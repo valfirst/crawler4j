@@ -59,7 +59,6 @@
         <wiremock.version>2.14.0</wiremock.version>
         <spock.version>1.1-groovy-2.4</spock.version>
         <groovy.version>2.4.12</groovy.version>
-        <checkstyle.version>8.12</checkstyle.version>
 
         <!-- Maven specific settings -->
         <encoding>UTF-8</encoding>
@@ -80,7 +79,6 @@
         <maven.nexus.staging.version>1.6.7</maven.nexus.staging.version>
         <maven.jar.version>3.0.0</maven.jar.version>
         <maven.compiler.version>3.7.0</maven.compiler.version>
-        <maven.checkstyle.version>3.0.0</maven.checkstyle.version>
         <maven.jacoco.version>0.8.2</maven.jacoco.version>
         <maven.gmaven.plus.version>1.6.2</maven.gmaven.plus.version>
         <maven.versions.version>2.5</maven.versions.version>
@@ -243,36 +241,6 @@
                         <target>${java.target}</target>
                         <encoding>${encoding}</encoding>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>${maven.checkstyle.version}</version>
-                    <executions>
-                        <execution>
-                            <id>compile</id>
-                            <phase>compile</phase>
-                            <configuration>
-                                <configLocation>checkstyle.xml</configLocation>
-                                <encoding>UTF-8</encoding>
-                                <consoleOutput>true</consoleOutput>
-                                <failsOnError>true</failsOnError>
-                                <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                                <sourceDirectories>${project.compileSourceRoots}</sourceDirectories>
-                                <testSourceDirectories>${project.testCompileSourceRoots}</testSourceDirectories>
-                            </configuration>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.puppycrawl.tools</groupId>
-                            <artifactId>checkstyle</artifactId>
-                            <version>${checkstyle.version}</version>
-                        </dependency>
-                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
