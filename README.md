@@ -1,4 +1,4 @@
-# crawler4j
+# crawler4j - Forked Variant
 [![Build Status](https://travis-ci.org/yasserg/crawler4j.svg?branch=master)](https://travis-ci.org/yasserg/crawler4j)
 [![Maven Central](https://img.shields.io/maven-central/v/edu.uci.ics/crawler4j.svg?style=flat-square)](https://search.maven.org/search?q=g:edu.uci.ics%20a:crawler4j)
 [![Gitter Chat](http://img.shields.io/badge/chat-online-brightgreen.svg)](https://gitter.im/crawler4j/Lobby)
@@ -22,17 +22,11 @@ Add the following dependency to your pom.xml:
 
 ```xml
     <dependency>
-        <groupId>edu.uci.ics</groupId>
+        <groupId>de.hs-heilbronn.mi</groupId>
         <artifactId>crawler4j</artifactId>
-        <version>4.4.0</version>
+        <version>4.5.0-SNAPSHOT</version>
     </dependency>
 ```
-
-### Using Gradle
-
-Add the following dependency to your build.gradle file:
-
-    compile group: 'edu.uci.ics', name: 'crawler4j', version: '4.4.0'
 
 ## Quickstart
 You need to create a crawler class that extends WebCrawler. This class decides which URLs
