@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>crawler4j-examples</artifactId>
+        <artifactId>crawler4j-parent</artifactId>
         <groupId>edu.uci.ics</groupId>
         <version>4.5.0-SNAPSHOT</version>
     </parent>
-    <artifactId>crawler4j-examples-base</artifactId>
-    <name>${project.groupId}:${project.artifactId}</name>
-    <description>Open Source Web Crawler for Java - base examples</description>
-    <url>https://github.com/yasserg/crawler4j</url>
-    <modelVersion>4.0.0</modelVersion>
 
-    <dependencies>
-        <dependency>
-            <groupId>edu.uci.ics</groupId>
-            <artifactId>crawler4j</artifactId>
-            <version>${crawler4j.version}</version>
-        </dependency>
-    </dependencies>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <artifactId>crawler4j-examples</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>crawler4j-examples-base</module>
+        <module>crawler4j-examples-postgres</module>
+    </modules>
+
 
 </project>
