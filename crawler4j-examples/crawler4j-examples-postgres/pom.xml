@@ -18,27 +18,6 @@
         <guava.version>24.0-jre</guava.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>bintray-palantir-releases</id>
-            <name>bintray</name>
-            <url>https://palantir.bintray.com/releases</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>bintray-palantir-releases</id>
-            <name>bintray-plugins</name>
-            <url>https://palantir.bintray.com/releases</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <dependencies>
         <dependency>
             <groupId>org.postgresql</groupId>
