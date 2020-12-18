@@ -15,7 +15,7 @@
         <logback.version>1.1.7</logback.version>
         <apache.http.components.version>4.5.5</apache.http.components.version>
         <je.version>18.3.12</je.version>
-        <apache.tika.version>1.17</apache.tika.version>
+        <apache.tika.version>1.25</apache.tika.version>
         <guava.version>26.0-jre</guava.version>
         <public.suffix.list.version>2.2.0</public.suffix.list.version>
         <url-detector.version>0.1.20</url-detector.version>
