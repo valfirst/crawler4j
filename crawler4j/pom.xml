@@ -11,8 +11,6 @@
     <url>https://github.com/yasserg/crawler4j</url>
 
     <properties>
-        <slf4j.version>1.7.22</slf4j.version>
-        <logback.version>1.1.7</logback.version>
         <apache.http.components.version>4.5.13</apache.http.components.version>
         <je.version>18.3.12</je.version>
         <apache.tika.version>1.25</apache.tika.version>
@@ -144,41 +142,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-banned-dependencies</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <bannedDependencies>
-                                    <excludes>
-                                        <!--
-                                            Banning JCL because we use SLF4J (and jcl-over-slf4j).
-                                            If this occurs in your build you should find what
-                                            dependency is bringing in JCL and add an exclusion
-                                            rule to prevent it.
-                                        -->
-                                        <exclude>commons-logging</exclude>
-                                        <!--
-                                            Banning Log4j because we use SLF4J/Logback.  If you
-                                            come across this, exclude the Log4j dependency and
-                                            add the log4j-over-slf4j library to replace it.
-                                        -->
-                                        <exclude>log4j</exclude>
-                                        <exclude>org.apache.logging.log4j</exclude>
-                                    </excludes>
-                                </bannedDependencies>
-                            </rules>
-                            <fail>true</fail>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
@@ -203,9 +166,15 @@
 
         <!-- Logging Provider -->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jcl</artifactId>
+            <version>${log4j.version}</version>
             <scope>runtime</scope>
         </dependency>
 
