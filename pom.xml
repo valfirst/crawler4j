@@ -5,8 +5,9 @@
     <packaging>pom</packaging>
     <version>4.5.0-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
+
     <description>Open Source Web Crawler for Java</description>
-    <url>https://github.com/yasserg/crawler4j</url>
+    <url>https://github.com/rzo1/crawler4j</url>
 
     <licenses>
         <license>
@@ -35,21 +36,40 @@
         <developer>
             <id>yasserg</id>
             <name>Yasser Ganjisaffar</name>
+            <roles>
+                <role>Original Founder</role>
+            </roles>
             <email />
             <timezone>America/Los_Angeles</timezone>
         </developer>
         <developer>
             <id>s17t</id>
             <name>Federico Tolomei</name>
+            <roles>
+                <role>Maintainer (till 2018)</role>
+            </roles>
             <email>fede@s17t.net</email>
             <url>https://s17t.net</url>
             <timezone>Europe/Rome</timezone>
         </developer>
+        <developer>
+            <id>rzo1</id>
+            <name>Richard Zowalla</name>
+            <roles>
+                <role>Fork Maintainer</role>
+            </roles>
+            <email/>
+            <url>https://github.com/rzo1/crawler4j</url>
+            <timezone>Europe/Berlin</timezone>
+        </developer>
     </developers>
 
     <modules>
-        <module>crawler4j</module>
+        <module>crawler4j-core</module>
         <module>crawler4j-examples</module>
+        <module>crawler4j-frontier</module>
+        <module>crawler4j-commons</module>
+        <module>crawler4j-boms</module>
     </modules>
 
     <properties>
@@ -68,8 +88,7 @@
         <log4j.version>2.13.3</log4j.version>
 
         <apache.http.components.version>4.5.13</apache.http.components.version>
-        <je.version>18.3.12</je.version>
-        <apache.tika.version>1.25</apache.tika.version>
+         <apache.tika.version>1.25</apache.tika.version>
         <guava.version>30.1-jre</guava.version>
         <public.suffix.list.version>2.2.0</public.suffix.list.version>
         <url-detector.version>0.1.20</url-detector.version>
@@ -79,8 +98,6 @@
         <wiremock.version>2.27.2</wiremock.version>
         <spock.version>2.0-M4-groovy-3.0</spock.version>
         <groovy.version>3.0.7</groovy.version>
-
-
 
         <!-- Maven plugin version -->
         <maven.source.version>3.0.1</maven.source.version>

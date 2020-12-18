@@ -1,5 +1,9 @@
 package edu.uci.ics.crawler4j.examples;
 
+import edu.uci.ics.crawler4j.frontier.FrontierConfiguration;
+import edu.uci.ics.crawler4j.frontier.SleepycatFrontierConfiguration;
+import edu.uci.ics.crawler4j.url.SleepycatWebURLFactory;
+import edu.uci.ics.crawler4j.url.WebURLFactory;
 import org.flywaydb.core.Flyway;
 
 import com.google.common.io.Files;
@@ -31,9 +35,11 @@ public class SampleLauncher {
          * Instantiate the controller for this crawl.
          */
         PageFetcher pageFetcher = new PageFetcher(config);
+        WebURLFactory webURLFactory = new SleepycatWebURLFactory();
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
+        FrontierConfiguration frontierConfiguration = new SleepycatFrontierConfiguration(config);
+        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher, new SleepycatWebURLFactory());
+        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, frontierConfiguration);
 
         /*
          * For each crawl, you need to add some seed urls. These are the first

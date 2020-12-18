@@ -19,6 +19,10 @@ package edu.uci.ics.crawler4j.examples.localdata;
 
 import java.util.List;
 
+import edu.uci.ics.crawler4j.frontier.FrontierConfiguration;
+import edu.uci.ics.crawler4j.frontier.SleepycatFrontierConfiguration;
+import edu.uci.ics.crawler4j.url.SleepycatWebURLFactory;
+import edu.uci.ics.crawler4j.url.WebURLFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,8 +54,9 @@ public class LocalDataCollectorController {
 
         PageFetcher pageFetcher = new PageFetcher(config);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
+        FrontierConfiguration frontierConfiguration = new SleepycatFrontierConfiguration(config);
+        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher, new SleepycatWebURLFactory());
+        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, frontierConfiguration);
 
         controller.addSeed("https://www.ics.uci.edu/");
         controller.start(LocalDataCollectorCrawler.class, numberOfCrawlers);

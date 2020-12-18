@@ -44,7 +44,28 @@
     </Appenders>
 
     <Loggers>
-        <Root level="INFO">
+        <Logger name="edu.uci.ics.crawler4j" level="DEBUG">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="ERRORFILE"/>
+            <AppenderRef ref="WARNFILE"/>
+            <AppenderRef ref="INFOFILE"/>
+            <AppenderRef ref="DEBUGFILE"/>
+        </Logger>
+<!--        <Logger name="edu.uci.ics.crawler4j.fetcher.SniPoolingHttpClientConnectionManager" level="WARN">-->
+<!--            <AppenderRef ref="STDOUT"/>-->
+<!--            <AppenderRef ref="ERRORFILE"/>-->
+<!--            <AppenderRef ref="WARNFILE"/>-->
+<!--            <AppenderRef ref="INFOFILE"/>-->
+<!--            <AppenderRef ref="DEBUGFILE"/>-->
+<!--        </Logger>-->
+<!--        <Logger name="edu.uci.ics.crawler4j.fetcher.SniSSLConnectionSocketFactory" level="WARN">-->
+<!--            <AppenderRef ref="STDOUT"/>-->
+<!--            <AppenderRef ref="ERRORFILE"/>-->
+<!--            <AppenderRef ref="WARNFILE"/>-->
+<!--            <AppenderRef ref="INFOFILE"/>-->
+<!--            <AppenderRef ref="DEBUGFILE"/>-->
+<!--        </Logger>-->
+        <Root level="DEBUG">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="ERRORFILE"/>
             <AppenderRef ref="WARNFILE"/>
