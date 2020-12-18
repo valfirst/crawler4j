@@ -1,14 +1,14 @@
 package edu.uci.ics.crawler4j.tests.fetcher;
 
-import java.io.IOException;
 import org.junit.Rule;
 import org.junit.Test;
+
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.Page;
-import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.url.WebURL;
 
@@ -18,8 +18,7 @@ public class PageFetcherHtmlTest {
     public WireMockRule wireMockRule = new WireMockRule(new WireMockConfiguration().dynamicPort());
 
     @Test
-    public void testCustomPageFetcher()
-        throws InterruptedException, PageBiggerThanMaxSizeException, IOException {
+    public void testCustomPageFetcher() throws Exception {
 
         WireMock.stubFor(WireMock.head(WireMock.urlEqualTo("/some/index.html"))
                                  .willReturn(WireMock.aResponse()

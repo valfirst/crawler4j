@@ -1,6 +1,6 @@
 # crawler4j
 [![Build Status](https://travis-ci.org/yasserg/crawler4j.svg?branch=master)](https://travis-ci.org/yasserg/crawler4j)
-![Maven Central](https://img.shields.io/maven-central/v/edu.uci.ics/crawler4j.svg?style=flat-square)
+[![Maven Central](https://img.shields.io/maven-central/v/edu.uci.ics/crawler4j.svg?style=flat-square)](https://search.maven.org/search?q=g:edu.uci.ics%20a:crawler4j)
 [![Gitter Chat](http://img.shields.io/badge/chat-online-brightgreen.svg)](https://gitter.im/crawler4j/Lobby)
 
 crawler4j is an open source web crawler for Java which provides a simple interface for
@@ -25,7 +25,7 @@ To use the latest release of crawler4j, please use the following snippet in your
     <dependency>
         <groupId>edu.uci.ics</groupId>
         <artifactId>crawler4j</artifactId>
-        <version>4.3</version>
+        <version>4.4.0</version>
     </dependency>
 ```
 
@@ -46,7 +46,7 @@ You can add the following to use the next SNAPSHOT release
         <dependency>
             <groupId>edu.uci.ics</groupId>
             <artifactId>crawler4j</artifactId>
-            <version>4.4-SNAPSHOT</version>
+            <version>4.5.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 ```
@@ -67,7 +67,7 @@ you will find in `target/` folder a jar named like `crawler4j-X.Y-with-dependenc
 
 Please include the following dependency in the build.gradle file to use crawler4j
 
-    compile group: 'edu.uci.ics', name: 'crawler4j', version: '4.3'
+    compile group: 'edu.uci.ics', name: 'crawler4j', version: '4.4.0'
     
 Also, add the following repository url in build.gradle, for the dependency [sleepycat](https://mvnrepository.com/artifact/com.sleepycat/je/5.0.84)
 
@@ -92,14 +92,14 @@ public class MyCrawler extends WebCrawler {
      * the given url should be crawled or not (based on your crawling logic).
      * In this example, we are instructing the crawler to ignore urls that
      * have css, js, git, ... extensions and to only accept urls that start
-     * with "http://www.ics.uci.edu/". In this case, we didn't need the
+     * with "https://www.ics.uci.edu/". In this case, we didn't need the
      * referringPage parameter to make the decision.
      */
      @Override
      public boolean shouldVisit(Page referringPage, WebURL url) {
          String href = url.getURL().toLowerCase();
          return !FILTERS.matcher(href).matches()
-                && href.startsWith("http://www.ics.uci.edu/");
+                && href.startsWith("https://www.ics.uci.edu/");
      }
 
      /**
@@ -158,9 +158,9 @@ public class Controller {
          * URLs that are fetched and then the crawler starts following links
          * which are found in these pages
          */
-        controller.addSeed("http://www.ics.uci.edu/~lopes/");
-        controller.addSeed("http://www.ics.uci.edu/~welling/");
-    	controller.addSeed("http://www.ics.uci.edu/");
+        controller.addSeed("https://www.ics.uci.edu/~lopes/");
+        controller.addSeed("https://www.ics.uci.edu/~welling/");
+    	controller.addSeed("https://www.ics.uci.edu/");
 
         /*
          * Start the crawl. This is a blocking operation, meaning that your code

@@ -97,6 +97,14 @@ public class BasicCrawlController {
      * rootFolder manually.
      */
         config.setResumableCrawling(false);
+        
+        /*
+         * Set this to true if you want crawling to stop whenever an unexpected error
+         * occurs. You'll probably want this set to true when you first start testing
+         * your crawler, and then set to false once you're ready to let the crawler run
+         * for a long time.
+         */
+        config.setHaltOnError(true);
 
     /*
      * Instantiate the controller for this crawl.
@@ -111,9 +119,9 @@ public class BasicCrawlController {
      * URLs that are fetched and then the crawler starts following links
      * which are found in these pages
      */
-        controller.addSeed("http://www.ics.uci.edu/");
-        controller.addSeed("http://www.ics.uci.edu/~lopes/");
-        controller.addSeed("http://www.ics.uci.edu/~welling/");
+        controller.addSeed("https://www.ics.uci.edu/");
+        controller.addSeed("https://www.ics.uci.edu/~lopes/");
+        controller.addSeed("https://www.ics.uci.edu/~welling/");
 
     /*
      * Start the crawl. This is a blocking operation, meaning that your code
