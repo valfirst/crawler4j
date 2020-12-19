@@ -2,23 +2,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>crawler4j-examples</artifactId>
-        <groupId>edu.uci.ics</groupId>
+        <groupId>de.hs-heilbronn.mi</groupId>
         <version>4.5.0-SNAPSHOT</version>
     </parent>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Open Source Web Crawler for Java - example with jdbc and Postgres</description>
-    <url>https://github.com/yasserg/crawler4j</url>
     <artifactId>crawler4j-examples-postgres</artifactId>
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <postgresql.version>42.2.1</postgresql.version>
-        <c3p0.version>0.9.5.3</c3p0.version>
+        <postgresql.version>42.2.18</postgresql.version>
+        <c3p0.version>0.9.5.5</c3p0.version>
         <flyway.db.version>5.0.7</flyway.db.version>
-        <guava.version>24.0-jre</guava.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>de.hs-heilbronn.mi</groupId>
+            <artifactId>crawler4j-with-sleepycat</artifactId>
+            <version>${crawler4j.version}</version>
+            <type>pom</type>
+        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -28,11 +31,6 @@
             <groupId>com.mchange</groupId>
             <artifactId>c3p0</artifactId>
             <version>${c3p0.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>edu.uci.ics</groupId>
-            <artifactId>crawler4j</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>

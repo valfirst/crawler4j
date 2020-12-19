@@ -1,7 +1,6 @@
-# crawler4j
-[![Build Status](https://travis-ci.org/yasserg/crawler4j.svg?branch=master)](https://travis-ci.org/yasserg/crawler4j)
-[![Maven Central](https://img.shields.io/maven-central/v/edu.uci.ics/crawler4j.svg?style=flat-square)](https://search.maven.org/search?q=g:edu.uci.ics%20a:crawler4j)
-[![Gitter Chat](http://img.shields.io/badge/chat-online-brightgreen.svg)](https://gitter.im/crawler4j/Lobby)
+# crawler4j - Forked Variant
+
+![Maven Central](https://img.shields.io/maven-central/v/de.hs-heilbronn.mi/crawler4j-parent.svg?style=flat-square)
 
 crawler4j is an open source web crawler for Java which provides a simple interface for
 crawling the Web. Using it, you can setup a multi-threaded web crawler in few minutes.
@@ -21,18 +20,28 @@ crawling the Web. Using it, you can setup a multi-threaded web crawler in few mi
 Add the following dependency to your pom.xml:
 
 ```xml
-    <dependency>
-        <groupId>edu.uci.ics</groupId>
-        <artifactId>crawler4j</artifactId>
-        <version>4.4.0</version>
-    </dependency>
+        <dependency>
+            <groupId>de.hs-heilbronn.mi</groupId>
+            <artifactId>crawler4j-with-sleepycat</artifactId>
+            <version>4.5.0-SNAPSHOT</version>
+            <type>pom</type>
+        </dependency>    
 ```
 
-### Using Gradle
+**Please check**, if the Oracle license for Sleepycat database complies with your use-case.
 
-Add the following dependency to your build.gradle file:
+Otherwise, you can use HSQLDB instead
 
-    compile group: 'edu.uci.ics', name: 'crawler4j', version: '4.4.0'
+```xml
+        <dependency>
+            <groupId>de.hs-heilbronn.mi</groupId>
+            <artifactId>crawler4j-with-hsqldb</artifactId>
+            <version>4.5.0-SNAPSHOT</version>
+            <type>pom</type>
+        </dependency>    
+```
+
+If you get exceptions related to missing classes in `Apache Tika`, you can check the related exclusion list in the [Module POM](crawler4j-core/pom.xml) and re-add these dependencies in your project!
 
 ## Quickstart
 You need to create a crawler class that extends WebCrawler. This class decides which URLs
@@ -104,11 +113,14 @@ public class Controller {
         CrawlConfig config = new CrawlConfig();
         config.setCrawlStorageFolder(crawlStorageFolder);
 
-        // Instantiate the controller for this crawl.
+        // Instantiate the controller for this crawl (or use 
         PageFetcher pageFetcher = new PageFetcher(config);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
+        FrontierConfiguration frontierConfiguration = new SleepycatFrontierConfiguration(config);
+        // OR use
+        // FrontierConfiguration frontierConfiguration = new HSQLDBFrontierConfiguration(config, 10);
+        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher, frontierConfiguration.getWebURLFactory());
+        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, frontierConfiguration);
 
         // For each crawl, you need to add some seed urls. These are the first
         // URLs that are fetched and then the crawler starts following links

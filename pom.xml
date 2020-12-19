@@ -1,12 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>edu.uci.ics</groupId>
+    <groupId>de.hs-heilbronn.mi</groupId>
     <artifactId>crawler4j-parent</artifactId>
     <packaging>pom</packaging>
     <version>4.5.0-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
+
     <description>Open Source Web Crawler for Java</description>
-    <url>https://github.com/yasserg/crawler4j</url>
+    <url>https://github.com/rzo1/crawler4j</url>
 
     <licenses>
         <license>
@@ -16,18 +18,20 @@
         </license>
     </licenses>
     <scm>
-        <url>https://github.com/yasserg/crawler4j</url>
-        <connection>scm:git:git@github.com:yasserg/crawler4j.git</connection>
-        <developerConnection>scm:git:git@github.com:yasserg/crawler4j.git</developerConnection>
+        <url>https://github.com/rzo1/crawler4j</url>
+        <connection>scm:git:git@github.com:rzo1/crawler4j.git</connection>
+        <developerConnection>scm:git:git@github.com:rzo1/crawler4j.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
+            <name>Sonatype Nexus snapshot repository</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
+            <name>Sonatype Nexus release repository</name>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
@@ -35,51 +39,89 @@
         <developer>
             <id>yasserg</id>
             <name>Yasser Ganjisaffar</name>
-            <email />
+            <roles>
+                <role>Original Founder</role>
+            </roles>
+            <email/>
             <timezone>America/Los_Angeles</timezone>
         </developer>
         <developer>
             <id>s17t</id>
             <name>Federico Tolomei</name>
+            <roles>
+                <role>Maintainer (till 2018)</role>
+            </roles>
             <email>fede@s17t.net</email>
             <url>https://s17t.net</url>
             <timezone>Europe/Rome</timezone>
         </developer>
+        <developer>
+            <id>rzo1</id>
+            <name>Richard Zowalla</name>
+            <roles>
+                <role>Fork Maintainer</role>
+            </roles>
+            <email/>
+            <url>https://github.com/rzo1/crawler4j</url>
+            <timezone>Europe/Berlin</timezone>
+        </developer>
     </developers>
 
+    <organization>
+        <name>crawler4j-fork (pre-fork: Yasser Ganjisaffar)</name>
+    </organization>
+
     <modules>
-        <module>crawler4j</module>
+        <module>crawler4j-core</module>
         <module>crawler4j-examples</module>
+        <module>crawler4j-frontier</module>
+        <module>crawler4j-commons</module>
+        <module>crawler4j-boms</module>
     </modules>
 
     <properties>
+        <!-- Application settings -->
+        <copyright.year>2020</copyright.year>
+        <license.inceptionYear>2010</license.inceptionYear>
+        <license.licenseName>apache_v2</license.licenseName>
+
+        <!-- Maven specific settings -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
+        <java.source>1.8</java.source>
+        <java.target>1.8</java.target>
+        <maven.compile.encoding>UTF-8</maven.compile.encoding>
+        <maven.compiler.target>${java.target}</maven.compiler.target>
+
         <crawler4j.version>${project.parent.version}</crawler4j.version>
+
+        <slf4j.version>1.7.30</slf4j.version>
+        <log4j.version>2.14.0</log4j.version>
+
+        <apache.http.components.version>4.5.13</apache.http.components.version>
+        <apache.tika.version>1.25</apache.tika.version>
+        <guava.version>30.1-jre</guava.version>
+        <public.suffix.list.version>2.2.0</public.suffix.list.version>
+        <url-detector.version>0.1.20</url-detector.version>
+
         <!-- 3rd party test dependencies -->
-        <junit.version>4.13</junit.version>
+        <junit.version>4.13.1</junit.version>
         <wiremock.version>2.27.2</wiremock.version>
         <spock.version>2.0-M4-groovy-3.0</spock.version>
         <groovy.version>3.0.7</groovy.version>
 
-        <!-- Maven specific settings -->
-        <encoding>UTF-8</encoding>
-        <java.source>1.8</java.source>
-        <java.target>1.8</java.target>
-        <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
-        <project.build.resourceEncoding>${encoding}</project.build.resourceEncoding>
-        <maven.compile.encoding>${encoding}</maven.compile.encoding>
-        <maven.compiler.target>${java.target}</maven.compiler.target>
-
         <!-- Maven plugin version -->
-        <maven.source.version>3.0.1</maven.source.version>
-        <maven.javadoc.version>3.0.0</maven.javadoc.version>
-        <maven.gpg.version>1.5</maven.gpg.version>
+        <maven.source.version>3.2.0</maven.source.version>
+        <maven.javadoc.version>3.2.0</maven.javadoc.version>
+        <maven.gpg.version>1.6</maven.gpg.version>
+        <maven.license.version>2.0.0</maven.license.version>
         <maven.build.helper.version>3.0.0</maven.build.helper.version>
         <maven.release.version>2.5.3</maven.release.version>
         <maven.assembly.version>2.5.3</maven.assembly.version>
         <maven.nexus.staging.version>1.6.7</maven.nexus.staging.version>
-        <maven.jar.version>3.0.0</maven.jar.version>
-        <maven.compiler.version>3.7.0</maven.compiler.version>
-        <maven.jacoco.version>0.8.2</maven.jacoco.version>
+        <maven.jar.version>3.2.0</maven.jar.version>
+        <maven.compiler.version>3.8.1</maven.compiler.version>
+        <maven.jacoco.version>0.8.6</maven.jacoco.version>
         <maven.gmaven.plus.version>1.12.0</maven.gmaven.plus.version>
         <maven.versions.version>2.5</maven.versions.version>
         <maven.forbiddenapis.version>3.1</maven.forbiddenapis.version>
@@ -90,75 +132,27 @@
     <profiles>
         <profile>
             <id>release</id>
-
             <build>
                 <plugins>
-                    <!-- generate a source jar -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>${maven.source.version}</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
-                    <!-- generate a javadoc jar -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>${maven.javadoc.version}</version>
-                        <configuration>
-                            <doclint>none</doclint>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven.gpg.version}</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>${maven.nexus.staging.version}</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <version>${maven.release.version}</version>
-                        <configuration>
-                            <autoVersionSubmodules>true</autoVersionSubmodules>
-                            <useReleaseProfile>false</useReleaseProfile>
-                            <releaseProfiles>release</releaseProfiles>
-                            <goals>deploy</goals>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
@@ -233,6 +227,33 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>${maven.license.version}</version>
+                    <configuration>
+                        <verbose>false</verbose>
+                        <includes>
+                            <includes>**/*.java</includes>
+                        </includes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>generate-license-headers</id>
+                            <goals>
+                                <goal>update-file-header</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                            <configuration>
+                                <roots>
+                                    <root>src/main/java</root>
+                                    <root>src/test/java</root>
+                                </roots>
+                                <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven.compiler.version}</version>
@@ -244,6 +265,50 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven.source.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven.javadoc.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                        <!-- workaround for https://bugs.openjdk.java.net/browse/JDK-8212233 -->
+                        <javaApiLinks>
+                            <property>
+                                <name>foo</name>
+                                <value>bar</value>
+                            </property>
+                        </javaApiLinks>
+                        <encoding>utf-8</encoding>
+                        <show>public</show>
+                        <detectOfflineLinks>false</detectOfflineLinks>
+                        <detectJavaApiLink>false</detectJavaApiLink>
+                        <!-- Speeds up the build of the javadocs -->
+                        <quiet>true</quiet>
+                        <use>false</use>
+                        <doclint>none</doclint>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
                     <version>${maven.enforcer.version}</version>
                 </plugin>
@@ -251,8 +316,31 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven.surefire.version}</version>
-              </plugin>
+                    <configuration>
+                        <argLine>-Xmx512m -Dfile.encoding=UTF-8</argLine>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven.gpg.version}</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>de.thetaphi</groupId>
+                <artifactId>forbiddenapis</artifactId>
+            </plugin>
+        </plugins>
     </build>
 </project>
