@@ -7,15 +7,21 @@
     </parent>
     <artifactId>crawler4j-examples-base</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Open Source Web Crawler for Java - base examples</description>
-    <url>https://github.com/yasserg/crawler4j</url>
+
     <modelVersion>4.0.0</modelVersion>
 
     <dependencies>
         <dependency>
             <groupId>de.hs-heilbronn.mi</groupId>
-            <artifactId>crawler4j</artifactId>
+            <artifactId>crawler4j-with-sleepycat</artifactId>
             <version>${crawler4j.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>de.hs-heilbronn.mi</groupId>
+            <artifactId>crawler4j-with-hsqldb</artifactId>
+            <version>${crawler4j.version}</version>
+            <type>pom</type>
         </dependency>
     </dependencies>
 

@@ -1,7 +1,4 @@
 # crawler4j - Forked Variant
-[![Build Status](https://travis-ci.org/yasserg/crawler4j.svg?branch=master)](https://travis-ci.org/yasserg/crawler4j)
-[![Maven Central](https://img.shields.io/maven-central/v/edu.uci.ics/crawler4j.svg?style=flat-square)](https://search.maven.org/search?q=g:edu.uci.ics%20a:crawler4j)
-[![Gitter Chat](http://img.shields.io/badge/chat-online-brightgreen.svg)](https://gitter.im/crawler4j/Lobby)
 
 crawler4j is an open source web crawler for Java which provides a simple interface for
 crawling the Web. Using it, you can setup a multi-threaded web crawler in few minutes.
@@ -21,11 +18,23 @@ crawling the Web. Using it, you can setup a multi-threaded web crawler in few mi
 Add the following dependency to your pom.xml:
 
 ```xml
-    <dependency>
-        <groupId>de.hs-heilbronn.mi</groupId>
-        <artifactId>crawler4j</artifactId>
-        <version>4.5.0-SNAPSHOT</version>
-    </dependency>
+        <dependency>
+            <groupId>de.hs-heilbronn.mi</groupId>
+            <artifactId>crawler4j-with-sleepycat</artifactId>
+            <version>4.5.0-SNAPSHOT</version>
+            <type>pom</type>
+        </dependency>    
+```
+
+or (if you prefer to use HSQLDB instead of Oracle Sleepycat database)
+
+```xml
+        <dependency>
+            <groupId>de.hs-heilbronn.mi</groupId>
+            <artifactId>crawler4j-with-hsqldb</artifactId>
+            <version>4.5.0-SNAPSHOT</version>
+            <type>pom</type>
+        </dependency>    
 ```
 
 ## Quickstart
@@ -98,11 +107,14 @@ public class Controller {
         CrawlConfig config = new CrawlConfig();
         config.setCrawlStorageFolder(crawlStorageFolder);
 
-        // Instantiate the controller for this crawl.
+        // Instantiate the controller for this crawl (or use 
         PageFetcher pageFetcher = new PageFetcher(config);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
+        FrontierConfiguration frontierConfiguration = new SleepycatFrontierConfiguration(config);
+        // OR use
+        // FrontierConfiguration frontierConfiguration = new HSQLDBFrontierConfiguration(config, 10);
+        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher, frontierConfiguration.getWebURLFactory());
+        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, frontierConfiguration);
 
         // For each crawl, you need to add some seed urls. These are the first
         // URLs that are fetched and then the crawler starts following links

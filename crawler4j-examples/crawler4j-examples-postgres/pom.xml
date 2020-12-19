@@ -6,8 +6,6 @@
         <version>4.5.0-SNAPSHOT</version>
     </parent>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Open Source Web Crawler for Java - example with jdbc and Postgres</description>
-    <url>https://github.com/yasserg/crawler4j</url>
     <artifactId>crawler4j-examples-postgres</artifactId>
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,6 +17,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>de.hs-heilbronn.mi</groupId>
+            <artifactId>crawler4j-with-sleepycat</artifactId>
+            <version>${crawler4j.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
@@ -27,11 +31,6 @@
             <groupId>com.mchange</groupId>
             <artifactId>c3p0</artifactId>
             <version>${c3p0.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.hs-heilbronn.mi</groupId>
-            <artifactId>crawler4j</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>

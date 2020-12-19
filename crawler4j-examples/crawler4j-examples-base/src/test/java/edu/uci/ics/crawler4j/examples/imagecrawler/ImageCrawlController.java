@@ -7,8 +7,12 @@ import java.util.List;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
+import edu.uci.ics.crawler4j.frontier.FrontierConfiguration;
+import edu.uci.ics.crawler4j.frontier.SleepycatFrontierConfiguration;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
+import edu.uci.ics.crawler4j.url.SleepycatWebURLFactory;
+import edu.uci.ics.crawler4j.url.WebURLFactory;
 
 public class ImageCrawlController {
 
@@ -35,8 +39,9 @@ public class ImageCrawlController {
 
         PageFetcher pageFetcher = new PageFetcher(config);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
+        FrontierConfiguration frontierConfiguration = new SleepycatFrontierConfiguration(config);
+        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher, new SleepycatWebURLFactory());
+        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, frontierConfiguration);
         for (String domain : crawlDomains) {
             controller.addSeed(domain);
         }
