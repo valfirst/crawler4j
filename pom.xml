@@ -67,6 +67,10 @@
         </developer>
     </developers>
 
+    <organization>
+        <name>crawler4j-fork (pre-fork: Yasser Ganjisaffar)</name>
+    </organization>
+
     <modules>
         <module>crawler4j-core</module>
         <module>crawler4j-examples</module>
