@@ -13,6 +13,7 @@
 
     <artifactId>crawler4j-boms</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
+
     <modules>
         <module>crawler4j-with-sleepycat</module>
         <module>crawler4j-with-hsqldb</module>
