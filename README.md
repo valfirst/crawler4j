@@ -1,5 +1,8 @@
 # crawler4j - Forked Variant
 
+
+[![Build Status](https://travis-ci.org/rzo1/crawler4j.svg?branch=4.5.0-progress)](https://travis-ci.org/rzo1/crawler4j) ![Maven Central](https://img.shields.io/maven-central/v/de.hs-heilbronn.mi/crawler4j-parent.svg?style=flat-square)
+
 crawler4j is an open source web crawler for Java which provides a simple interface for
 crawling the Web. Using it, you can setup a multi-threaded web crawler in few minutes.
 
