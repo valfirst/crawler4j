@@ -34,6 +34,13 @@
             <groupId>de.malkusch.whois-server-list</groupId>
             <artifactId>public-suffix-list</artifactId>
             <version>${public.suffix.list.version}</version>
+            <exclusions>
+                <exclusion>
+                    <!-- we already have a newer version (via Guava) of it in the classpath -->
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
