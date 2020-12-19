@@ -26,7 +26,9 @@ Add the following dependency to your pom.xml:
         </dependency>    
 ```
 
-or (if you prefer to use HSQLDB instead of Oracle Sleepycat database)
+**Please check**, if the Oracle license for Sleepycat database complies with your use-case.
+
+Otherwise, you can use HSQLDB instead
 
 ```xml
         <dependency>
