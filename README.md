@@ -39,6 +39,8 @@ Otherwise, you can use HSQLDB instead
         </dependency>    
 ```
 
+If you get exceptions related to missing classes in `Apache Tika`, you can check the related exclusion list in the [Module POM](crawler4j-core/pom.xml) and re-add these dependencies in your project!
+
 ## Quickstart
 You need to create a crawler class that extends WebCrawler. This class decides which URLs
 should be crawled and handles the downloaded page. The following is a sample
