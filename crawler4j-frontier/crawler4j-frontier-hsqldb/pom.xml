@@ -13,8 +13,8 @@
     <artifactId>crawler4j-frontier-hsqldb</artifactId>
 
     <properties>
-        <hikaricp.version>3.4.5</hikaricp.version>
-        <hsqldb.version>2.5.1</hsqldb.version>
+        <hikaricp.version>4.0.3</hikaricp.version>
+        <hsqldb.version>2.6.0</hsqldb.version>
     </properties>
 
     <dependencies>
