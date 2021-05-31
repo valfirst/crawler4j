@@ -2,7 +2,7 @@
  * #%L
  * de.hs-heilbronn.mi:crawler4j-examples-base
  * %%
- * Copyright (C) 2010 - 2020 crawler4j-fork (pre-fork: Yasser Ganjisaffar)
+ * Copyright (C) 2010 - 2021 crawler4j-fork (pre-fork: Yasser Ganjisaffar)
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
