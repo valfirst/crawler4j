@@ -22,7 +22,6 @@ package edu.uci.ics.crawler4j.examples;
 import edu.uci.ics.crawler4j.frontier.FrontierConfiguration;
 import edu.uci.ics.crawler4j.frontier.SleepycatFrontierConfiguration;
 import edu.uci.ics.crawler4j.url.SleepycatWebURLFactory;
-import edu.uci.ics.crawler4j.url.WebURLFactory;
 import org.flywaydb.core.Flyway;
 
 import com.google.common.io.Files;
@@ -40,7 +39,7 @@ public class SampleLauncher {
     public static void main(String[] args) throws Exception {
 
         String crawlStorageFolder = Files.createTempDir().getAbsolutePath();
-        final int numberOfCrawlers = Integer.valueOf(args[2]);
+        final int numberOfCrawlers = Integer.parseInt(args[2]);
 
         CrawlConfig config = new CrawlConfig();
 
@@ -48,13 +47,12 @@ public class SampleLauncher {
 
         config.setCrawlStorageFolder(crawlStorageFolder);
 
-        config.setMaxPagesToFetch(Integer.valueOf(args[0]));
+        config.setMaxPagesToFetch(Integer.parseInt(args[0]));
 
         /*
          * Instantiate the controller for this crawl.
          */
         PageFetcher pageFetcher = new PageFetcher(config);
-        WebURLFactory webURLFactory = new SleepycatWebURLFactory();
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
         FrontierConfiguration frontierConfiguration = new SleepycatFrontierConfiguration(config);
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher, new SleepycatWebURLFactory());
@@ -71,8 +69,7 @@ public class SampleLauncher {
         controller.addSeed("https://pt.wikipedia.org/wiki/Protocolo");
         controller.addSeed("https://de.wikipedia.org/wiki/Datenbank");
 
-        Flyway flyway = new Flyway();
-        flyway.setDataSource(args[1], "crawler4j", "crawler4j");
+        Flyway flyway = Flyway.configure().dataSource(args[1], "crawler4j", "crawler4j").load();
         flyway.migrate();
 
         ComboPooledDataSource pool = new ComboPooledDataSource();
