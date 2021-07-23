@@ -21,6 +21,7 @@ package edu.uci.ics.crawler4j.fetcher;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
@@ -35,36 +36,36 @@ import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 
-import org.apache.http.Header;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.NTCredentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.ssl.SSLContexts;
+import org.apache.hc.client5.http.ClientProtocolException;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.Credentials;
+import org.apache.hc.client5.http.auth.NTCredentials;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.config.Registry;
+import org.apache.hc.core5.http.config.RegistryBuilder;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.apache.hc.core5.ssl.SSLContexts;
+import org.apache.hc.core5.ssl.TrustStrategy;
+import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,8 +101,8 @@ public class PageFetcher {
                 .setExpectContinueEnabled(false)
                 .setCookieSpec(config.getCookiePolicy())
                 .setRedirectsEnabled(false)
-                .setSocketTimeout(config.getSocketTimeout())
-                .setConnectTimeout(config.getConnectionTimeout())
+                .setResponseTimeout(Timeout.ofMilliseconds(config.getSocketTimeout()))
+                .setConnectTimeout(Timeout.ofMilliseconds(config.getConnectionTimeout()))
                 .build();
 
         RegistryBuilder<ConnectionSocketFactory> connRegistryBuilder = RegistryBuilder.create();
@@ -149,7 +150,7 @@ public class PageFetcher {
             if (config.getProxyUsername() != null) {
                 AuthScope authScope = new AuthScope(config.getProxyHost(), config.getProxyPort());
                 Credentials credentials = new UsernamePasswordCredentials(config.getProxyUsername(),
-                        config.getProxyPassword());
+                        config.getProxyPassword().toCharArray());
                 credentialsMap.put(authScope, credentials);
             }
 
@@ -169,12 +170,9 @@ public class PageFetcher {
             }
 
             if (!credentialsMap.isEmpty()) {
-                CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                credentialsMap.forEach((AuthScope authscope, Credentials credentials) -> {
-                    credentialsProvider.setCredentials(authscope, credentials);
-                });
+                BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                credentialsMap.forEach(credentialsProvider::setCredentials);
                 clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-                clientBuilder.addInterceptorFirst(new BasicAuthHttpRequestInterceptor());
             }
             httpClient = clientBuilder.build();
 
@@ -202,7 +200,7 @@ public class PageFetcher {
                                      Map<AuthScope, Credentials> credentialsMap) {
         logger.info("BASIC authentication for: {}", authInfo.getLoginTarget());
         Credentials credentials = new UsernamePasswordCredentials(authInfo.getUsername(),
-                authInfo.getPassword());
+                authInfo.getPassword().toCharArray());
         credentialsMap.put(new AuthScope(authInfo.getHost(), authInfo.getPort()), credentials);
     }
 
@@ -213,7 +211,7 @@ public class PageFetcher {
         logger.info("NT authentication for: {}", authInfo.getLoginTarget());
         try {
             Credentials credentials = new NTCredentials(authInfo.getUsername(),
-                    authInfo.getPassword(), InetAddress.getLocalHost().getHostName(),
+                    authInfo.getPassword().toCharArray(), InetAddress.getLocalHost().getHostName(),
                     authInfo.getDomain());
             credentialsMap.put(new AuthScope(authInfo.getHost(), authInfo.getPort()), credentials);
         } catch (UnknownHostException e) {
@@ -254,7 +252,7 @@ public class PageFetcher {
     }
 
     public PageFetchResult fetchPage(WebURL webUrl)
-            throws InterruptedException, IOException, PageBiggerThanMaxSizeException {
+            throws InterruptedException, IOException, PageBiggerThanMaxSizeException, URISyntaxException {
         // Getting URL, setting headers & content
         PageFetchResult fetchResult = new PageFetchResult(config.isHaltOnError());
         String toFetchURL = webUrl.getURL();
@@ -274,12 +272,12 @@ public class PageFetcher {
 
             CloseableHttpResponse response = httpClient.execute(request);
             fetchResult.setEntity(response.getEntity());
-            fetchResult.setResponseHeaders(response.getAllHeaders());
+            fetchResult.setResponseHeaders(response.getHeaders());
 
             // Setting HttpStatus
-            int statusCode = response.getStatusLine().getStatusCode();
+            int statusCode = response.getCode();
 
-            // If Redirect ( 3xx )
+                        // If Redirect ( 3xx )
             if (statusCode == HttpStatus.SC_MOVED_PERMANENTLY ||
                     statusCode == HttpStatus.SC_MOVED_TEMPORARILY ||
                     statusCode == HttpStatus.SC_MULTIPLE_CHOICES ||
@@ -296,7 +294,7 @@ public class PageFetcher {
                 }
             } else if (statusCode >= 200 && statusCode <= 299) { // is 2XX, everything looks ok
                 fetchResult.setFetchedUrl(toFetchURL);
-                String uri = request.getURI().toString();
+                String uri = request.getUri().toString();
                 if (!uri.equals(toFetchURL)) {
                     if (!URLCanonicalizer.getCanonicalURL(uri).equals(toFetchURL)) {
                         fetchResult.setFetchedUrl(uri);
@@ -335,7 +333,7 @@ public class PageFetcher {
 
     public synchronized void shutDown() {
         if (connectionMonitorThread != null) {
-            connectionManager.shutdown();
+            connectionManager.close();
             connectionMonitorThread.shutdown();
         }
     }

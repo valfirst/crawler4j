@@ -20,19 +20,20 @@
 package edu.uci.ics.crawler4j.tests.fetcher;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 import edu.uci.ics.crawler4j.url.WebURL;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpHead;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
 import edu.uci.ics.crawler4j.fetcher.PageFetchResult;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
+import org.apache.hc.client5.http.classic.methods.HttpHead;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 
 public class PageFetcherHtmlOnly extends PageFetcher {
 
@@ -43,7 +44,7 @@ public class PageFetcherHtmlOnly extends PageFetcher {
 
     @Override
     public PageFetchResult fetchPage(WebURL webUrl)
-        throws InterruptedException, IOException, PageBiggerThanMaxSizeException {
+            throws InterruptedException, IOException, PageBiggerThanMaxSizeException, URISyntaxException {
         String toFetchURL = webUrl.getURL();
 
         PageFetchResult fetchResult = new PageFetchResult(config.isHaltOnError());
@@ -59,11 +60,12 @@ public class PageFetcherHtmlOnly extends PageFetcher {
                 this.lastFetchTime = new Date().getTime();
             }
 
-            HttpResponse response = httpClient.execute(head);
+            CloseableHttpResponse response = httpClient.execute(head);
+
             fetchResult.setEntity(response.getEntity());
-            fetchResult.setResponseHeaders(response.getAllHeaders());
+            fetchResult.setResponseHeaders(response.getHeaders());
             fetchResult.setFetchedUrl(toFetchURL);
-            fetchResult.setStatusCode(response.getStatusLine().getStatusCode());
+            fetchResult.setStatusCode(response.getCode());
 
             String contentType = response.containsHeader("Content-Type") ?
                                  response.getFirstHeader("Content-Type").getValue() : null;

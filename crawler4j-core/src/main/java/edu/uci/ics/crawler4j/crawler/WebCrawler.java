@@ -21,14 +21,15 @@ package edu.uci.ics.crawler4j.crawler;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import edu.uci.ics.crawler4j.frontier.DocIDServer;
 import edu.uci.ics.crawler4j.frontier.Frontier;
-import org.apache.http.HttpStatus;
-import org.apache.http.impl.EnglishReasonPhraseCatalog;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.http.impl.EnglishReasonPhraseCatalog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -485,7 +486,7 @@ public class WebCrawler implements Runnable {
                     // the status reason for all known statuses
                     String contentType = fetchResult.getEntity() == null ? "" :
                                          fetchResult.getEntity().getContentType() == null ? "" :
-                                         fetchResult.getEntity().getContentType().getValue();
+                                         fetchResult.getEntity().getContentType();
                     onUnexpectedStatusCode(curURL.getURL(), fetchResult.getStatusCode(),
                                            contentType, description);
                 }
@@ -577,7 +578,7 @@ public class WebCrawler implements Runnable {
             logger.debug(
                 "Skipping: {} as it contains binary content which you configured not to crawl",
                 curURL.getURL());
-        } catch (IOException | InterruptedException | RuntimeException e) {
+        } catch (IOException | InterruptedException | URISyntaxException | RuntimeException e) {
             onUnhandledException(curURL, e);
         } finally {
             if (fetchResult != null) {

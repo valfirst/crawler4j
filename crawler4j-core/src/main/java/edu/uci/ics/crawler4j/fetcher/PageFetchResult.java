@@ -22,9 +22,9 @@ package edu.uci.ics.crawler4j.fetcher;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

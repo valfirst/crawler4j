@@ -24,14 +24,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import org.apache.http.Header;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.conn.DnsResolver;
-import org.apache.http.impl.conn.SystemDefaultDnsResolver;
-import org.apache.http.message.BasicHeader;
 
 import edu.uci.ics.crawler4j.crawler.authentication.AuthInfo;
+import org.apache.hc.client5.http.DnsResolver;
+import org.apache.hc.client5.http.SystemDefaultDnsResolver;
+import org.apache.hc.client5.http.cookie.CookieStore;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.message.BasicHeader;
 
 public class CrawlConfig {
 
@@ -197,7 +196,7 @@ public class CrawlConfig {
     /**
      * Cookie policy
      */
-    private String cookiePolicy = CookieSpecs.STANDARD;
+    private String cookiePolicy = null;
 
     /**
      * Whether to honor "nofollow" flag

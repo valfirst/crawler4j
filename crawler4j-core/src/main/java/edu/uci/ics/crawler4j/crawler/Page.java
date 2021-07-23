@@ -22,11 +22,12 @@ package edu.uci.ics.crawler4j.crawler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.util.ByteArrayBuffer;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.util.ByteArrayBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -164,24 +165,18 @@ public class Page {
      */
     public void load(HttpEntity entity, int maxBytes) throws IOException {
 
-        contentType = null;
-        Header type = entity.getContentType();
-        if (type != null) {
-            contentType = type.getValue();
-        }
+        contentType = entity.getContentType();
 
-        contentEncoding = null;
-        Header encoding = entity.getContentEncoding();
-        if (encoding != null) {
-            contentEncoding = encoding.getValue();
-        }
+        contentEncoding = entity.getContentEncoding();
 
         Charset charset;
         try {
-            charset = ContentType.getOrDefault(entity).getCharset();
+            //FIX how to obtain it with http client 5
+           // charset = ContentType.getOrDefault(entity).getCharset();
+            charset = StandardCharsets.UTF_8;
         } catch (Exception e) {
             logger.warn("parse charset failed: {}", e.getMessage());
-            charset = Charset.forName("UTF-8");
+            charset = StandardCharsets.UTF_8;
         }
 
         if (charset != null) {

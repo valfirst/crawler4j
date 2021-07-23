@@ -38,14 +38,15 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.uci.ics.crawler4j.url.WebURLFactory;
-import org.apache.http.HttpStatus;
-import org.apache.http.NoHttpResponseException;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.http.NoHttpResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,13 +121,15 @@ public class RobotstxtServer {
             return directives.allows(path);
         } catch (MalformedURLException e) {
             logger.error("Bad URL in Robots.txt: " + webURL.getURL(), e);
+        } catch (URISyntaxException e) {
+            logger.error("Bad URL to Robots.txt: " + webURL.getURL(), e);
         }
 
         logger.warn("RobotstxtServer: default: allow", webURL.getURL());
         return true;
     }
 
-    private HostDirectives fetchDirectives(URL url) throws IOException, InterruptedException {
+    private HostDirectives fetchDirectives(URL url) throws IOException, InterruptedException, URISyntaxException {
         WebURL robotsTxtUrl = factory.newWebUrl();
         String host = getHost(url);
         String port = ((url.getPort() == url.getDefaultPort()) || (url.getPort() == -1)) ? "" :
@@ -184,7 +187,7 @@ public class RobotstxtServer {
                              robotsTxtUrl.getURL(), fetchResult.getStatusCode());
             }
         } catch (SocketException | UnknownHostException | SocketTimeoutException |
-            NoHttpResponseException se) {
+                NoHttpResponseException se) {
             // No logging here, as it just means that robots.txt doesn't exist on this server
             // which is perfectly ok
             logger.trace("robots.txt probably does not exist.", se);

@@ -21,7 +21,7 @@ package edu.uci.ics.crawler4j.examples.statushandler;
 
 import java.util.regex.Pattern;
 
-import org.apache.http.HttpStatus;
+import org.apache.hc.core5.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

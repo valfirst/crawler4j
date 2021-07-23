@@ -19,9 +19,8 @@
  */
 package edu.uci.ics.crawler4j.fetcher;
 
-import java.util.concurrent.TimeUnit;
-
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.core5.util.TimeValue;
 
 public class IdleConnectionMonitorThread extends Thread {
 
@@ -40,9 +39,9 @@ public class IdleConnectionMonitorThread extends Thread {
                 synchronized (this) {
                     wait(5000);
                     // Close expired connections
-                    connMgr.closeExpiredConnections();
+                    connMgr.closeExpired();
                     // Optionally, close connections that have been idle longer than 30 sec
-                    connMgr.closeIdleConnections(30, TimeUnit.SECONDS);
+                    connMgr.closeIdle(TimeValue.ofSeconds(30));
                 }
             }
         } catch (InterruptedException ignored) {

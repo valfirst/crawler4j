@@ -19,14 +19,14 @@
  */
 package edu.uci.ics.crawler4j.fetcher;
 
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.protocol.HttpContext;
+
 import java.io.IOException;
 import java.net.Socket;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.protocol.HttpContext;
 
 /**
  * Class to work around the exception thrown by the SSL subsystem when the server is incorrectly
