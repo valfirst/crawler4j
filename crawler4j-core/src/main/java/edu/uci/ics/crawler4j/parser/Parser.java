@@ -20,7 +20,7 @@
 package edu.uci.ics.crawler4j.parser;
 
 import edu.uci.ics.crawler4j.url.WebURLFactory;
-import org.apache.tika.language.LanguageIdentifier;
+import org.apache.tika.langdetect.tika.LanguageIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
