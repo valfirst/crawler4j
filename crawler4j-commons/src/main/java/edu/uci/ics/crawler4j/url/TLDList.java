@@ -43,7 +43,7 @@ public class TLDList {
     @SuppressWarnings("unused")
     private final Logger logger = LoggerFactory.getLogger(TLDList.class);
 
-    private boolean onlineUpdate;
+    private final boolean onlineUpdate;
 
     private PublicSuffixList publicSuffixList;
 

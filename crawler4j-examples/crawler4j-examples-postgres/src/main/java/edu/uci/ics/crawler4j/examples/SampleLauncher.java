@@ -69,14 +69,14 @@ public class SampleLauncher {
         controller.addSeed("https://pt.wikipedia.org/wiki/Protocolo");
         controller.addSeed("https://de.wikipedia.org/wiki/Datenbank");
 
-        Flyway flyway = Flyway.configure().dataSource(args[1], "crawler4j", "crawler4j").load();
+        Flyway flyway = Flyway.configure().dataSource(args[1], "postgres", "postgres").load();
         flyway.migrate();
 
         ComboPooledDataSource pool = new ComboPooledDataSource();
         pool.setDriverClass("org.postgresql.Driver");
         pool.setJdbcUrl(args[1]);
-        pool.setUser("crawler4j");
-        pool.setPassword("crawler4j");
+        pool.setUser("postgres");
+        pool.setPassword("postgres");
         pool.setMaxPoolSize(numberOfCrawlers);
         pool.setMinPoolSize(numberOfCrawlers);
         pool.setInitialPoolSize(numberOfCrawlers);

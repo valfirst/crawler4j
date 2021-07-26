@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,8 @@
 package edu.uci.ics.crawler4j.parser;
 
 import edu.uci.ics.crawler4j.url.WebURLFactory;
-import org.apache.tika.langdetect.tika.LanguageIdentifier;
+import org.apache.tika.langdetect.optimaize.OptimaizeLangDetector;
+import org.apache.tika.language.detect.LanguageDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +31,8 @@ import edu.uci.ics.crawler4j.crawler.exceptions.ParseException;
 import edu.uci.ics.crawler4j.url.TLDList;
 import edu.uci.ics.crawler4j.util.Net;
 import edu.uci.ics.crawler4j.util.Util;
+
+import java.io.IOException;
 
 /**
  * @author Yasser Ganjisaffar
@@ -42,18 +45,22 @@ public class Parser {
 
     private final HtmlParser htmlContentParser;
 
+    private final LanguageDetector languageDetector;
+
     private final Net net;
     private final WebURLFactory factory;
 
-    public Parser(CrawlConfig config, TLDList tldList, WebURLFactory webURLFactory) throws IllegalAccessException, InstantiationException {
+    public Parser(CrawlConfig config, TLDList tldList, WebURLFactory webURLFactory) throws IllegalAccessException, InstantiationException, IOException {
         this(config, new TikaHtmlParser(config, tldList, webURLFactory), tldList, webURLFactory);
     }
 
-    public Parser(CrawlConfig config, HtmlParser htmlParser, TLDList tldList,WebURLFactory webURLFactory) {
+    public Parser(CrawlConfig config, HtmlParser htmlParser, TLDList tldList, WebURLFactory webURLFactory) throws IOException {
         this.config = config;
         this.htmlContentParser = htmlParser;
         this.net = new Net(config, tldList, webURLFactory);
         this.factory = webURLFactory;
+        this.languageDetector = new OptimaizeLangDetector();
+        this.languageDetector.loadModels();
     }
 
     public void parse(Page page, String contextURL) throws NotAllowedContentException, ParseException {
@@ -88,7 +95,7 @@ public class Parser {
                     parseData.setTextContent(new String(page.getContentData()));
                 } else {
                     parseData.setTextContent(
-                        new String(page.getContentData(), page.getContentCharset()));
+                            new String(page.getContentData(), page.getContentCharset()));
                 }
                 parseData.setOutgoingUrls(page.getWebURL());
                 page.setParseData(parseData);
@@ -103,7 +110,7 @@ public class Parser {
                     parseData.setTextContent(new String(page.getContentData()));
                 } else {
                     parseData.setTextContent(
-                        new String(page.getContentData(), page.getContentCharset()));
+                            new String(page.getContentData(), page.getContentCharset()));
                 }
                 parseData.setOutgoingUrls(net.extractUrls(parseData.getTextContent()));
                 page.setParseData(parseData);
@@ -120,8 +127,7 @@ public class Parser {
             }
 
             // Please note that identifying language takes less than 10 milliseconds
-            LanguageIdentifier languageIdentifier = new LanguageIdentifier(parsedData.getText());
-            page.setLanguage(languageIdentifier.getLanguage());
+            page.setLanguage(languageDetector.detect(parsedData.getText()).getLanguage());
 
             page.setParseData(parsedData);
 
