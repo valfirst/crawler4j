@@ -1,6 +1,8 @@
-# crawler4j - Forked Variant
+# crawler4j (fork)
 
 ![Maven Central](https://img.shields.io/maven-central/v/de.hs-heilbronn.mi/crawler4j-parent.svg?style=flat-square)
+
+Tis is a maintained fork of [yasserg/crawler4j](https://github.com/yasserg/crawler4j).
 
 crawler4j is an open source web crawler for Java which provides a simple interface for
 crawling the Web. Using it, you can setup a multi-threaded web crawler in few minutes.
@@ -30,7 +32,7 @@ Add the following dependency to your pom.xml:
 
 **Please check**, if the Oracle license for Sleepycat database complies with your use-case.
 
-Otherwise, you can use HSQLDB instead
+Otherwise, you can use `HSQLDB` instead
 
 ```xml
         <dependency>
@@ -40,8 +42,6 @@ Otherwise, you can use HSQLDB instead
             <type>pom</type>
         </dependency>    
 ```
-
-If you get exceptions related to missing classes in `Apache Tika`, you can check the related exclusion list in the [Module POM](crawler4j-core/pom.xml) and re-add these dependencies in your project!
 
 ## Quickstart
 You need to create a crawler class that extends WebCrawler. This class decides which URLs
