@@ -103,8 +103,10 @@
         <apache.http.core.h2.version>5.1.1</apache.http.core.h2.version>
 
         <apache.tika.version>2.0.0</apache.tika.version>
-        <guava.version>30.1.1-jre</guava.version>
+        <guava.version>31.0.1-jre</guava.version>
+        <!-- XXX replace with crawler commons -->
         <public.suffix.list.version>2.2.0</public.suffix.list.version>
+        <!-- XXX replace with crawler commons -->
         <url-detector.version>0.1.23</url-detector.version>
         <crawler-commons.version>1.2</crawler-commons.version>
 
@@ -112,7 +114,7 @@
         <junit.version>4.13.2</junit.version>
         <wiremock.version>2.27.2</wiremock.version>
         <spock.version>2.0-groovy-3.0</spock.version>
-        <groovy.version>3.0.8</groovy.version>
+        <groovy.version>3.0.9</groovy.version>
 
         <!-- Maven plugin version -->
         <maven.source.version>3.2.0</maven.source.version>
