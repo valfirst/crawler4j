@@ -19,6 +19,7 @@
  */
 package edu.uci.ics.crawler4j.examples.statushandler;
 
+import crawlercommons.filters.basic.BasicURLNormalizer;
 import edu.uci.ics.crawler4j.frontier.FrontierConfiguration;
 import edu.uci.ics.crawler4j.frontier.SleepycatFrontierConfiguration;
 import edu.uci.ics.crawler4j.url.SleepycatWebURLFactory;
@@ -102,11 +103,12 @@ public class StatusHandlerCrawlController {
     /*
      * Instantiate the controller for this crawl.
      */
-        PageFetcher pageFetcher = new PageFetcher(config);
+        BasicURLNormalizer normalizer = BasicURLNormalizer.newBuilder().idnNormalization(BasicURLNormalizer.IdnNormalization.NONE).build();
+        PageFetcher pageFetcher = new PageFetcher(config, normalizer);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
         FrontierConfiguration frontierConfiguration = new SleepycatFrontierConfiguration(config);
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher, new SleepycatWebURLFactory());
-        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, frontierConfiguration);
+        CrawlController controller = new CrawlController(config, normalizer, pageFetcher, robotstxtServer, frontierConfiguration);
 
     /*
      * For each crawl, you need to add some seed urls. These are the first

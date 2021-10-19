@@ -21,6 +21,7 @@ package edu.uci.ics.crawler4j.examples.multiple;
 
 import java.util.List;
 
+import crawlercommons.filters.basic.BasicURLNormalizer;
 import edu.uci.ics.crawler4j.frontier.FrontierConfiguration;
 import edu.uci.ics.crawler4j.frontier.SleepycatFrontierConfiguration;
 import edu.uci.ics.crawler4j.url.SleepycatWebURLFactory;
@@ -58,8 +59,10 @@ public class MultipleCrawlerController {
         config2.setMaxPagesToFetch(100);
 
         // We will use different PageFetchers for the two crawlers.
-        PageFetcher pageFetcher1 = new PageFetcher(config1);
-        PageFetcher pageFetcher2 = new PageFetcher(config2);
+        BasicURLNormalizer normalizer1 = BasicURLNormalizer.newBuilder().idnNormalization(BasicURLNormalizer.IdnNormalization.NONE).build();
+        BasicURLNormalizer normalizer2 = BasicURLNormalizer.newBuilder().idnNormalization(BasicURLNormalizer.IdnNormalization.NONE).build();
+        PageFetcher pageFetcher1 = new PageFetcher(config1, normalizer1);
+        PageFetcher pageFetcher2 = new PageFetcher(config2, normalizer2);
 
         // We will use the same RobotstxtServer for both of the crawlers.
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
@@ -69,8 +72,8 @@ public class MultipleCrawlerController {
 
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher1, new SleepycatWebURLFactory());
 
-        CrawlController controller1 = new CrawlController(config1, pageFetcher1, robotstxtServer, frontierConfiguration);
-        CrawlController controller2 = new CrawlController(config2, pageFetcher2, robotstxtServer, frontierConfiguration2);
+        CrawlController controller1 = new CrawlController(config1, normalizer1, pageFetcher1, robotstxtServer, frontierConfiguration);
+        CrawlController controller2 = new CrawlController(config2, normalizer2, pageFetcher2, robotstxtServer, frontierConfiguration2);
 
         List<String> crawler1Domains = ImmutableList.of("https://www.ics.uci.edu/", "https://www.cnn.com/");
         List<String> crawler2Domains = ImmutableList.of("https://en.wikipedia.org/");

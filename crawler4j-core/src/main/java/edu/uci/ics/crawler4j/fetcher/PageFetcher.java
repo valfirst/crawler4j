@@ -36,6 +36,7 @@ import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 
+import crawlercommons.filters.basic.BasicURLNormalizer;
 import org.apache.hc.client5.http.ClientProtocolException;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.Credentials;
@@ -75,7 +76,6 @@ import edu.uci.ics.crawler4j.crawler.authentication.BasicAuthInfo;
 import edu.uci.ics.crawler4j.crawler.authentication.FormAuthInfo;
 import edu.uci.ics.crawler4j.crawler.authentication.NtAuthInfo;
 import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
-import edu.uci.ics.crawler4j.url.URLCanonicalizer;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 /**
@@ -89,13 +89,15 @@ public class PageFetcher {
      * read this field;
      */
     protected final CrawlConfig config;
+    protected final BasicURLNormalizer normalizer;
     protected PoolingHttpClientConnectionManager connectionManager;
     protected CloseableHttpClient httpClient;
     protected long lastFetchTime = 0;
     protected IdleConnectionMonitorThread connectionMonitorThread = null;
 
-    public PageFetcher(CrawlConfig config) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
+    public PageFetcher(CrawlConfig config, BasicURLNormalizer normalizer) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
         this.config = config;
+        this.normalizer = normalizer;
 
         RequestConfig requestConfig = RequestConfig.custom()
                 .setExpectContinueEnabled(false)
@@ -288,15 +290,14 @@ public class PageFetcher {
 
                 Header header = response.getFirstHeader(HttpHeaders.LOCATION);
                 if (header != null) {
-                    String movedToUrl =
-                            URLCanonicalizer.getCanonicalURL(header.getValue(), toFetchURL);
+                    String movedToUrl = normalizer.filter(header.getValue());
                     fetchResult.setMovedToUrl(movedToUrl);
                 }
             } else if (statusCode >= 200 && statusCode <= 299) { // is 2XX, everything looks ok
                 fetchResult.setFetchedUrl(toFetchURL);
                 String uri = request.getUri().toString();
                 if (!uri.equals(toFetchURL)) {
-                    if (!URLCanonicalizer.getCanonicalURL(uri).equals(toFetchURL)) {
+                    if (!normalizer.filter(uri).equals(toFetchURL)) {
                         fetchResult.setFetchedUrl(uri);
                     }
                 }

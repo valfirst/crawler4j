@@ -22,11 +22,14 @@ package edu.uci.ics.crawler4j.parser;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
+import crawlercommons.filters.basic.BasicURLNormalizer;
+import edu.uci.ics.crawler4j.url.UrlResolver;
 import edu.uci.ics.crawler4j.url.WebURLFactory;
 import org.apache.tika.metadata.DublinCore;
 import org.apache.tika.metadata.Metadata;
@@ -40,7 +43,6 @@ import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.exceptions.ParseException;
 import edu.uci.ics.crawler4j.url.TLDList;
-import edu.uci.ics.crawler4j.url.URLCanonicalizer;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
@@ -52,10 +54,12 @@ public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
     private final HtmlParser htmlParser;
     private final ParseContext parseContext;
     private final WebURLFactory factory;
+    private final BasicURLNormalizer normalizer;
 
-    public TikaHtmlParser(CrawlConfig config, TLDList tldList, WebURLFactory webURLFactory) throws InstantiationException, IllegalAccessException {
+    public TikaHtmlParser(CrawlConfig config, BasicURLNormalizer normalizer, TLDList tldList, WebURLFactory webURLFactory) throws InstantiationException, IllegalAccessException {
         this.config = config;
         this.tldList = tldList;
+        this.normalizer = normalizer;
 
         htmlParser = new HtmlParser();
         parseContext = new ParseContext();
@@ -88,7 +92,7 @@ public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
         parsedData.setMetaTags(contentHandler.getMetaTags());
 
         try {
-            Set<WebURL> outgoingUrls = getOutgoingUrls(contextURL, contentHandler, contentCharset);
+            Set<WebURL> outgoingUrls = getOutgoingUrls(contextURL, contentHandler);
             parsedData.setOutgoingUrls(outgoingUrls);
 
             if (page.getContentCharset() == null) {
@@ -105,7 +109,7 @@ public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
 
     }
 
-    private Set<WebURL> getOutgoingUrls(String contextURL, HtmlContentHandler contentHandler, String contentCharset)
+    private Set<WebURL> getOutgoingUrls(String contextURL, HtmlContentHandler contentHandler)
             throws UnsupportedEncodingException {
         Set<WebURL> outgoingUrls = new HashSet<>();
 
@@ -125,10 +129,7 @@ public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
             String hrefLoweredCase = href.trim().toLowerCase();
             if (!hrefLoweredCase.contains("javascript:") &&
                     !hrefLoweredCase.contains("mailto:") && !hrefLoweredCase.contains("@")) {
-                // Prefer page's content charset to encode href url
-                Charset hrefCharset = ((contentCharset == null) || contentCharset.isEmpty()) ?
-                        StandardCharsets.UTF_8 : Charset.forName(contentCharset);
-                String url = URLCanonicalizer.getCanonicalURL(href, contextURL, hrefCharset);
+                String url = normalizer.filter(UrlResolver.resolveUrl((contextURL == null) ? "" : contextURL, href));
                 if (url != null) {
                     WebURL webURL = factory.newWebUrl();
                     webURL.setTldList(tldList);

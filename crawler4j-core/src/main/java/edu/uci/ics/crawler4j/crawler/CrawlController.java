@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import crawlercommons.filters.basic.BasicURLNormalizer;
 import edu.uci.ics.crawler4j.frontier.*;
 import edu.uci.ics.crawler4j.url.WebURLFactory;
 import org.slf4j.Logger;
@@ -34,7 +35,6 @@ import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.parser.Parser;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import edu.uci.ics.crawler4j.url.TLDList;
-import edu.uci.ics.crawler4j.url.URLCanonicalizer;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 /**
@@ -78,23 +78,24 @@ public class CrawlController {
     protected DocIDServer docIdServer;
     protected TLDList tldList;
     protected WebURLFactory webURLFactory;
+    protected BasicURLNormalizer normalizer;
 
     protected final Object waitingLock = new Object();
     protected final FrontierConfiguration frontierConfiguration;
 
     protected Parser parser;
 
-    public CrawlController(CrawlConfig config, PageFetcher pageFetcher,
+    public CrawlController(CrawlConfig config, BasicURLNormalizer normalizer, PageFetcher pageFetcher,
                            RobotstxtServer robotstxtServer, FrontierConfiguration frontierConfiguration) throws Exception {
-        this(config, pageFetcher, null, robotstxtServer, null, frontierConfiguration);
+        this(config, normalizer, pageFetcher, null, robotstxtServer, null, frontierConfiguration);
     }
 
-    public CrawlController(CrawlConfig config, PageFetcher pageFetcher,
+    public CrawlController(CrawlConfig config,  BasicURLNormalizer normalizer, PageFetcher pageFetcher,
             RobotstxtServer robotstxtServer, TLDList tldList, FrontierConfiguration frontierConfiguration) throws Exception {
-        this(config, pageFetcher, null, robotstxtServer, tldList, frontierConfiguration);
+        this(config, normalizer, pageFetcher, null, robotstxtServer, tldList, frontierConfiguration);
     }
 
-    public CrawlController(CrawlConfig config, PageFetcher pageFetcher, Parser parser,
+    public CrawlController(CrawlConfig config,  BasicURLNormalizer normalizer, PageFetcher pageFetcher, Parser parser,
                            RobotstxtServer robotstxtServer, TLDList tldList, FrontierConfiguration frontierConfiguration) throws Exception {
         config.validate();
         this.config = config;
@@ -111,15 +112,15 @@ public class CrawlController {
         }
 
         this.tldList = tldList == null ? new TLDList(config) : tldList;
-        URLCanonicalizer.setHaltOnError(config.isHaltOnError());
 
         this.frontierConfiguration = frontierConfiguration;
         this.frontier = frontierConfiguration.getFrontier();
         this.docIdServer = frontierConfiguration.getDocIDServer();
         this.webURLFactory = frontierConfiguration.getWebURLFactory();
+        this.normalizer = normalizer;
 
         this.pageFetcher = pageFetcher;
-        this.parser = parser == null ? new Parser(config, tldList, webURLFactory) : parser;
+        this.parser = parser == null ? new Parser(config, normalizer, tldList, webURLFactory) : parser;
         this.robotstxtServer = robotstxtServer;
 
         finished = false;
@@ -486,7 +487,7 @@ public class CrawlController {
      * @throws IOException
      */
     public void addSeed(String pageUrl, int docId) throws IOException, InterruptedException {
-        String canonicalUrl = URLCanonicalizer.getCanonicalURL(pageUrl);
+        String canonicalUrl = normalizer.filter(pageUrl);
         if (canonicalUrl == null) {
             logger.error("Invalid seed URL: {}", pageUrl);
         } else {
@@ -541,7 +542,7 @@ public class CrawlController {
      *
      */
     public void addSeenUrl(String url, int docId) throws UnsupportedEncodingException {
-        String canonicalUrl = URLCanonicalizer.getCanonicalURL(url);
+        String canonicalUrl = normalizer.filter(url);
         if (canonicalUrl == null) {
             logger.error("Invalid Url: {} (can't cannonicalize it!)", url);
         } else {

@@ -19,8 +19,8 @@
  */
 package edu.uci.ics.crawler4j.examples.hsqldb.basic;
 
+import crawlercommons.filters.basic.BasicURLNormalizer;
 import de.hshn.mi.crawler4j.frontier.HSQLDBFrontierConfiguration;
-import de.hshn.mi.crawler4j.url.HSQLDBWebURLFactory;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
@@ -74,12 +74,13 @@ public class HSQLDBBasicCrawlController {
         config.setHaltOnError(true);
 
         // Instantiate the controller for this crawl.
-        PageFetcher pageFetcher = new PageFetcher(config);
+        BasicURLNormalizer normalizer = BasicURLNormalizer.newBuilder().idnNormalization(BasicURLNormalizer.IdnNormalization.NONE).build();
+        PageFetcher pageFetcher = new PageFetcher(config, normalizer);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
         robotstxtConfig.setEnabled(false);
         FrontierConfiguration frontierConfiguration = new HSQLDBFrontierConfiguration(config, 10);
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher, frontierConfiguration.getWebURLFactory());
-        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, frontierConfiguration);
+        CrawlController controller = new CrawlController(config, normalizer, pageFetcher, robotstxtServer, frontierConfiguration);
 
         // For each crawl, you need to add some seed urls. These are the first
         // URLs that are fetched and then the crawler starts following links

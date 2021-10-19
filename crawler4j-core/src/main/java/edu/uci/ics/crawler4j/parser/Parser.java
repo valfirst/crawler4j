@@ -19,6 +19,7 @@
  */
 package edu.uci.ics.crawler4j.parser;
 
+import crawlercommons.filters.basic.BasicURLNormalizer;
 import edu.uci.ics.crawler4j.url.WebURLFactory;
 import org.apache.tika.langdetect.optimaize.OptimaizeLangDetector;
 import org.apache.tika.language.detect.LanguageDetector;
@@ -49,18 +50,19 @@ public class Parser {
 
     private final Net net;
     private final WebURLFactory factory;
-
-    public Parser(CrawlConfig config, TLDList tldList, WebURLFactory webURLFactory) throws IllegalAccessException, InstantiationException, IOException {
-        this(config, new TikaHtmlParser(config, tldList, webURLFactory), tldList, webURLFactory);
+    private final BasicURLNormalizer normalizer;
+    public Parser(CrawlConfig config, BasicURLNormalizer normalizer, TLDList tldList, WebURLFactory webURLFactory) throws IllegalAccessException, InstantiationException, IOException {
+        this(config, normalizer, new TikaHtmlParser(config, normalizer, tldList, webURLFactory), tldList, webURLFactory);
     }
 
-    public Parser(CrawlConfig config, HtmlParser htmlParser, TLDList tldList, WebURLFactory webURLFactory) throws IOException {
+    public Parser(CrawlConfig config, BasicURLNormalizer normalizer, HtmlParser htmlParser, TLDList tldList, WebURLFactory webURLFactory) throws IOException {
         this.config = config;
         this.htmlContentParser = htmlParser;
         this.net = new Net(config, tldList, webURLFactory);
         this.factory = webURLFactory;
         this.languageDetector = new OptimaizeLangDetector();
         this.languageDetector.loadModels();
+        this.normalizer = normalizer;
     }
 
     public void parse(Page page, String contextURL) throws NotAllowedContentException, ParseException {
@@ -90,7 +92,7 @@ public class Parser {
             }
         } else if (Util.hasCssTextContent(page.getContentType())) { // text/css
             try {
-                CssParseData parseData = new CssParseData(factory);
+                CssParseData parseData = new CssParseData(factory, normalizer);
                 if (page.getContentCharset() == null) {
                     parseData.setTextContent(new String(page.getContentData()));
                 } else {
