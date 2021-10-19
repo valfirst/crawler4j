@@ -2,14 +2,14 @@
  * #%L
  * de.hs-heilbronn.mi:crawler4j-core
  * %%
- * Copyright (C) 2010 - 2021 crawler4j-fork (pre-fork: Yasser Ganjisaffar)
+ * Copyright (C) 2010 - 2021 crawler4j-fork
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,22 +17,24 @@
  * limitations under the License.
  * #L%
  */
-/**
- * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
- * agreements. See the NOTICE file distributed with this work for additional information regarding
- * copyright ownership. The ASF licenses this file to You under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance with the License. You may obtain a
- * copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package edu.uci.ics.crawler4j.robotstxt;
+
+import crawlercommons.robots.BaseRobotRules;
+import crawlercommons.robots.BaseRobotsParser;
+import crawlercommons.robots.SimpleRobotRules;
+import crawlercommons.robots.SimpleRobotRulesParser;
+import edu.uci.ics.crawler4j.crawler.CrawlConfig;
+import edu.uci.ics.crawler4j.crawler.Page;
+import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
+import edu.uci.ics.crawler4j.fetcher.PageFetchResult;
+import edu.uci.ics.crawler4j.fetcher.PageFetcher;
+import edu.uci.ics.crawler4j.url.WebURL;
+import edu.uci.ics.crawler4j.url.WebURLFactory;
+import edu.uci.ics.crawler4j.util.Util;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.http.NoHttpResponseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -44,26 +46,11 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.uci.ics.crawler4j.url.WebURLFactory;
-import org.apache.hc.core5.http.HttpStatus;
-import org.apache.hc.core5.http.NoHttpResponseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import edu.uci.ics.crawler4j.crawler.CrawlConfig;
-import edu.uci.ics.crawler4j.crawler.Page;
-import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
-import edu.uci.ics.crawler4j.fetcher.PageFetchResult;
-import edu.uci.ics.crawler4j.fetcher.PageFetcher;
-import edu.uci.ics.crawler4j.url.WebURL;
-import edu.uci.ics.crawler4j.util.Util;
-
-/**
- * @author Yasser Ganjisaffar
- */
 public class RobotstxtServer {
 
     private static final Logger logger = LoggerFactory.getLogger(RobotstxtServer.class);
+
+    protected BaseRobotsParser ruleParser;
 
     protected WebURLFactory factory;
 
@@ -71,21 +58,15 @@ public class RobotstxtServer {
 
     protected CrawlConfig crawlConfig;
 
-    protected final Map<String, HostDirectives> host2directivesCache = new HashMap<>();
+    protected final Map<String, RobotRules> cache = new HashMap<>();
 
     protected PageFetcher pageFetcher;
 
-    private final int maxBytes;
-
     public RobotstxtServer(RobotstxtConfig config, PageFetcher pageFetcher, WebURLFactory factory) {
-        this(config, pageFetcher, 16384, factory);
-    }
-
-    public RobotstxtServer(RobotstxtConfig config, PageFetcher pageFetcher, int maxBytes, WebURLFactory factory) {
         this.config = config;
         this.pageFetcher = pageFetcher;
-        this.maxBytes = maxBytes;
         this.factory = factory;
+        this.ruleParser = new SimpleRobotRulesParser();
     }
 
     private static String getHost(URL url) {
@@ -105,20 +86,19 @@ public class RobotstxtServer {
         try {
             URL url = new URL(webURL.getURL());
             String host = getHost(url);
-            String path = url.getPath();
 
-            HostDirectives directives = host2directivesCache.get(host);
+            RobotRules rule = cache.get(host);
 
-            if (directives != null && directives.needsRefetch()) {
-                synchronized (host2directivesCache) {
-                    host2directivesCache.remove(host);
-                    directives = null;
+            if (rule != null && rule.needsRefetch()) {
+                synchronized (cache) {
+                    cache.remove(host);
+                    rule = null;
                 }
             }
-            if (directives == null) {
-                directives = fetchDirectives(url);
+            if (rule == null) {
+                rule = fetchDirectives(url);
             }
-            return directives.allows(path);
+            return rule.isAllowed(webURL.getURL());
         } catch (MalformedURLException e) {
             logger.error("Bad URL in Robots.txt: " + webURL.getURL(), e);
         } catch (URISyntaxException e) {
@@ -129,14 +109,15 @@ public class RobotstxtServer {
         return true;
     }
 
-    private HostDirectives fetchDirectives(URL url) throws IOException, InterruptedException, URISyntaxException {
+    private RobotRules fetchDirectives(URL url) throws InterruptedException, URISyntaxException {
         WebURL robotsTxtUrl = factory.newWebUrl();
         String host = getHost(url);
         String port = ((url.getPort() == url.getDefaultPort()) || (url.getPort() == -1)) ? "" :
                       (":" + url.getPort());
         String proto = url.getProtocol();
         robotsTxtUrl.setURL(proto + "://" + host + port + "/robots.txt");
-        HostDirectives directives = null;
+
+        BaseRobotRules directives = null;
         PageFetchResult fetchResult = null;
         try {
             for (int redir = 0; redir < 3; ++redir) {
@@ -164,19 +145,8 @@ public class RobotstxtServer {
                 // https://developers.google.com/search/reference/robots_txt
                 fetchResult.fetchContent(page, 500 * 1024);
                 if (Util.hasPlainTextContent(page.getContentType())) {
-                    String content;
-                    if (page.getContentCharset() == null) {
-                        content = new String(page.getContentData());
-                    } else {
-                        content = new String(page.getContentData(), page.getContentCharset());
-                    }
-                    directives = RobotstxtParser.parse(content, config);
-                } else if (page.getContentType()
-                               .contains(
-                                   "html")) { // TODO This one should be upgraded to remove all
-                    // html tags
-                    String content = new String(page.getContentData());
-                    directives = RobotstxtParser.parse(content, config);
+                    directives = ruleParser.parseContent(robotsTxtUrl.getURL(), page.getContentData(),
+                            "text/plain", config.getUserAgentName());
                 } else {
                     logger.warn(
                         "Can't read this robots.txt: {}  as it is not written in plain text, " +
@@ -210,24 +180,27 @@ public class RobotstxtServer {
 
         if (directives == null) {
             // We still need to have this object to keep track of the time we fetched it
-            directives = new HostDirectives(config);
+            directives = new SimpleRobotRules(SimpleRobotRules.RobotRulesMode.ALLOW_ALL);
         }
-        synchronized (host2directivesCache) {
-            if (host2directivesCache.size() == config.getCacheSize()) {
+
+        RobotRules robotRules = new RobotRules(directives);
+
+        synchronized (cache) {
+            if (cache.size() == config.getCacheSize()) {
                 String minHost = null;
                 long minAccessTime = Long.MAX_VALUE;
-                for (Map.Entry<String, HostDirectives> entry : host2directivesCache.entrySet()) {
-                    long entryAccessTime = entry.getValue().getLastAccessTime();
+                for (Map.Entry<String, RobotRules> entry : cache.entrySet()) {
+                    long entryAccessTime = entry.getValue().getTimeLastAccessed();
                     if (entryAccessTime < minAccessTime) {
                         minAccessTime = entryAccessTime;
                         minHost = entry.getKey();
                     }
                 }
-                host2directivesCache.remove(minHost);
+                cache.remove(minHost);
             }
-            host2directivesCache.put(host, directives);
+            cache.put(host, robotRules);
         }
-        return directives;
+        return robotRules;
     }
 
     public void setCrawlConfig(CrawlConfig crawlConfig) {

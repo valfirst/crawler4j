@@ -1,6 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>crawler4j-parent</artifactId>
         <groupId>de.hs-heilbronn.mi</groupId>
@@ -110,6 +111,11 @@
             <groupId>de.hs-heilbronn.mi</groupId>
             <artifactId>crawler4j-commons</artifactId>
             <version>${crawler4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.crawler-commons</groupId>
+            <artifactId>crawler-commons</artifactId>
+            <version>${crawler-commons.version}</version>
         </dependency>
         <!-- Logging API -->
         <dependency>
