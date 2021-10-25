@@ -195,16 +195,9 @@
                         <artifactId>forbiddenapis</artifactId>
                         <version>${maven.forbiddenapis.version}</version>
                         <configuration>
-                            <!--
-                          if the used Java version is too new,
-                          don't fail, just do nothing:
-                        -->
+                            <failOnViolation>false</failOnViolation>
                             <failOnUnsupportedJava>false</failOnUnsupportedJava>
                             <bundledSignatures>
-                                <!--
-                              This will automatically choose the right
-                              signatures based on 'maven.compiler.target':
-                            -->
                                 <bundledSignature>jdk-deprecated</bundledSignature>
                                 <bundledSignature>jdk-internal</bundledSignature>
                                 <!-- disallow undocumented classes like sun.misc.Unsafe: -->
@@ -212,7 +205,7 @@
                                 <!-- interesting, yet inactive for the moment:
                                 <bundledSignature>jdk-unsafe</bundledSignature>
                                 <bundledSignature>jdk-reflection</bundledSignature>
-                            -->
+                                -->
                             </bundledSignatures>
                         </configuration>
                         <executions>

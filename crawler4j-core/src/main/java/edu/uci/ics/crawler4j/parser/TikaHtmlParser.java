@@ -63,7 +63,7 @@ public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
 
         htmlParser = new HtmlParser();
         parseContext = new ParseContext();
-        parseContext.set(HtmlMapper.class, AllTagMapper.class.newInstance());
+        parseContext.set(HtmlMapper.class, new AllTagMapper());
         this.factory = webURLFactory;
     }
 
