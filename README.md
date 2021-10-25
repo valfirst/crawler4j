@@ -25,7 +25,7 @@ Add the following dependency to your pom.xml:
         <dependency>
             <groupId>de.hs-heilbronn.mi</groupId>
             <artifactId>crawler4j-with-sleepycat</artifactId>
-            <version>4.6.0</version>
+            <version>4.7.0</version>
             <type>pom</type>
         </dependency>    
 ```
@@ -112,15 +112,16 @@ public class Controller {
 
         CrawlConfig config = new CrawlConfig();
         config.setCrawlStorageFolder(crawlStorageFolder);
-
-        // Instantiate the controller for this crawl (or use 
-        PageFetcher pageFetcher = new PageFetcher(config);
+        
+        // Instantiate the controller for this crawl 
+        BasicURLNormalizer normalizer = BasicURLNormalizer.newBuilder().idnNormalization(BasicURLNormalizer.IdnNormalization.NONE).build();
+        PageFetcher pageFetcher = new PageFetcher(config, normalizer);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
         FrontierConfiguration frontierConfiguration = new SleepycatFrontierConfiguration(config);
         // OR use
         // FrontierConfiguration frontierConfiguration = new HSQLDBFrontierConfiguration(config, 10);
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher, frontierConfiguration.getWebURLFactory());
-        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, frontierConfiguration);
+        CrawlController controller = new CrawlController(config, normalizer, pageFetcher, robotstxtServer, frontierConfiguration);
 
         // For each crawl, you need to add some seed urls. These are the first
         // URLs that are fetched and then the crawler starts following links
@@ -225,7 +226,7 @@ User-agent string is used for representing your crawler to web servers. See [her
 for more details. By default crawler4j uses the following user agent string:
 
 ```
-"crawler4j (https://github.com/yasserg/crawler4j/)"
+"crawler4j (https://github.com/rzo1/crawler4j/)"
 ```
 However, you can overwrite it:
 ```java
