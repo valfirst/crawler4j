@@ -215,6 +215,12 @@ public class CrawlConfig {
     private CookieStore cookieStore;
 
     /**
+     * Used to enable language detection via tha tika-langdetect module.
+     * If set to {@code true}, additional runtime dependencies (tika-langdetect-optimaize) are required.
+     */
+    private boolean languageDetection;
+
+    /**
      * DNS resolver to use, {@link SystemDefaultDnsResolver} is default.
      */
     public void setDnsResolver(final DnsResolver dnsResolver) {
@@ -733,6 +739,14 @@ public class CrawlConfig {
         this.batchReadSize = batchReadSize;
     }
 
+    public boolean isLanguageDetection() {
+        return languageDetection;
+    }
+
+    public void setLanguageDetection(boolean languageDetection) {
+        this.languageDetection = languageDetection;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -762,6 +776,7 @@ public class CrawlConfig {
         sb.append("Halt on error: " + isHaltOnError() + "\n");
         sb.append("Allow single level domain:" + isAllowSingleLevelDomain() + "\n");
         sb.append("Batch read size: " + getBatchReadSize() + "\n");
+        sb.append("Language Detection enabled:: " + isLanguageDetection() + "\n");
         return sb.toString();
     }
 }

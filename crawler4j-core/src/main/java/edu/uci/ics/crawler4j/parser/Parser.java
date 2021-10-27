@@ -21,8 +21,6 @@ package edu.uci.ics.crawler4j.parser;
 
 import crawlercommons.filters.basic.BasicURLNormalizer;
 import edu.uci.ics.crawler4j.url.WebURLFactory;
-import org.apache.tika.langdetect.optimaize.OptimaizeLangDetector;
-import org.apache.tika.language.detect.LanguageDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +44,7 @@ public class Parser {
 
     private final HtmlParser htmlContentParser;
 
-    private final LanguageDetector languageDetector;
+    private TikaLanguageDetector languageDetector;
 
     private final Net net;
     private final WebURLFactory factory;
@@ -60,9 +58,10 @@ public class Parser {
         this.htmlContentParser = htmlParser;
         this.net = new Net(config, tldList, webURLFactory);
         this.factory = webURLFactory;
-        this.languageDetector = new OptimaizeLangDetector();
-        this.languageDetector.loadModels();
         this.normalizer = normalizer;
+        if(config.isLanguageDetection()) {
+            this.languageDetector = new TikaLanguageDetector();
+        }
     }
 
     public void parse(Page page, String contextURL) throws NotAllowedContentException, ParseException {
@@ -128,11 +127,14 @@ public class Parser {
                 page.setContentCharset(parsedData.getContentCharset());
             }
 
-            // Please note that identifying language takes less than 10 milliseconds
-            page.setLanguage(languageDetector.detect(parsedData.getText()).getLanguage());
+            if(config.isLanguageDetection()) {
+                // Please note that identifying language takes less than 10 milliseconds
+                page.setLanguage(languageDetector.detect(parsedData.getText()));
+            } else {
+                page.setLanguage("");
+            }
 
             page.setParseData(parsedData);
-
         }
     }
 }
