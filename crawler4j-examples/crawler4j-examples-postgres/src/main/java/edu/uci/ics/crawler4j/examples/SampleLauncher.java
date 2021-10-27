@@ -25,7 +25,6 @@ import edu.uci.ics.crawler4j.frontier.SleepycatFrontierConfiguration;
 import edu.uci.ics.crawler4j.url.SleepycatWebURLFactory;
 import org.flywaydb.core.Flyway;
 
-import com.google.common.io.Files;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
@@ -35,11 +34,14 @@ import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 
+import java.nio.file.Files;
+
 public class SampleLauncher {
 
     public static void main(String[] args) throws Exception {
 
-        String crawlStorageFolder = Files.createTempDir().getAbsolutePath();
+        String crawlStorageFolder = Files.createTempDirectory("crawler4j-").toAbsolutePath().toString();
+
         final int numberOfCrawlers = Integer.parseInt(args[2]);
 
         CrawlConfig config = new CrawlConfig();

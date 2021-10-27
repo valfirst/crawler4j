@@ -21,12 +21,13 @@ package edu.uci.ics.crawler4j.examples.imagecrawler;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.io.Files;
 
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
@@ -52,7 +53,7 @@ public class ImageCrawler extends WebCrawler {
 
     public ImageCrawler(File storageFolder, List<String> crawlDomains) {
         this.storageFolder = storageFolder;
-        this.crawlDomains = ImmutableList.copyOf(crawlDomains);
+        this.crawlDomains = Collections.unmodifiableList(crawlDomains);
     }
 
     @Override
@@ -92,7 +93,7 @@ public class ImageCrawler extends WebCrawler {
         // Store image
         String filename = storageFolder.getAbsolutePath() + '/' + hashedName;
         try {
-            Files.write(page.getContentData(), new File(filename));
+            Files.write(Paths.get(filename), page.getContentData(), StandardOpenOption.CREATE_NEW);
             WebCrawler.logger.info("Stored: {}", url);
         } catch (IOException iox) {
             WebCrawler.logger.error("Failed to write file: {}", filename, iox);

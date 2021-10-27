@@ -103,9 +103,6 @@
         <apache.http.core.h2.version>5.1.1</apache.http.core.h2.version>
 
         <apache.tika.version>2.1.0</apache.tika.version>
-        <guava.version>31.0.1-jre</guava.version>
-        <!-- XXX replace with crawler commons -->
-        <public.suffix.list.version>2.2.0</public.suffix.list.version>
         <!-- XXX replace with crawler commons -->
         <url-detector.version>0.1.23</url-detector.version>
         <crawler-commons.version>1.2</crawler-commons.version>

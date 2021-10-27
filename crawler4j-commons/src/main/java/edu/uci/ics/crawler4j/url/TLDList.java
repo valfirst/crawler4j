@@ -24,13 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import crawlercommons.domains.EffectiveTldFinder;
 
-import com.google.common.net.InternetDomainName;
-
-import de.malkusch.whoisServerList.publicSuffixList.PublicSuffixList;
-import de.malkusch.whoisServerList.publicSuffixList.PublicSuffixListFactory;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 
 /**
@@ -40,16 +35,8 @@ import edu.uci.ics.crawler4j.crawler.CrawlConfig;
  */
 public class TLDList {
 
-    @SuppressWarnings("unused")
-    private final Logger logger = LoggerFactory.getLogger(TLDList.class);
-
-    private final boolean onlineUpdate;
-
-    private PublicSuffixList publicSuffixList;
-
     public TLDList(CrawlConfig config) throws IOException {
-        this.onlineUpdate = config.isOnlineTldListUpdate();
-        if (onlineUpdate) {
+        if (config.isOnlineTldListUpdate()) {
             InputStream stream;
             String filename = config.getPublicSuffixLocalFile();
             if (filename == null) {
@@ -59,7 +46,7 @@ public class TLDList {
                 stream = new FileInputStream(filename);
             }
             try {
-                this.publicSuffixList = new PublicSuffixListFactory().build(stream);
+                EffectiveTldFinder.getInstance().initialize(stream);
             } finally {
                 stream.close();
             }
@@ -67,18 +54,10 @@ public class TLDList {
     }
 
     public boolean contains(String domain) {
-        if (onlineUpdate) {
-            return publicSuffixList.isPublicSuffix(domain);
-        } else {
-            return InternetDomainName.from(domain).isPublicSuffix();
-        }
+        return EffectiveTldFinder.getAssignedDomain(domain) != null;
     }
 
     public boolean isRegisteredDomain(String domain) {
-        if (onlineUpdate) {
-            return publicSuffixList.isRegistrable(domain);
-        } else {
-            return InternetDomainName.from(domain).isTopPrivateDomain();
-        }
+        return EffectiveTldFinder.getEffectiveTLD(domain) != null;
     }
 }

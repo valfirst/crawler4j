@@ -38,12 +38,6 @@
             <version>${flyway.db.version}</version>
         </dependency>
         <dependency>
-            <!-- Google's core Java libraries -->
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>

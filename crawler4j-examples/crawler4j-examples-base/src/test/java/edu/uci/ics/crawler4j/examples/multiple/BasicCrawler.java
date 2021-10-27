@@ -19,14 +19,13 @@
  */
 package edu.uci.ics.crawler4j.examples.multiple;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.ImmutableList;
 
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
@@ -43,7 +42,7 @@ public class BasicCrawler extends WebCrawler {
     private final List<String> myCrawlDomains;
 
     public BasicCrawler(List<String> myCrawlDomains) {
-        this.myCrawlDomains = ImmutableList.copyOf(myCrawlDomains);
+        this.myCrawlDomains = Collections.unmodifiableList(myCrawlDomains);
     }
 
     @Override

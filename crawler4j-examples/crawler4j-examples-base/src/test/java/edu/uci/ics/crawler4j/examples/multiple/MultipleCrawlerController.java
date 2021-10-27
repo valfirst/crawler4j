@@ -25,11 +25,8 @@ import crawlercommons.filters.basic.BasicURLNormalizer;
 import edu.uci.ics.crawler4j.frontier.FrontierConfiguration;
 import edu.uci.ics.crawler4j.frontier.SleepycatFrontierConfiguration;
 import edu.uci.ics.crawler4j.url.SleepycatWebURLFactory;
-import edu.uci.ics.crawler4j.url.WebURLFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.ImmutableList;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
@@ -75,8 +72,8 @@ public class MultipleCrawlerController {
         CrawlController controller1 = new CrawlController(config1, normalizer1, pageFetcher1, robotstxtServer, frontierConfiguration);
         CrawlController controller2 = new CrawlController(config2, normalizer2, pageFetcher2, robotstxtServer, frontierConfiguration2);
 
-        List<String> crawler1Domains = ImmutableList.of("https://www.ics.uci.edu/", "https://www.cnn.com/");
-        List<String> crawler2Domains = ImmutableList.of("https://en.wikipedia.org/");
+        List<String> crawler1Domains = List.of("https://www.ics.uci.edu/", "https://www.cnn.com/");
+        List<String> crawler2Domains = List.of("https://en.wikipedia.org/");
 
         controller1.addSeed("https://www.ics.uci.edu/");
         controller1.addSeed("https://www.cnn.com/");

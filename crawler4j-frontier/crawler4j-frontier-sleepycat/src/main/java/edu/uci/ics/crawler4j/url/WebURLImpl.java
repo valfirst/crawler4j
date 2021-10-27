@@ -21,7 +21,6 @@ package edu.uci.ics.crawler4j.url;
 
 import java.util.Map;
 
-import com.google.common.net.InternetDomainName;
 import com.sleepycat.persist.model.Entity;
 import com.sleepycat.persist.model.PrimaryKey;
 
@@ -86,7 +85,7 @@ public class WebURLImpl implements WebURL {
         String domain = url.substring(domainStartIdx, domainEndIdx);
         registeredDomain = domain;
         subDomain = "";
-        if (tldList != null && !(domain.isEmpty()) && InternetDomainName.isValid(domain)) {
+        if (tldList != null && !(domain.isEmpty())) {
             String candidate = null;
             String rd = null;
             String sd = null;

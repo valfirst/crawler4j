@@ -14,6 +14,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.crawler-commons</groupId>
+            <artifactId>crawler-commons</artifactId>
+            <version>${crawler-commons.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
             <version>${apache.http.client.version}</version>
@@ -42,23 +47,6 @@
             <groupId>io.github.url-detector</groupId>
             <artifactId>url-detector</artifactId>
             <version>${url-detector.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.malkusch.whois-server-list</groupId>
-            <artifactId>public-suffix-list</artifactId>
-            <version>${public.suffix.list.version}</version>
-            <exclusions>
-                <exclusion>
-                    <!-- we already have a newer version (via Guava) of it in the classpath -->
-                    <groupId>com.google.code.findbugs</groupId>
-                    <artifactId>jsr305</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
         </dependency>
         <!-- Logging API -->
         <dependency>

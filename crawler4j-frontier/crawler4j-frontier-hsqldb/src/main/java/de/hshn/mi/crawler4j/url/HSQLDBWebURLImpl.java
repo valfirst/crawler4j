@@ -19,7 +19,6 @@
  */
 package de.hshn.mi.crawler4j.url;
 
-import com.google.common.net.InternetDomainName;
 import edu.uci.ics.crawler4j.url.TLDList;
 import edu.uci.ics.crawler4j.url.WebURL;
 
@@ -78,7 +77,7 @@ public class HSQLDBWebURLImpl implements WebURL {
         String domain = url.substring(domainStartIdx, domainEndIdx);
         registeredDomain = domain;
         subDomain = "";
-        if (tldList != null && !(domain.isEmpty()) && InternetDomainName.isValid(domain)) {
+        if (tldList != null && !(domain.isEmpty())) {
             String candidate = null;
             String rd = null;
             String sd = null;
