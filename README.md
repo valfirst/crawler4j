@@ -25,7 +25,7 @@ Add the following dependency to your pom.xml:
         <dependency>
             <groupId>de.hs-heilbronn.mi</groupId>
             <artifactId>crawler4j-with-sleepycat</artifactId>
-            <version>4.7.3</version>
+            <version>4.7.4</version>
             <type>pom</type>
         </dependency>    
 ```
