@@ -38,7 +38,7 @@ Otherwise, you can use `HSQLDB` instead
         <dependency>
             <groupId>de.hs-heilbronn.mi</groupId>
             <artifactId>crawler4j-with-hsqldb</artifactId>
-            <version>4.6.0</version>
+            <version>4.7.4</version>
             <type>pom</type>
         </dependency>    
 ```
