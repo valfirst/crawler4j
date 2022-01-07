@@ -14,7 +14,7 @@
 
     <properties>
         <hikaricp.version>4.0.3</hikaricp.version>
-        <hsqldb.version>2.6.0</hsqldb.version>
+        <hsqldb.version>2.6.1</hsqldb.version>
     </properties>
 
     <dependencies>
