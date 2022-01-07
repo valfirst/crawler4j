@@ -25,7 +25,7 @@ Add the following dependency to your pom.xml:
         <dependency>
             <groupId>de.hs-heilbronn.mi</groupId>
             <artifactId>crawler4j-with-sleepycat</artifactId>
-            <version>4.7.5</version>
+            <version>4.7.6</version>
             <type>pom</type>
         </dependency>    
 ```
@@ -38,7 +38,7 @@ Otherwise, you can use `HSQLDB` instead
         <dependency>
             <groupId>de.hs-heilbronn.mi</groupId>
             <artifactId>crawler4j-with-hsqldb</artifactId>
-            <version>4.7.4</version>
+            <version>4.7.6</version>
             <type>pom</type>
         </dependency>    
 ```
