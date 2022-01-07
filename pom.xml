@@ -125,7 +125,7 @@
         <maven.jar.version>3.2.0</maven.jar.version>
         <maven.compiler.version>3.8.1</maven.compiler.version>
         <maven.jacoco.version>0.8.7</maven.jacoco.version>
-        <maven.gmaven.plus.version>1.12.0</maven.gmaven.plus.version>
+        <maven.gmaven.plus.version>1.13.1</maven.gmaven.plus.version>
         <maven.versions.version>2.5</maven.versions.version>
         <maven.forbiddenapis.version>3.1</maven.forbiddenapis.version>
         <maven.enforcer.version>3.0.0-M2</maven.enforcer.version>
