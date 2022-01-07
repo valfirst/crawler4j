@@ -118,7 +118,7 @@
         <maven.javadoc.version>3.2.0</maven.javadoc.version>
         <maven.gpg.version>1.6</maven.gpg.version>
         <maven.license.version>2.0.0</maven.license.version>
-        <maven.build.helper.version>3.0.0</maven.build.helper.version>
+        <maven.build.helper.version>3.2.0</maven.build.helper.version>
         <maven.release.version>2.5.3</maven.release.version>
         <maven.assembly.version>2.5.3</maven.assembly.version>
         <maven.nexus.staging.version>1.6.7</maven.nexus.staging.version>
