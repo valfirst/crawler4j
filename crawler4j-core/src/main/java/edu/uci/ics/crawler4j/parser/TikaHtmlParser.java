@@ -126,8 +126,12 @@ public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
             }
 
             String hrefLoweredCase = href.trim().toLowerCase(Locale.ROOT);
-            if (!hrefLoweredCase.contains("javascript:") &&
-                    !hrefLoweredCase.contains("mailto:") && !hrefLoweredCase.contains("@")) {
+            if (!hrefLoweredCase.contains("about:") && !hrefLoweredCase.contains("tel:") &&
+                    !hrefLoweredCase.contains("data:")  && !hrefLoweredCase.contains("whatsapp:") &&
+                    !hrefLoweredCase.contains("javascript:") && !hrefLoweredCase.contains("viber:") &&
+                    !hrefLoweredCase.contains("sms:") && !hrefLoweredCase.contains("android-app:") &&
+                    !hrefLoweredCase.contains("fb-messenger:") && !hrefLoweredCase.contains("mailto:") &&
+                    !hrefLoweredCase.contains("@") && !hrefLoweredCase.contains("fb-messenger:")) {
                 String url = normalizer.filter(UrlResolver.resolveUrl((contextURL == null) ? "" : contextURL, href));
                 if (url != null) {
                     WebURL webURL = factory.newWebUrl();
