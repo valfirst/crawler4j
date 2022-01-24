@@ -21,7 +21,6 @@ package edu.uci.ics.crawler4j.parser;
 
 import org.apache.tika.langdetect.optimaize.OptimaizeLangDetector;
 import org.apache.tika.language.detect.LanguageDetector;
-import org.apache.tika.language.detect.LanguageResult;
 
 import java.io.IOException;
 

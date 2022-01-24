@@ -37,17 +37,21 @@ public class IO {
     public static boolean deleteFolderContents(File folder) {
         logger.debug("Deleting content of: " + folder.getAbsolutePath());
         File[] files = folder.listFiles();
-        for (File file : files) {
-            if (file.isFile()) {
-                if (!file.delete()) {
-                    return false;
-                }
-            } else {
-                if (!deleteFolder(file)) {
-                    return false;
+        if(files != null ){
+            for (File file : files) {
+                if (file.isFile()) {
+                    if (!file.delete()) {
+                        return false;
+                    }
+                } else {
+                    if (!deleteFolder(file)) {
+                        return false;
+                    }
                 }
             }
+            return true;
         }
         return true;
+
     }
 }

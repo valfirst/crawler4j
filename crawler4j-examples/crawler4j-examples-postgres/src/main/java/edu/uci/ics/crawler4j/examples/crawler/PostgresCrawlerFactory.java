@@ -26,7 +26,7 @@ import edu.uci.ics.crawler4j.examples.db.impl.PostgresDBServiceImpl;
 
 public class PostgresCrawlerFactory implements CrawlController.WebCrawlerFactory<PostgresWebCrawler> {
 
-    private ComboPooledDataSource comboPooledDataSource;
+    private final ComboPooledDataSource comboPooledDataSource;
 
     public PostgresCrawlerFactory(ComboPooledDataSource comboPooledDataSource) {
         this.comboPooledDataSource = comboPooledDataSource;

@@ -254,7 +254,7 @@
                     <configuration>
                         <source>${java.source}</source>
                         <target>${java.target}</target>
-                        <encoding>${encoding}</encoding>
+                        <encoding>${maven.compile.encoding}</encoding>
                     </configuration>
                 </plugin>
                 <plugin>

@@ -20,7 +20,6 @@
 package edu.uci.ics.crawler4j.examples.imagecrawler;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 import crawlercommons.filters.basic.BasicURLNormalizer;
@@ -32,7 +31,6 @@ import edu.uci.ics.crawler4j.frontier.SleepycatFrontierConfiguration;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import edu.uci.ics.crawler4j.url.SleepycatWebURLFactory;
-import edu.uci.ics.crawler4j.url.WebURLFactory;
 
 public class ImageCrawlController {
 
@@ -55,7 +53,7 @@ public class ImageCrawlController {
         // true to make sure they are included in the crawl.
         config.setIncludeBinaryContentInCrawling(true);
 
-        List<String> crawlDomains = Arrays.asList("https://uci.edu/");
+        List<String> crawlDomains = List.of("https://uci.edu/");
 
         BasicURLNormalizer normalizer = BasicURLNormalizer.newBuilder().idnNormalization(BasicURLNormalizer.IdnNormalization.NONE).build();
         PageFetcher pageFetcher = new PageFetcher(config, normalizer);

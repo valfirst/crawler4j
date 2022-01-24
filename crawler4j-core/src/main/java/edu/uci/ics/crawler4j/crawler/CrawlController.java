@@ -21,7 +21,6 @@ package edu.uci.ics.crawler4j.crawler;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,7 +146,7 @@ public class CrawlController {
         }
 
         @Override
-        public T newInstance() throws Exception {
+        public T newInstance() {
             return this.instance;
         }
     }
@@ -250,123 +249,118 @@ public class CrawlController {
             }
 
             final CrawlController controller = this;
-            Thread monitorThread = new Thread(new Runnable() {
+            Thread monitorThread = new Thread(() -> {
+                try {
+                    synchronized (waitingLock) {
 
-                @Override
-                public void run() {
-                    try {
-                        synchronized (waitingLock) {
+                        while (true) {
+                            sleep(config.getThreadMonitoringDelaySeconds());
+                            boolean someoneIsWorking = false;
+                            for (int i = 0; i < threads.size(); i++) {
+                                Thread thread = threads.get(i);
+                                if (!thread.isAlive()) {
+                                    if (!shuttingDown && !config.isHaltOnError()) {
+                                        logger.info("Thread {} was dead, I'll recreate it", i);
+                                        T crawler = crawlerFactory.newInstance();
+                                        thread = new Thread(crawler, "Crawler " + (i + 1));
+                                        threads.remove(i);
+                                        threads.add(i, thread);
+                                        crawler.setThread(thread);
+                                        crawler.init(i + 1, controller);
+                                        thread.start();
+                                        crawlers.remove(i);
+                                        crawlers.add(i, crawler);
+                                    }
+                                } else if (crawlers.get(i).isNotWaitingForNewURLs()) {
+                                    someoneIsWorking = true;
+                                }
+                                Throwable t = crawlers.get(i).getError();
+                                if (t != null && config.isHaltOnError()) {
+                                    throw new RuntimeException(
+                                            "error on thread [" + threads.get(i).getName() + "]", t);
+                                }
+                            }
+                            boolean shutOnEmpty = config.isShutdownOnEmptyQueue();
+                            if (!someoneIsWorking && shutOnEmpty) {
+                                // Make sure again that none of the threads
+                                // are
+                                // alive.
+                                logger.info(
+                                        "It looks like no thread is working, waiting for " +
+                                                config.getThreadShutdownDelaySeconds() +
+                                                " seconds to make sure...");
+                                sleep(config.getThreadShutdownDelaySeconds());
 
-                            while (true) {
-                                sleep(config.getThreadMonitoringDelaySeconds());
-                                boolean someoneIsWorking = false;
+                                someoneIsWorking = false;
                                 for (int i = 0; i < threads.size(); i++) {
                                     Thread thread = threads.get(i);
-                                    if (!thread.isAlive()) {
-                                        if (!shuttingDown && !config.isHaltOnError()) {
-                                            logger.info("Thread {} was dead, I'll recreate it", i);
-                                            T crawler = crawlerFactory.newInstance();
-                                            thread = new Thread(crawler, "Crawler " + (i + 1));
-                                            threads.remove(i);
-                                            threads.add(i, thread);
-                                            crawler.setThread(thread);
-                                            crawler.init(i + 1, controller);
-                                            thread.start();
-                                            crawlers.remove(i);
-                                            crawlers.add(i, crawler);
-                                        }
-                                    } else if (crawlers.get(i).isNotWaitingForNewURLs()) {
+                                    if (thread.isAlive() &&
+                                            crawlers.get(i).isNotWaitingForNewURLs()) {
                                         someoneIsWorking = true;
                                     }
-                                    Throwable t = crawlers.get(i).getError();
-                                    if (t != null && config.isHaltOnError()) {
-                                        throw new RuntimeException(
-                                                "error on thread [" + threads.get(i).getName() + "]", t);
-                                    }
                                 }
-                                boolean shutOnEmpty = config.isShutdownOnEmptyQueue();
-                                if (!someoneIsWorking && shutOnEmpty) {
-                                    // Make sure again that none of the threads
-                                    // are
-                                    // alive.
+                                if (!someoneIsWorking) {
+                                    if (!shuttingDown) {
+                                        long queueLength = frontier.getQueueLength();
+                                        if (queueLength > 0) {
+                                            continue;
+                                        }
+                                        logger.info(
+                                                "No thread is working and no more URLs are in " +
+                                                        "queue waiting for another " +
+                                                        config.getThreadShutdownDelaySeconds() +
+                                                        " seconds to make sure...");
+                                        sleep(config.getThreadShutdownDelaySeconds());
+                                        queueLength = frontier.getQueueLength();
+                                        if (queueLength > 0) {
+                                            continue;
+                                        }
+                                    }
+
                                     logger.info(
-                                            "It looks like no thread is working, waiting for " +
-                                                    config.getThreadShutdownDelaySeconds() +
-                                                    " seconds to make sure...");
-                                    sleep(config.getThreadShutdownDelaySeconds());
-
-                                    someoneIsWorking = false;
-                                    for (int i = 0; i < threads.size(); i++) {
-                                        Thread thread = threads.get(i);
-                                        if (thread.isAlive() &&
-                                                crawlers.get(i).isNotWaitingForNewURLs()) {
-                                            someoneIsWorking = true;
-                                        }
+                                            "All of the crawlers are stopped. Finishing the " +
+                                                    "process...");
+                                    // At this step, frontier notifies the threads that were
+                                    // waiting for new URLs and they should stop
+                                    frontier.finish();
+                                    for (T crawler : crawlers) {
+                                        crawler.onBeforeExit();
+                                        crawlersLocalData.add(crawler.getMyLocalData());
                                     }
-                                    if (!someoneIsWorking) {
-                                        if (!shuttingDown) {
-                                            long queueLength = frontier.getQueueLength();
-                                            if (queueLength > 0) {
-                                                continue;
-                                            }
-                                            logger.info(
-                                                    "No thread is working and no more URLs are in " +
-                                                            "queue waiting for another " +
-                                                            config.getThreadShutdownDelaySeconds() +
-                                                            " seconds to make sure...");
-                                            sleep(config.getThreadShutdownDelaySeconds());
-                                            queueLength = frontier.getQueueLength();
-                                            if (queueLength > 0) {
-                                                continue;
-                                            }
-                                        }
 
-                                        logger.info(
-                                                "All of the crawlers are stopped. Finishing the " +
-                                                        "process...");
-                                        // At this step, frontier notifies the threads that were
-                                        // waiting for new URLs and they should stop
-                                        frontier.finish();
-                                        for (T crawler : crawlers) {
-                                            crawler.onBeforeExit();
-                                            crawlersLocalData.add(crawler.getMyLocalData());
-                                        }
+                                    logger.info(
+                                            "Waiting for " + config.getCleanupDelaySeconds() +
+                                                    " seconds before final clean up...");
+                                    sleep(config.getCleanupDelaySeconds());
 
-                                        logger.info(
-                                                "Waiting for " + config.getCleanupDelaySeconds() +
-                                                        " seconds before final clean up...");
-                                        sleep(config.getCleanupDelaySeconds());
+                                    frontier.close();
+                                    docIdServer.close();
+                                    pageFetcher.shutDown();
 
-                                        frontier.close();
-                                        docIdServer.close();
-                                        pageFetcher.shutDown();
+                                    finished = true;
+                                    waitingLock.notifyAll();
+                                    frontierConfiguration.close();
 
-                                        finished = true;
-                                        waitingLock.notifyAll();
-                                        frontierConfiguration.close();
-
-                                        return;
-                                    }
+                                    return;
                                 }
                             }
-                        }
-                    } catch (Throwable e) {
-                        if (config.isHaltOnError()) {
-                            setError(e);
-                            synchronized (waitingLock) {
-                                frontier.finish();
-                                frontier.close();
-                                docIdServer.close();
-                                pageFetcher.shutDown();
-                                waitingLock.notifyAll();
-                                frontierConfiguration.close();
-                            }
-                        } else {
-                            logger.error("Unexpected Error", e);
                         }
                     }
+                } catch (Throwable e) {
+                    if (config.isHaltOnError()) {
+                        setError(e);
+                        synchronized (waitingLock) {
+                            frontier.finish();
+                            frontier.close();
+                            docIdServer.close();
+                            pageFetcher.shutDown();
+                            waitingLock.notifyAll();
+                            frontierConfiguration.close();
+                        }
+                    } else {
+                        logger.error("Unexpected Error", e);
+                    }
                 }
-
             });
 
             monitorThread.start();
@@ -432,7 +426,7 @@ public class CrawlController {
 
     protected static void sleep(int seconds) {
         try {
-            Thread.sleep(seconds * 1000);
+            Thread.sleep(seconds * 1000L);
         } catch (InterruptedException ignored) {
             // Do nothing
         }
@@ -466,9 +460,8 @@ public class CrawlController {
      * @param pageUrl the URL of the seed
      * @param docId   the document id that you want to be assigned to this seed URL.
      * @throws InterruptedException
-     * @throws IOException
      */
-    public void addSeed(String pageUrl, int docId) throws IOException, InterruptedException {
+    public void addSeed(String pageUrl, int docId) throws InterruptedException {
         String canonicalUrl = normalizer.filter(pageUrl);
         if (canonicalUrl == null) {
             logger.error("Invalid seed URL: {}", pageUrl);
@@ -518,9 +511,8 @@ public class CrawlController {
      *
      * @param url   the URL of the page
      * @param docId the document id that you want to be assigned to this URL.
-     * @throws UnsupportedEncodingException
      */
-    public void addSeenUrl(String url, int docId) throws UnsupportedEncodingException {
+    public void addSeenUrl(String url, int docId) {
         String canonicalUrl = normalizer.filter(url);
         if (canonicalUrl == null) {
             logger.error("Invalid Url: {} (can't cannonicalize it!)", url);

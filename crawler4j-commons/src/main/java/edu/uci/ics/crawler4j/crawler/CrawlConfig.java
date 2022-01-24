@@ -72,7 +72,7 @@ public class CrawlConfig {
     /**
      * Default request header values.
      */
-    private Collection<BasicHeader> defaultHeaders = new HashSet<BasicHeader>();
+    private Collection<BasicHeader> defaultHeaders = new HashSet<>();
 
     /**
      * Politeness delay in milliseconds (delay between sending two requests to
@@ -295,7 +295,6 @@ public class CrawlConfig {
     /**
      * Set the lock timeout for the underlying sleepycat DB, in milliseconds. Default is 500.
      *
-     * @see com.sleepycat.je.EnvironmentConfig#setLockTimeout(long, java.util.concurrent.TimeUnit)
      * @param dbLockTimeout
      */
     public void setDbLockTimeout(long dbLockTimeout) {
@@ -608,7 +607,7 @@ public class CrawlConfig {
 
     public void addAuthInfo(AuthInfo authInfo) {
         if (this.authInfos == null) {
-            this.authInfos = new ArrayList<AuthInfo>();
+            this.authInfos = new ArrayList<>();
         }
 
         this.authInfos.add(authInfo);
@@ -749,34 +748,32 @@ public class CrawlConfig {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Crawl storage folder: " + getCrawlStorageFolder() + "\n");
-        sb.append("Resumable crawling: " + isResumableCrawling() + "\n");
-        sb.append("Max depth of crawl: " + getMaxDepthOfCrawling() + "\n");
-        sb.append("Max pages to fetch: " + getMaxPagesToFetch() + "\n");
-        sb.append("User agent string: " + getUserAgentString() + "\n");
-        sb.append("Include https pages: " + isIncludeHttpsPages() + "\n");
-        sb.append("Include binary content: " + isIncludeBinaryContentInCrawling() + "\n");
-        sb.append("Max connections per host: " + getMaxConnectionsPerHost() + "\n");
-        sb.append("Max total connections: " + getMaxTotalConnections() + "\n");
-        sb.append("Socket timeout: " + getSocketTimeout() + "\n");
-        sb.append("Max total connections: " + getMaxTotalConnections() + "\n");
-        sb.append("Max outgoing links to follow: " + getMaxOutgoingLinksToFollow() + "\n");
-        sb.append("Max download size: " + getMaxDownloadSize() + "\n");
-        sb.append("Should follow redirects?: " + isFollowRedirects() + "\n");
-        sb.append("Proxy host: " + getProxyHost() + "\n");
-        sb.append("Proxy port: " + getProxyPort() + "\n");
-        sb.append("Proxy username: " + getProxyUsername() + "\n");
-        sb.append("Thread monitoring delay: " + getThreadMonitoringDelaySeconds() + "\n");
-        sb.append("Thread shutdown delay: " + getThreadShutdownDelaySeconds() + "\n");
-        sb.append("Cleanup delay: " + getCleanupDelaySeconds() + "\n");
-        sb.append("Cookie policy: " + getCookiePolicy() + "\n");
-        sb.append("Respect nofollow: " + isRespectNoFollow() + "\n");
-        sb.append("Respect noindex: " + isRespectNoIndex() + "\n");
-        sb.append("Halt on error: " + isHaltOnError() + "\n");
-        sb.append("Allow single level domain:" + isAllowSingleLevelDomain() + "\n");
-        sb.append("Batch read size: " + getBatchReadSize() + "\n");
-        sb.append("Language Detection enabled:: " + isLanguageDetection() + "\n");
-        return sb.toString();
+        return "Crawl storage folder: " + getCrawlStorageFolder() + "\n" +
+                "Resumable crawling: " + isResumableCrawling() + "\n" +
+                "Max depth of crawl: " + getMaxDepthOfCrawling() + "\n" +
+                "Max pages to fetch: " + getMaxPagesToFetch() + "\n" +
+                "User agent string: " + getUserAgentString() + "\n" +
+                "Include https pages: " + isIncludeHttpsPages() + "\n" +
+                "Include binary content: " + isIncludeBinaryContentInCrawling() + "\n" +
+                "Max connections per host: " + getMaxConnectionsPerHost() + "\n" +
+                "Max total connections: " + getMaxTotalConnections() + "\n" +
+                "Socket timeout: " + getSocketTimeout() + "\n" +
+                "Max total connections: " + getMaxTotalConnections() + "\n" +
+                "Max outgoing links to follow: " + getMaxOutgoingLinksToFollow() + "\n" +
+                "Max download size: " + getMaxDownloadSize() + "\n" +
+                "Should follow redirects?: " + isFollowRedirects() + "\n" +
+                "Proxy host: " + getProxyHost() + "\n" +
+                "Proxy port: " + getProxyPort() + "\n" +
+                "Proxy username: " + getProxyUsername() + "\n" +
+                "Thread monitoring delay: " + getThreadMonitoringDelaySeconds() + "\n" +
+                "Thread shutdown delay: " + getThreadShutdownDelaySeconds() + "\n" +
+                "Cleanup delay: " + getCleanupDelaySeconds() + "\n" +
+                "Cookie policy: " + getCookiePolicy() + "\n" +
+                "Respect nofollow: " + isRespectNoFollow() + "\n" +
+                "Respect noindex: " + isRespectNoIndex() + "\n" +
+                "Halt on error: " + isHaltOnError() + "\n" +
+                "Allow single level domain:" + isAllowSingleLevelDomain() + "\n" +
+                "Batch read size: " + getBatchReadSize() + "\n" +
+                "Language Detection enabled:: " + isLanguageDetection() + "\n";
     }
 }

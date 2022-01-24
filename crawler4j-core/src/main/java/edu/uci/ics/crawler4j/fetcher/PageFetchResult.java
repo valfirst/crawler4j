@@ -37,7 +37,7 @@ public class PageFetchResult {
 
     protected static final Logger logger = LoggerFactory.getLogger(PageFetchResult.class);
 
-    private boolean haltOnError;
+    private final boolean haltOnError;
     protected int statusCode;
     protected HttpEntity entity = null;
     protected Header[] responseHeaders = null;
@@ -80,7 +80,7 @@ public class PageFetchResult {
         this.fetchedUrl = fetchedUrl;
     }
 
-    public boolean fetchContent(Page page, int maxBytes) throws SocketTimeoutException, IOException {
+    public boolean fetchContent(Page page, int maxBytes) throws IOException {
         try {
             page.setFetchResponseHeaders(responseHeaders);
             page.load(entity, maxBytes);

@@ -69,7 +69,7 @@ public class StatusHandlerCrawler extends WebCrawler {
                 logger.warn("Broken link: {}, this link was found in page: {}", webUrl.getURL(),
                             webUrl.getParentUrl());
             } else {
-                logger.warn("Non success status for link: {} status code: {}, description: ",
+                logger.warn("Non success status for link: {} status code: {}, description: {} ",
                             webUrl.getURL(), statusCode, statusDescription);
             }
         }

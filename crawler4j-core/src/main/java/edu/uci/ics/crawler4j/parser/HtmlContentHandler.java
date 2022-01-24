@@ -26,7 +26,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class HtmlContentHandler extends DefaultHandler {
@@ -83,8 +82,7 @@ public class HtmlContentHandler extends DefaultHandler {
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes)
-        throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         Element element = HtmlFactory.getElement(localName);
 
         if ((element == Element.A) || (element == Element.AREA) || (element == Element.LINK)) {
@@ -162,7 +160,7 @@ public class HtmlContentHandler extends DefaultHandler {
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName) {
         Element element = HtmlFactory.getElement(localName);
         if ((element == Element.A) || (element == Element.AREA) || (element == Element.LINK)) {
             anchorFlag = false;
@@ -185,7 +183,7 @@ public class HtmlContentHandler extends DefaultHandler {
     }
 
     @Override
-    public void characters(char[] ch, int start, int length) throws SAXException {
+    public void characters(char[] ch, int start, int length) {
         if (isWithinBodyElement) {
             if (bodyText.length() > 0) {
                 bodyText.append(' ');

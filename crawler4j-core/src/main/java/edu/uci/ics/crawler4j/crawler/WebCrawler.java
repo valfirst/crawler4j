@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -112,15 +112,10 @@ public class WebCrawler implements Runnable {
     /**
      * Initializes the current instance of the crawler
      *
-     * @param id
-     *            the id of this crawler instance
-     * @param crawlController
-     *            the controller that manages this crawling session
-     * @throws IllegalAccessException
-     * @throws InstantiationException
+     * @param id              the id of this crawler instance
+     * @param crawlController the controller that manages this crawling session
      */
-    public void init(int id, CrawlController crawlController)
-        throws InstantiationException, IllegalAccessException {
+    public void init(int id, CrawlController crawlController) {
         this.myId = id;
         this.pageFetcher = crawlController.getPageFetcher();
         this.robotstxtServer = crawlController.getRobotstxtServer();
@@ -170,8 +165,8 @@ public class WebCrawler implements Runnable {
      * overridden by sub-classes to perform custom logic for different status
      * codes. For example, 404 pages can be logged, etc.
      *
-     * @param webUrl WebUrl containing the statusCode
-     * @param statusCode Html Status Code number
+     * @param webUrl            WebUrl containing the statusCode
+     * @param statusCode        Html Status Code number
      * @param statusDescription Html Status COde description
      */
     protected void handlePageStatusCode(WebURL webUrl, int statusCode, String statusDescription) {
@@ -198,7 +193,7 @@ public class WebCrawler implements Runnable {
      */
     protected void onPageBiggerThanMaxSize(String urlStr, long pageSize) {
         logger.warn("Skipping a URL: {} which was bigger ( {} ) than max allowed size", urlStr,
-                    pageSize);
+                pageSize);
     }
 
     /**
@@ -212,26 +207,27 @@ public class WebCrawler implements Runnable {
 
     /**
      * Emitted when the crawler is redirected to an invalid Location.
+     *
      * @param page
      */
     protected void onRedirectedToInvalidUrl(Page page) {
         logger.warn("Unexpected error, URL: {} is redirected to NOTHING",
-            page.url.getURL());
+                page.url.getURL());
     }
 
     /**
      * This function is called if the crawler encountered an unexpected http status code ( a
      * status code other than 3xx)
      *
-     * @param urlStr URL in which an unexpected error was encountered while crawling
-     * @param statusCode Html StatusCode
+     * @param urlStr      URL in which an unexpected error was encountered while crawling
+     * @param statusCode  Html StatusCode
      * @param contentType Type of Content
      * @param description Error Description
      */
     protected void onUnexpectedStatusCode(String urlStr, int statusCode, String contentType,
                                           String description) {
         logger.warn("Skipping URL: {}, StatusCode: {}, {}, {}", urlStr, statusCode, contentType,
-                    description);
+                description);
         // Do nothing by default (except basic logging)
         // Sub-classed can override this to add their custom functionality
     }
@@ -240,10 +236,9 @@ public class WebCrawler implements Runnable {
      * This function is called if the content of a url could not be fetched.
      *
      * @param webUrl URL which content failed to be fetched
-     *
      * @deprecated use {@link #onContentFetchError(Page)}
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     protected void onContentFetchError(WebURL webUrl) {
         logger.warn("Can't fetch content of: {}", webUrl.getURL());
         // Do nothing by default (except basic logging)
@@ -283,7 +278,7 @@ public class WebCrawler implements Runnable {
      *
      * @param webUrl URL which failed on parsing
      */
-    protected void onParseError(WebURL webUrl, ParseException e) throws ParseException {
+    protected void onParseError(WebURL webUrl, ParseException e) {
         onParseError(webUrl);
     }
 
@@ -292,7 +287,7 @@ public class WebCrawler implements Runnable {
      *
      * @param webUrl URL which failed on parsing
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     protected void onParseError(WebURL webUrl) {
         logger.warn("Parsing error of: {}", webUrl.getURL());
         // Do nothing by default (Except logging)
@@ -361,22 +356,20 @@ public class WebCrawler implements Runnable {
      * default implementation indicates that all urls should be included in the crawl
      * except those with a nofollow flag.
      *
-     * @param url
-     *            the url which we are interested to know whether it should be
-     *            included in the crawl or not.
-     * @param referringPage
-     *           The Page in which this url was found.
+     * @param url           the url which we are interested to know whether it should be
+     *                      included in the crawl or not.
+     * @param referringPage The Page in which this url was found.
      * @return if the url should be included in the crawl it returns true,
-     *         otherwise false is returned.
+     * otherwise false is returned.
      */
     public boolean shouldVisit(Page referringPage, WebURL url) {
         if (myController.getConfig().isRespectNoFollow()) {
             return !((referringPage != null &&
                     referringPage.getContentType() != null &&
                     referringPage.getContentType().contains("html") &&
-                    ((HtmlParseData)referringPage.getParseData())
-                        .getMetaTagValue("robots")
-                        .contains("nofollow")) ||
+                    ((HtmlParseData) referringPage.getParseData())
+                            .getMetaTagValue("robots")
+                            .contains("nofollow")) ||
                     url.getAttribute("rel").contains("nofollow"));
         }
 
@@ -388,7 +381,7 @@ public class WebCrawler implements Runnable {
      * By default this method returns true always, but classes that extend WebCrawler can
      * override it in order to implement particular policies about which pages should be
      * mined for outgoing links and which should not.
-     *
+     * <p>
      * If links from the URL are not being followed, then we are not operating as
      * a web crawler and need not check robots.txt before fetching the single URL.
      * (see definition at http://www.robotstxt.org/faq/what.html).  Thus URLs that
@@ -405,15 +398,14 @@ public class WebCrawler implements Runnable {
      * Classes that extends WebCrawler should overwrite this function to process
      * the content of the fetched and parsed page.
      *
-     * @param page
-     *            the page object that is just fetched and parsed.
+     * @param page the page object that is just fetched and parsed.
      */
     public void visit(Page page) {
         // Do nothing by default
         // Sub-classed should override this to add their custom functionality
     }
 
-    private void processPage(WebURL curURL) throws IOException, InterruptedException, ParseException {
+    private void processPage(WebURL curURL) {
         PageFetchResult fetchResult = null;
         Page page = new Page(curURL);
         try {
@@ -424,20 +416,20 @@ public class WebCrawler implements Runnable {
             fetchResult = pageFetcher.fetchPage(curURL);
             int statusCode = fetchResult.getStatusCode();
             handlePageStatusCode(curURL, statusCode,
-                                 EnglishReasonPhraseCatalog.INSTANCE.getReason(statusCode,
-                                                                               Locale.ENGLISH));
+                    EnglishReasonPhraseCatalog.INSTANCE.getReason(statusCode,
+                            Locale.ENGLISH));
             // Finds the status reason for all known statuses
 
             page.setFetchResponseHeaders(fetchResult.getResponseHeaders());
             page.setStatusCode(statusCode);
             if (statusCode < 200 ||
-                statusCode > 299) { // Not 2XX: 2XX status codes indicate success
+                    statusCode > 299) { // Not 2XX: 2XX status codes indicate success
                 if (statusCode == HttpStatus.SC_MOVED_PERMANENTLY ||
-                    statusCode == HttpStatus.SC_MOVED_TEMPORARILY ||
-                    statusCode == HttpStatus.SC_MULTIPLE_CHOICES ||
-                    statusCode == HttpStatus.SC_SEE_OTHER ||
-                    statusCode == HttpStatus.SC_TEMPORARY_REDIRECT ||
-                    statusCode == 308) { // is 3xx  todo
+                        statusCode == HttpStatus.SC_MOVED_TEMPORARILY ||
+                        statusCode == HttpStatus.SC_MULTIPLE_CHOICES ||
+                        statusCode == HttpStatus.SC_SEE_OTHER ||
+                        statusCode == HttpStatus.SC_TEMPORARY_REDIRECT ||
+                        statusCode == 308) { // is 3xx  todo
                     // follow https://issues.apache.org/jira/browse/HTTPCORE-389
 
                     page.setRedirect(true);
@@ -471,24 +463,24 @@ public class WebCrawler implements Runnable {
                                 frontier.schedule(webURL);
                             } else {
                                 logger.debug(
-                                    "Not visiting: {} as per the server's \"robots.txt\" policy",
-                                    webURL.getURL());
+                                        "Not visiting: {} as per the server's \"robots.txt\" policy",
+                                        webURL.getURL());
                             }
                         } else {
                             logger.debug("Not visiting: {} as per your \"shouldVisit\" policy",
-                                         webURL.getURL());
+                                    webURL.getURL());
                         }
                     }
                 } else { // All other http codes other than 3xx & 200
                     String description =
-                        EnglishReasonPhraseCatalog.INSTANCE.getReason(fetchResult.getStatusCode(),
-                                                                      Locale.ENGLISH); // Finds
+                            EnglishReasonPhraseCatalog.INSTANCE.getReason(fetchResult.getStatusCode(),
+                                    Locale.ENGLISH); // Finds
                     // the status reason for all known statuses
                     String contentType = fetchResult.getEntity() == null ? "" :
-                                         fetchResult.getEntity().getContentType() == null ? "" :
-                                         fetchResult.getEntity().getContentType();
+                            fetchResult.getEntity().getContentType() == null ? "" :
+                                    fetchResult.getEntity().getContentType();
                     onUnexpectedStatusCode(curURL.getURL(), fetchResult.getStatusCode(),
-                                           contentType, description);
+                            contentType, description);
                 }
 
             } else { // if status code is 200
@@ -502,15 +494,15 @@ public class WebCrawler implements Runnable {
                 }
 
                 if (!fetchResult.fetchContent(page,
-                                              myController.getConfig().getMaxDownloadSize())) {
+                        myController.getConfig().getMaxDownloadSize())) {
                     throw new ContentFetchException();
                 }
 
                 if (page.isTruncated()) {
                     logger.warn(
-                        "Warning: unknown page size exceeded max-download-size, truncated to: " +
-                        "({}), at URL: {}",
-                        myController.getConfig().getMaxDownloadSize(), curURL.getURL());
+                            "Warning: unknown page size exceeded max-download-size, truncated to: " +
+                                    "({}), at URL: {}",
+                            myController.getConfig().getMaxDownloadSize(), curURL.getURL());
                 }
 
                 parser.parse(page, curURL.getURL());
@@ -538,13 +530,13 @@ public class WebCrawler implements Runnable {
                                         toSchedule.add(webURL);
                                     } else {
                                         logger.debug(
-                                            "Not visiting: {} as per the server's \"robots.txt\" " +
-                                            "policy", webURL.getURL());
+                                                "Not visiting: {} as per the server's \"robots.txt\" " +
+                                                        "policy", webURL.getURL());
                                     }
                                 } else {
                                     logger.debug(
-                                        "Not visiting: {} as per your \"shouldVisit\" policy",
-                                        webURL.getURL());
+                                            "Not visiting: {} as per your \"shouldVisit\" policy",
+                                            webURL.getURL());
                                 }
                             }
                         }
@@ -552,16 +544,16 @@ public class WebCrawler implements Runnable {
                     frontier.scheduleAll(toSchedule);
                 } else {
                     logger.debug("Not looking for links in page {}, "
-                                 + "as per your \"shouldFollowLinksInPage\" policy",
-                                 page.getWebURL().getURL());
+                                    + "as per your \"shouldFollowLinksInPage\" policy",
+                            page.getWebURL().getURL());
                 }
 
                 boolean noIndex = myController.getConfig().isRespectNoIndex() &&
-                    page.getContentType() != null &&
-                    page.getContentType().contains("html") &&
-                    ((HtmlParseData)page.getParseData())
-                        .getMetaTagValue("robots").
-                        contains("noindex");
+                        page.getContentType() != null &&
+                        page.getContentType().contains("html") &&
+                        ((HtmlParseData) page.getParseData())
+                                .getMetaTagValue("robots").
+                                contains("noindex");
 
                 if (!noIndex) {
                     visit(page);
@@ -576,8 +568,8 @@ public class WebCrawler implements Runnable {
             onContentFetchError(page);
         } catch (NotAllowedContentException nace) {
             logger.debug(
-                "Skipping: {} as it contains binary content which you configured not to crawl",
-                curURL.getURL());
+                    "Skipping: {} as it contains binary content which you configured not to crawl",
+                    curURL.getURL());
         } catch (IOException | InterruptedException | URISyntaxException | RuntimeException e) {
             onUnhandledException(curURL, e);
         } finally {

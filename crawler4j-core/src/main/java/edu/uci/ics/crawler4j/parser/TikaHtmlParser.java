@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,7 +55,7 @@ public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
     private final WebURLFactory factory;
     private final BasicURLNormalizer normalizer;
 
-    public TikaHtmlParser(CrawlConfig config, BasicURLNormalizer normalizer, TLDList tldList, WebURLFactory webURLFactory) throws InstantiationException, IllegalAccessException {
+    public TikaHtmlParser(CrawlConfig config, BasicURLNormalizer normalizer, TLDList tldList, WebURLFactory webURLFactory) {
         this.config = config;
         this.tldList = tldList;
         this.normalizer = normalizer;
@@ -108,8 +108,7 @@ public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
 
     }
 
-    private Set<WebURL> getOutgoingUrls(String contextURL, HtmlContentHandler contentHandler)
-            throws UnsupportedEncodingException {
+    private Set<WebURL> getOutgoingUrls(String contextURL, HtmlContentHandler contentHandler) {
         Set<WebURL> outgoingUrls = new HashSet<>();
 
         String baseURL = contentHandler.getBaseUrl();
@@ -127,7 +126,7 @@ public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
 
             String hrefLoweredCase = href.trim().toLowerCase(Locale.ROOT);
             if (!hrefLoweredCase.contains("about:") && !hrefLoweredCase.contains("tel:") &&
-                    !hrefLoweredCase.contains("data:")  && !hrefLoweredCase.contains("whatsapp:") &&
+                    !hrefLoweredCase.contains("data:") && !hrefLoweredCase.contains("whatsapp:") &&
                     !hrefLoweredCase.contains("javascript:") && !hrefLoweredCase.contains("viber:") &&
                     !hrefLoweredCase.contains("sms:") && !hrefLoweredCase.contains("android-app:") &&
                     !hrefLoweredCase.contains("fb-messenger:") && !hrefLoweredCase.contains("mailto:") &&

@@ -52,7 +52,7 @@ public class Counters {
     private static final String DATABASE_NAME = "Statistics";
     protected Database statisticsDB = null;
     protected Environment env;
-    private CrawlConfig config;
+    private final CrawlConfig config;
 
     protected final Object mutex = new Object();
 

@@ -27,7 +27,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,7 +64,6 @@ import org.apache.hc.core5.http.config.Registry;
 import org.apache.hc.core5.http.config.RegistryBuilder;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.ssl.SSLContexts;
-import org.apache.hc.core5.ssl.TrustStrategy;
 import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,12 +111,7 @@ public class PageFetcher {
             try { // Fixing: https://code.google.com/p/crawler4j/issues/detail?id=174
                 // By always trusting the ssl certificate
                 SSLContext sslContext =
-                        SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
-                            @Override
-                            public boolean isTrusted(final X509Certificate[] chain, String authType) {
-                                return true;
-                            }
-                        }).build();
+                        SSLContexts.custom().loadTrustMaterial(null, (chain, authType) -> true).build();
                 SSLConnectionSocketFactory sslsf =
                         new SniSSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
                 connRegistryBuilder.register("https", sslsf);

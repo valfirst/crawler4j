@@ -77,7 +77,7 @@ public class BinaryParseData implements ParseData {
             AUTO_DETECT_PARSER.parse(inputStream, handler, new Metadata(), context);
 
             // Hacking the following line to remove Tika's inserted DocType
-            this.html = new String(outputStream.toByteArray(), DEFAULT_ENCODING).replace(
+            this.html = outputStream.toString(DEFAULT_ENCODING).replace(
                 "http://www.w3.org/1999/xhtml", "");
         } catch (TransformerConfigurationException | TikaException | SAXException | IOException | RuntimeException e) {
             throw e;

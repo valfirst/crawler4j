@@ -29,8 +29,6 @@ import edu.uci.ics.crawler4j.frontier.FrontierConfiguration;
 import edu.uci.ics.crawler4j.frontier.SleepycatFrontierConfiguration;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
-import edu.uci.ics.crawler4j.url.SleepycatWebURLFactory;
-import edu.uci.ics.crawler4j.url.WebURLFactory;
 
 public class BasicCrawlController {
 
@@ -42,7 +40,7 @@ public class BasicCrawlController {
         config.setCrawlStorageFolder("/tmp/crawler4j/");
 
         // Be polite: Make sure that we don't send more than 1 request per second (1000 milliseconds between requests).
-        // Otherwise it may overload the target servers.
+        // Otherwise, it may overload the target servers.
         config.setPolitenessDelay(1000);
 
         // You can set the maximum crawl depth here. The default value is -1 for unlimited depth.
@@ -95,7 +93,7 @@ public class BasicCrawlController {
         int numberOfCrawlers = 8;
 
         // To demonstrate an example of how you can pass objects to crawlers, we use an AtomicInteger that crawlers
-        // increment whenever they see a url which points to an image.
+        // increment whenever they see an url which points to an image.
         AtomicInteger numSeenImages = new AtomicInteger();
 
         // The factory which creates instances of crawlers.

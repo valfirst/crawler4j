@@ -50,7 +50,7 @@ public class Parser {
     private final Net net;
     private final WebURLFactory factory;
     private final BasicURLNormalizer normalizer;
-    public Parser(CrawlConfig config, BasicURLNormalizer normalizer, TLDList tldList, WebURLFactory webURLFactory) throws IllegalAccessException, InstantiationException, IOException {
+    public Parser(CrawlConfig config, BasicURLNormalizer normalizer, TLDList tldList, WebURLFactory webURLFactory) throws IOException {
         this(config, normalizer, new TikaHtmlParser(config, normalizer, tldList, webURLFactory), tldList, webURLFactory);
     }
 

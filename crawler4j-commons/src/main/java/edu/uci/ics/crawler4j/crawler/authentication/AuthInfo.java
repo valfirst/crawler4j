@@ -27,13 +27,13 @@ import javax.swing.text.html.FormSubmitEvent.MethodType;
 /**
  * Created by Avi Hayun on 11/23/2014.
  *
- * Abstract class containing authentication information needed to login into a user/password
+ * Abstract class containing authentication information needed to log in into a user/password
  * protected site<br>
  * This class should be extended by specific authentication types like form authentication and
  * basic authentication
  * etc<br>
  * <br>
- * This class contains all of the mutual authentication data for all authentication types
+ * This class contains all the mutual authentication data for all authentication types
  */
 public abstract class AuthInfo {
     public enum AuthenticationType {

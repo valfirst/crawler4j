@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-/**
+/*
  * This class is adopted from Htmlunit with the following copyright:
  *
  * Copyright (c) 2002-2012 Gargoyle Software Inc.

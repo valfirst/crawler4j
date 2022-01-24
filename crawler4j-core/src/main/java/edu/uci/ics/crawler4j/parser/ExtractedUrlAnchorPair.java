@@ -27,7 +27,7 @@ public class ExtractedUrlAnchorPair {
     private String href;
     private String anchor;
     private String tag;
-    private Map<String, String> attributes = new HashMap<String, String>();
+    private Map<String, String> attributes = new HashMap<>();
 
     public String getHref() {
         return href;

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
-import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.util.ByteArrayBuffer;
@@ -115,10 +114,9 @@ public class Page {
      * Read contents from an entity, with a specified maximum. This is a replacement of
      * EntityUtils.toByteArray because that function does not impose a maximum size.
      *
-     * @param entity The entity from which to read
+     * @param entity   The entity from which to read
      * @param maxBytes The maximum number of bytes to read
      * @return A byte array containing maxBytes or fewer bytes read from the entity
-     *
      * @throws IOException Thrown when reading fails for any reason
      */
     protected byte[] toByteArray(HttpEntity entity, int maxBytes) throws IOException {
@@ -126,8 +124,7 @@ public class Page {
             return new byte[0];
         }
         try (InputStream is = entity.getContent()) {
-            int size = (int) entity.getContentLength();
-            int readBufferLength = size;
+            int readBufferLength = (int) entity.getContentLength();
 
             if (readBufferLength <= 0) {
                 readBufferLength = 4096;
@@ -160,7 +157,7 @@ public class Page {
     /**
      * Loads the content of this page from a fetched HttpEntity.
      *
-     * @param entity HttpEntity
+     * @param entity   HttpEntity
      * @param maxBytes The maximum number of bytes to read
      * @throws IOException when load fails
      */
@@ -173,17 +170,14 @@ public class Page {
         Charset charset;
         try {
             //FIX how to obtain it with http client 5
-           // charset = ContentType.getOrDefault(entity).getCharset();
+            // charset = ContentType.getOrDefault(entity).getCharset();
             charset = StandardCharsets.UTF_8;
         } catch (Exception e) {
             logger.warn("parse charset failed: {}", e.getMessage());
             charset = StandardCharsets.UTF_8;
         }
 
-        if (charset != null) {
-            contentCharset = charset.displayName(Locale.ROOT);
-        }
-
+        contentCharset = charset.displayName(Locale.ROOT);
         contentData = toByteArray(entity, maxBytes);
     }
 

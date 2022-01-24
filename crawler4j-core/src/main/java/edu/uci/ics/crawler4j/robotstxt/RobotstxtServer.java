@@ -78,9 +78,8 @@ public class RobotstxtServer {
      * Please note that in the case of a bad URL, TRUE will be returned
      *
      * @throws InterruptedException
-     * @throws IOException
      */
-    public boolean allows(WebURL webURL) throws IOException, InterruptedException {
+    public boolean allows(WebURL webURL) throws InterruptedException {
         if (!config.isEnabled()) {
             return true;
         }
@@ -106,7 +105,7 @@ public class RobotstxtServer {
             logger.error("Bad URL to Robots.txt: " + webURL.getURL(), e);
         }
 
-        logger.warn("RobotstxtServer: default: allow", webURL.getURL());
+        logger.warn("RobotstxtServer: default: allow for {}", webURL.getURL());
         return true;
     }
 
@@ -114,7 +113,7 @@ public class RobotstxtServer {
         WebURL robotsTxtUrl = factory.newWebUrl();
         String host = getHost(url);
         String port = ((url.getPort() == url.getDefaultPort()) || (url.getPort() == -1)) ? "" :
-                      (":" + url.getPort());
+                (":" + url.getPort());
         String proto = url.getProtocol();
         robotsTxtUrl.setURL(proto + "://" + host + port + "/robots.txt");
 
@@ -126,12 +125,12 @@ public class RobotstxtServer {
                 int status = fetchResult.getStatusCode();
                 // Follow redirects up to 3 levels
                 if ((status == HttpStatus.SC_MULTIPLE_CHOICES ||
-                     status == HttpStatus.SC_MOVED_PERMANENTLY ||
-                     status == HttpStatus.SC_MOVED_TEMPORARILY ||
-                     status == HttpStatus.SC_SEE_OTHER ||
-                     status == HttpStatus.SC_TEMPORARY_REDIRECT || status == 308) &&
-                    // SC_PERMANENT_REDIRECT RFC7538
-                    fetchResult.getMovedToUrl() != null) {
+                        status == HttpStatus.SC_MOVED_PERMANENTLY ||
+                        status == HttpStatus.SC_MOVED_TEMPORARILY ||
+                        status == HttpStatus.SC_SEE_OTHER ||
+                        status == HttpStatus.SC_TEMPORARY_REDIRECT || status == 308) &&
+                        // SC_PERMANENT_REDIRECT RFC7538
+                        fetchResult.getMovedToUrl() != null) {
                     robotsTxtUrl.setURL(fetchResult.getMovedToUrl());
                     fetchResult.discardContentIfNotConsumed();
                 } else {
@@ -150,12 +149,12 @@ public class RobotstxtServer {
                             "text/plain", config.getUserAgentName());
                 } else {
                     logger.warn(
-                        "Can't read this robots.txt: {}  as it is not written in plain text, " +
-                        "contentType: {}", robotsTxtUrl.getURL(), page.getContentType());
+                            "Can't read this robots.txt: {}  as it is not written in plain text, " +
+                                    "contentType: {}", robotsTxtUrl.getURL(), page.getContentType());
                 }
             } else {
                 logger.debug("Can't read this robots.txt: {}  as it's status code is {}",
-                             robotsTxtUrl.getURL(), fetchResult.getStatusCode());
+                        robotsTxtUrl.getURL(), fetchResult.getStatusCode());
             }
         } catch (SocketException | UnknownHostException | SocketTimeoutException |
                 NoHttpResponseException se) {
@@ -164,7 +163,7 @@ public class RobotstxtServer {
             logger.trace("robots.txt probably does not exist.", se);
         } catch (PageBiggerThanMaxSizeException pbtms) {
             logger.error("Error occurred while fetching (robots) url: {}, {}",
-                         robotsTxtUrl.getURL(), pbtms.getMessage());
+                    robotsTxtUrl.getURL(), pbtms.getMessage());
         } catch (IOException e) {
             logger.error("Error occurred while fetching (robots) url: " + robotsTxtUrl.getURL(), e);
         } catch (InterruptedException | RuntimeException e) {

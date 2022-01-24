@@ -33,7 +33,7 @@ public class HSQLDBDocIDServerImpl implements DocIDServer {
 
     private final Object mutex = new Object();
 
-    private HikariDataSource ds;
+    private final HikariDataSource ds;
 
     public HSQLDBDocIDServerImpl(HikariDataSource ds) {
         this.ds = ds;

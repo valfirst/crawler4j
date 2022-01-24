@@ -88,7 +88,7 @@ public class WebURLImpl implements WebURL {
         if (tldList != null && !(domain.isEmpty())) {
             String candidate = null;
             String rd = null;
-            String sd = null;
+            StringBuilder sd = null;
             String[] parts = domain.split("\\.");
             for (int i = parts.length - 1; i >= 0; i--) {
                 if (rd == null) {
@@ -102,9 +102,9 @@ public class WebURLImpl implements WebURL {
                     }
                 } else {
                     if (sd == null) {
-                        sd = parts[i];
+                        sd = new StringBuilder(parts[i]);
                     } else {
-                        sd = parts[i] + "." + sd;
+                        sd.insert(0, parts[i] + ".");
                     }
                 }
             }
@@ -112,7 +112,7 @@ public class WebURLImpl implements WebURL {
                 registeredDomain = rd;
             }
             if (sd != null) {
-                subDomain = sd;
+                subDomain = sd.toString();
             }
         }
         path = url.substring(domainEndIdx);

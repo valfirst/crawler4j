@@ -135,8 +135,7 @@ public class CssParseData extends TextParseData {
         }
 
         if (linkUrl.startsWith("http")) {
-            String domainUrl = getPathFromUrl(linkUrl);
-            return domainUrl;
+            return getPathFromUrl(linkUrl);
         }
 
         if (linkUrl.startsWith("../")) {
@@ -147,11 +146,11 @@ public class CssParseData extends TextParseData {
             int parents = pos / 3;
             long diff = parts.length - parents - 1;
 
-            String absolute = "";
+            StringBuilder absolute = new StringBuilder();
             for (int i = 0; i < diff; i++) {
                 String dir = parts[i];
                 if (!dir.isEmpty()) {
-                    absolute = absolute + "/" + dir;
+                    absolute.append("/").append(dir);
                 }
             }
             return absolute + "/" + linkUrl.substring(pos);
@@ -162,26 +161,20 @@ public class CssParseData extends TextParseData {
     }
 
     private static String getDirsFromUrl(String urlPath) {
-
         int pos = urlPath.lastIndexOf("/") + 1;
-        String root = urlPath.substring(0, pos);
-        return root;
+        return urlPath.substring(0, pos);
     }
 
     private static String getPathFromUrl(String url) {
-
         int pos1 = url.indexOf("//") + 2;              // http://subdomain.domain:port/dir/page.ext
         int pos2 = url.indexOf("/", pos1);
-        String path = url.substring(pos2);
-        return path;
+        return  url.substring(pos2);
     }
 
     private static String getFullDomainFromUrl(String url) {
-
         int pos1 = url.indexOf("//") + 2;              // http://subdomain.domain:port/dir/page.ext
         int pos2 = url.indexOf("/", pos1);
-        String path = url.substring(0, pos2);
-        return path;
+        return url.substring(0, pos2);
     }
 
 }

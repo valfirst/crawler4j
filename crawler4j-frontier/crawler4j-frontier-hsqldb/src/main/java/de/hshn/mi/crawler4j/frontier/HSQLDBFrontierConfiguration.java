@@ -35,9 +35,9 @@ import java.sql.SQLException;
 
 public class HSQLDBFrontierConfiguration implements FrontierConfiguration {
 
-    private HikariDataSource dataSource;
-    private DocIDServer docIDServer;
-    private Frontier frontier;
+    private final HikariDataSource dataSource;
+    private final DocIDServer docIDServer;
+    private final Frontier frontier;
 
     public HSQLDBFrontierConfiguration(CrawlConfig crawlConfig, int poolSize) {
 

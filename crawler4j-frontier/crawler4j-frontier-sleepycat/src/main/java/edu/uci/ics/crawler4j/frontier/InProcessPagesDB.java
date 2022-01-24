@@ -29,8 +29,6 @@ import com.sleepycat.je.Environment;
 import com.sleepycat.je.OperationStatus;
 import com.sleepycat.je.Transaction;
 
-import edu.uci.ics.crawler4j.url.WebURLImpl;
-
 /**
  * This class maintains the list of pages which are
  * assigned to crawlers but are not yet processed.

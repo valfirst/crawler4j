@@ -40,8 +40,8 @@ import edu.uci.ics.crawler4j.url.WebURLFactory;
  */
 public class Net {
 
-    private Function<Url, WebURL> urlMapper;
-    private CrawlConfig config;
+    private final Function<Url, WebURL> urlMapper;
+    private final CrawlConfig config;
 
     public Net(CrawlConfig config, TLDList tldList, WebURLFactory factory) {
         this.config = config;

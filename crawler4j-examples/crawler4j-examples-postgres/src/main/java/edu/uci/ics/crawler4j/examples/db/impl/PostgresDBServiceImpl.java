@@ -35,9 +35,9 @@ public class PostgresDBServiceImpl implements PostgresDBService {
 
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(PostgresDBServiceImpl.class);
 
-    private ComboPooledDataSource comboPooledDataSource;
+    private final ComboPooledDataSource comboPooledDataSource;
 
-    private PreparedStatement insertKeyStatement;
+    private final PreparedStatement insertKeyStatement;
 
     public PostgresDBServiceImpl(ComboPooledDataSource comboPooledDataSource) throws SQLException {
         this.comboPooledDataSource = comboPooledDataSource;

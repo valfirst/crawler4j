@@ -46,7 +46,7 @@ public class SleepycatDocIDServer implements DocIDServer{
 
     private final Object mutex = new Object();
 
-    private CrawlConfig config;
+    private final CrawlConfig config;
     private int lastDocID;
 
     public SleepycatDocIDServer(Environment env, CrawlConfig config) {
@@ -74,7 +74,7 @@ public class SleepycatDocIDServer implements DocIDServer{
      */
     public int getDocId(String url) {
         synchronized (mutex) {
-            OperationStatus result = null;
+            OperationStatus result;
             DatabaseEntry value = new DatabaseEntry();
             try {
                 DatabaseEntry key = new DatabaseEntry(url.getBytes(StandardCharsets.UTF_8));
