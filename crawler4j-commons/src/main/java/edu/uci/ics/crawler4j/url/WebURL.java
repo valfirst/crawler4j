@@ -71,7 +71,7 @@ public interface WebURL extends Serializable {
     void setDepth(short depth);
 
     /**
-     * If {@link WebURLImpl} was provided with a {@link TLDList} then domain will be the
+     * If {@link WebURL} was provided with a {@link TLDList} then domain will be the
      * privately registered domain which is an immediate child of an effective top
      * level domain as defined at
      * <a href="https://publicsuffix.org">publicsuffix.org</a>. Otherwise it will be
@@ -84,9 +84,9 @@ public interface WebURL extends Serializable {
     String getDomain();
 
     /**
-     * If {@link WebURLImpl} was provided with a {@link TLDList} then subDomain will be
+     * If {@link WebURL} was provided with a {@link TLDList} then subDomain will be
      * the private portion of the entire domain which is a child of the identified
-     * registered domain. Otherwise it will be empty. e.g. in
+     * registered domain. Otherwise, it will be empty. e.g. in
      * "http://www.example.com" the subdomain is "www". In
      * "http://www.my.company.co.uk" the subdomain would be "www.my".
      */
