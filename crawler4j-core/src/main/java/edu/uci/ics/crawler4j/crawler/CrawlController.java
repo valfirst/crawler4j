@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -90,12 +90,12 @@ public class CrawlController {
         this(config, normalizer, pageFetcher, null, robotstxtServer, null, frontierConfiguration);
     }
 
-    public CrawlController(CrawlConfig config,  BasicURLNormalizer normalizer, PageFetcher pageFetcher,
-            RobotstxtServer robotstxtServer, TLDList tldList, FrontierConfiguration frontierConfiguration) throws Exception {
+    public CrawlController(CrawlConfig config, BasicURLNormalizer normalizer, PageFetcher pageFetcher,
+                           RobotstxtServer robotstxtServer, TLDList tldList, FrontierConfiguration frontierConfiguration) throws Exception {
         this(config, normalizer, pageFetcher, null, robotstxtServer, tldList, frontierConfiguration);
     }
 
-    public CrawlController(CrawlConfig config,  BasicURLNormalizer normalizer, PageFetcher pageFetcher, Parser parser,
+    public CrawlController(CrawlConfig config, BasicURLNormalizer normalizer, PageFetcher pageFetcher, Parser parser,
                            RobotstxtServer robotstxtServer, TLDList tldList, FrontierConfiguration frontierConfiguration) throws Exception {
         config.validate();
         this.config = config;
@@ -106,8 +106,8 @@ public class CrawlController {
                 logger.debug("Created folder: " + folder.getAbsolutePath());
             } else {
                 throw new Exception(
-                    "couldn't create the storage folder: " + folder.getAbsolutePath() +
-                    " does it already exist ?");
+                        "couldn't create the storage folder: " + folder.getAbsolutePath() +
+                                " does it already exist ?");
             }
         }
 
@@ -138,7 +138,7 @@ public class CrawlController {
     }
 
     private static class SingleInstanceFactory<T extends WebCrawler>
-        implements WebCrawlerFactory<T> {
+            implements WebCrawlerFactory<T> {
 
         final T instance;
 
@@ -153,7 +153,7 @@ public class CrawlController {
     }
 
     private static class DefaultWebCrawlerFactory<T extends WebCrawler>
-        implements WebCrawlerFactory<T> {
+            implements WebCrawlerFactory<T> {
         final Class<T> clazz;
 
         DefaultWebCrawlerFactory(Class<T> clazz) {
@@ -162,11 +162,7 @@ public class CrawlController {
 
         @Override
         public T newInstance() throws Exception {
-            try {
-                return clazz.newInstance();
-            } catch (ReflectiveOperationException e) {
-                throw e;
-            }
+            return clazz.getDeclaredConstructor().newInstance();
         }
     }
 
@@ -174,12 +170,10 @@ public class CrawlController {
      * Start the crawling session and wait for it to finish.
      * This method utilizes default crawler factory that creates new crawler using Java reflection
      *
-     * @param clazz
-     *            the class that implements the logic for crawler threads
-     * @param numberOfCrawlers
-     *            the number of concurrent threads that will be contributing in
-     *            this crawling session.
-     * @param <T> Your class extending WebCrawler
+     * @param clazz            the class that implements the logic for crawler threads
+     * @param numberOfCrawlers the number of concurrent threads that will be contributing in
+     *                         this crawling session.
+     * @param <T>              Your class extending WebCrawler
      */
     public <T extends WebCrawler> void start(Class<T> clazz, int numberOfCrawlers) {
         this.start(new DefaultWebCrawlerFactory<>(clazz), numberOfCrawlers, true);
@@ -189,9 +183,8 @@ public class CrawlController {
      * Start the crawling session and wait for it to finish.
      * This method depends on a single instance of a crawler. Only that instance will be used for crawling.
      *
-     * @param instance
-     *            the instance of a class that implements the logic for crawler threads
-     * @param <T> Your class extending WebCrawler
+     * @param instance the instance of a class that implements the logic for crawler threads
+     * @param <T>      Your class extending WebCrawler
      */
     public <T extends WebCrawler> void start(T instance) {
         this.start(new SingleInstanceFactory<>(instance), 1, true);
@@ -200,12 +193,10 @@ public class CrawlController {
     /**
      * Start the crawling session and wait for it to finish.
      *
-     * @param crawlerFactory
-     *            factory to create crawlers on demand for each thread
-     * @param numberOfCrawlers
-     *            the number of concurrent threads that will be contributing in
-     *            this crawling session.
-     * @param <T> Your class extending WebCrawler
+     * @param crawlerFactory   factory to create crawlers on demand for each thread
+     * @param numberOfCrawlers the number of concurrent threads that will be contributing in
+     *                         this crawling session.
+     * @param <T>              Your class extending WebCrawler
      */
     public <T extends WebCrawler> void start(WebCrawlerFactory<T> crawlerFactory,
                                              int numberOfCrawlers) {
@@ -215,12 +206,10 @@ public class CrawlController {
     /**
      * Start the crawling session and return immediately.
      *
-     * @param crawlerFactory
-     *            factory to create crawlers on demand for each thread
-     * @param numberOfCrawlers
-     *            the number of concurrent threads that will be contributing in
-     *            this crawling session.
-     * @param <T> Your class extending WebCrawler
+     * @param crawlerFactory   factory to create crawlers on demand for each thread
+     * @param numberOfCrawlers the number of concurrent threads that will be contributing in
+     *                         this crawling session.
+     * @param <T>              Your class extending WebCrawler
      */
     public <T extends WebCrawler> void startNonBlocking(WebCrawlerFactory<T> crawlerFactory,
                                                         final int numberOfCrawlers) {
@@ -231,12 +220,10 @@ public class CrawlController {
      * Start the crawling session and return immediately.
      * This method utilizes default crawler factory that creates new crawler using Java reflection
      *
-     * @param clazz
-     *            the class that implements the logic for crawler threads
-     * @param numberOfCrawlers
-     *            the number of concurrent threads that will be contributing in
-     *            this crawling session.
-     * @param <T> Your class extending WebCrawler
+     * @param clazz            the class that implements the logic for crawler threads
+     * @param numberOfCrawlers the number of concurrent threads that will be contributing in
+     *                         this crawling session.
+     * @param <T>              Your class extending WebCrawler
      */
     public <T extends WebCrawler> void startNonBlocking(Class<T> clazz, int numberOfCrawlers) {
         start(new DefaultWebCrawlerFactory<>(clazz), numberOfCrawlers, false);
@@ -303,16 +290,16 @@ public class CrawlController {
                                     // are
                                     // alive.
                                     logger.info(
-                                        "It looks like no thread is working, waiting for " +
-                                         config.getThreadShutdownDelaySeconds() +
-                                         " seconds to make sure...");
+                                            "It looks like no thread is working, waiting for " +
+                                                    config.getThreadShutdownDelaySeconds() +
+                                                    " seconds to make sure...");
                                     sleep(config.getThreadShutdownDelaySeconds());
 
                                     someoneIsWorking = false;
                                     for (int i = 0; i < threads.size(); i++) {
                                         Thread thread = threads.get(i);
                                         if (thread.isAlive() &&
-                                            crawlers.get(i).isNotWaitingForNewURLs()) {
+                                                crawlers.get(i).isNotWaitingForNewURLs()) {
                                             someoneIsWorking = true;
                                         }
                                     }
@@ -323,10 +310,10 @@ public class CrawlController {
                                                 continue;
                                             }
                                             logger.info(
-                                                "No thread is working and no more URLs are in " +
-                                                "queue waiting for another " +
-                                                config.getThreadShutdownDelaySeconds() +
-                                                " seconds to make sure...");
+                                                    "No thread is working and no more URLs are in " +
+                                                            "queue waiting for another " +
+                                                            config.getThreadShutdownDelaySeconds() +
+                                                            " seconds to make sure...");
                                             sleep(config.getThreadShutdownDelaySeconds());
                                             queueLength = frontier.getQueueLength();
                                             if (queueLength > 0) {
@@ -335,8 +322,8 @@ public class CrawlController {
                                         }
 
                                         logger.info(
-                                            "All of the crawlers are stopped. Finishing the " +
-                                            "process...");
+                                                "All of the crawlers are stopped. Finishing the " +
+                                                        "process...");
                                         // At this step, frontier notifies the threads that were
                                         // waiting for new URLs and they should stop
                                         frontier.finish();
@@ -346,8 +333,8 @@ public class CrawlController {
                                         }
 
                                         logger.info(
-                                            "Waiting for " + config.getCleanupDelaySeconds() +
-                                            " seconds before final clean up...");
+                                                "Waiting for " + config.getCleanupDelaySeconds() +
+                                                        " seconds before final clean up...");
                                         sleep(config.getCleanupDelaySeconds());
 
                                         frontier.close();
@@ -391,7 +378,7 @@ public class CrawlController {
         } catch (Exception e) {
             if (config.isHaltOnError()) {
                 if (e instanceof RuntimeException) {
-                    throw (RuntimeException)e;
+                    throw (RuntimeException) e;
                 } else {
                     throw new RuntimeException("error running the monitor thread", e);
                 }
@@ -411,9 +398,9 @@ public class CrawlController {
                     Throwable t = getError();
                     if (t != null && config.isHaltOnError()) {
                         if (t instanceof RuntimeException) {
-                            throw (RuntimeException)t;
+                            throw (RuntimeException) t;
                         } else if (t instanceof Error) {
-                            throw (Error)t;
+                            throw (Error) t;
                         } else {
                             throw new RuntimeException("error on monitor thread", t);
                         }
@@ -455,9 +442,7 @@ public class CrawlController {
      * Adds a new seed URL. A seed URL is a URL that is fetched by the crawler
      * to extract new URLs in it and follow them for crawling.
      *
-     * @param pageUrl
-     *            the URL of the seed
-     *
+     * @param pageUrl the URL of the seed
      * @throws InterruptedException
      * @throws IOException
      */
@@ -473,16 +458,13 @@ public class CrawlController {
      * with document ids 1,2, and 7. Then the next URL that is found during the
      * crawl will get a doc id of 8. Also you need to ensure to add seeds in
      * increasing order of document ids.
-     *
+     * <p>
      * Specifying doc ids is mainly useful when you have had a previous crawl
      * and have stored the results and want to start a new crawl with seeds
      * which get the same document ids as the previous crawl.
      *
-     * @param pageUrl
-     *            the URL of the seed
-     * @param docId
-     *            the document id that you want to be assigned to this seed URL.
-     *
+     * @param pageUrl the URL of the seed
+     * @param docId   the document id that you want to be assigned to this seed URL.
      * @throws InterruptedException
      * @throws IOException
      */
@@ -529,17 +511,14 @@ public class CrawlController {
      * feature is useful when you have had a previous crawl and have stored the
      * Urls and their associated document ids and want to have a new crawl which
      * is aware of the previously seen Urls and won't re-crawl them.
-     *
+     * <p>
      * Note that if you add three seen Urls with document ids 1,2, and 7. Then
      * the next URL that is found during the crawl will get a doc id of 8. Also
      * you need to ensure to add seen Urls in increasing order of document ids.
      *
-     * @param url
-     *            the URL of the page
-     * @param docId
-     *            the document id that you want to be assigned to this URL.
+     * @param url   the URL of the page
+     * @param docId the document id that you want to be assigned to this URL.
      * @throws UnsupportedEncodingException
-     *
      */
     public void addSeenUrl(String url, int docId) throws UnsupportedEncodingException {
         String canonicalUrl = normalizer.filter(url);
