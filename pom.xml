@@ -106,6 +106,7 @@
         <!-- XXX replace with crawler commons -->
         <url-detector.version>0.1.23</url-detector.version>
         <crawler-commons.version>1.2</crawler-commons.version>
+        <commons-io.version>2.11.0</commons-io.version>
 
         <!-- 3rd party test dependencies -->
         <junit.version>4.13.2</junit.version>

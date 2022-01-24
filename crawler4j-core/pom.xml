@@ -226,7 +226,7 @@
             <groupId>de.hs-heilbronn.mi</groupId>
             <artifactId>crawler4j-frontier-sleepycat</artifactId>
             <version>${crawler4j.version}</version>
-            <!-- test scope here as it is a optional dependency! -->
+            <!-- test scope here as it is an optional dependency! -->
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -240,6 +240,12 @@
             <artifactId>wiremock</artifactId>
             <version>${wiremock.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>

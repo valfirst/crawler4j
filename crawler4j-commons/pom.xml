@@ -17,6 +17,17 @@
             <groupId>com.github.crawler-commons</groupId>
             <artifactId>crawler-commons</artifactId>
             <version>${crawler-commons.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
@@ -65,5 +76,4 @@
             <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
-
 </project>
