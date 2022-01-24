@@ -19,7 +19,8 @@
  */
 package edu.uci.ics.crawler4j.examples.localdata;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -46,7 +47,7 @@ public class LocalDataCollectorCrawler extends WebCrawler {
 
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
-        String href = url.getURL().toLowerCase();
+        String href = url.getURL().toLowerCase(Locale.ROOT);
         return !FILTERS.matcher(href).matches() && href.startsWith("https://www.ics.uci.edu/");
     }
 
@@ -59,11 +60,7 @@ public class LocalDataCollectorCrawler extends WebCrawler {
             HtmlParseData parseData = (HtmlParseData) page.getParseData();
             Set<WebURL> links = parseData.getOutgoingUrls();
             myCrawlStat.incTotalLinks(links.size());
-            try {
-                myCrawlStat.incTotalTextSize(parseData.getText().getBytes("UTF-8").length);
-            } catch (UnsupportedEncodingException ignored) {
-                // Do nothing
-            }
+            myCrawlStat.incTotalTextSize(parseData.getText().getBytes(StandardCharsets.UTF_8).length);
         }
         // We dump this crawler statistics after processing every 50 pages
         if ((myCrawlStat.getTotalProcessedPages() % 50) == 0) {

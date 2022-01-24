@@ -198,12 +198,9 @@
                             <bundledSignatures>
                                 <bundledSignature>jdk-deprecated</bundledSignature>
                                 <bundledSignature>jdk-internal</bundledSignature>
-                                <!-- disallow undocumented classes like sun.misc.Unsafe: -->
                                 <bundledSignature>jdk-non-portable</bundledSignature>
-                                <!-- interesting, yet inactive for the moment:
                                 <bundledSignature>jdk-unsafe</bundledSignature>
                                 <bundledSignature>jdk-reflection</bundledSignature>
-                                -->
                             </bundledSignatures>
                         </configuration>
                         <executions>

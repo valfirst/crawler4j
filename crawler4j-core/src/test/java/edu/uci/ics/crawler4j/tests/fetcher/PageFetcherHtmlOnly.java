@@ -25,6 +25,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.Locale;
 
 import crawlercommons.filters.basic.BasicURLNormalizer;
 import edu.uci.ics.crawler4j.url.WebURL;
@@ -70,7 +71,7 @@ public class PageFetcherHtmlOnly extends PageFetcher {
 
             String contentType = response.containsHeader("Content-Type") ?
                     response.getFirstHeader("Content-Type").getValue() : null;
-            String typeStr = (contentType != null) ? contentType.toLowerCase() : "";
+            String typeStr = (contentType != null) ? contentType.toLowerCase(Locale.ROOT) : "";
 
             if (typeStr.equals("") || (typeStr.contains("text") && typeStr.contains("html"))) {
                 return super.fetchPage(webUrl);

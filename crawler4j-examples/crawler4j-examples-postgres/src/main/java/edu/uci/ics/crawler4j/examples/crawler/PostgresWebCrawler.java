@@ -19,6 +19,7 @@
  */
 package edu.uci.ics.crawler4j.examples.crawler;
 
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -53,7 +54,7 @@ public class PostgresWebCrawler extends WebCrawler {
 
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
-        String href = url.getURL().toLowerCase();
+        String href = url.getURL().toLowerCase(Locale.ROOT);
         return !FILE_ENDING_EXCLUSION_PATTERN.matcher(href).matches();
     }
 

@@ -21,6 +21,7 @@ package edu.uci.ics.crawler4j.examples.multiple;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -47,7 +48,7 @@ public class BasicCrawler extends WebCrawler {
 
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
-        String href = url.getURL().toLowerCase();
+        String href = url.getURL().toLowerCase(Locale.ROOT);
         if (FILTERS.matcher(href).matches()) {
             return false;
         }

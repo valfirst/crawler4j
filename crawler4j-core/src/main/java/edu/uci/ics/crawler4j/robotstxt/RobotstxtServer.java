@@ -44,6 +44,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class RobotstxtServer {
@@ -70,7 +71,7 @@ public class RobotstxtServer {
     }
 
     private static String getHost(URL url) {
-        return url.getHost().toLowerCase();
+        return url.getHost().toLowerCase(Locale.ROOT);
     }
 
     /**

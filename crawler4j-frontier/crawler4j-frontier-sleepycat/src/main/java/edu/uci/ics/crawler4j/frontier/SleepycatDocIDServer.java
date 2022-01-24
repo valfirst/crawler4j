@@ -32,6 +32,8 @@ import com.sleepycat.je.OperationStatus;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.util.Util;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author Yasser Ganjisaffar
  */
@@ -75,7 +77,7 @@ public class SleepycatDocIDServer implements DocIDServer{
             OperationStatus result = null;
             DatabaseEntry value = new DatabaseEntry();
             try {
-                DatabaseEntry key = new DatabaseEntry(url.getBytes());
+                DatabaseEntry key = new DatabaseEntry(url.getBytes(StandardCharsets.UTF_8));
                 result = docIDsDB.get(null, key, value, null);
 
             } catch (RuntimeException e) {
@@ -105,7 +107,7 @@ public class SleepycatDocIDServer implements DocIDServer{
                 }
 
                 ++lastDocID;
-                docIDsDB.put(null, new DatabaseEntry(url.getBytes()),
+                docIDsDB.put(null, new DatabaseEntry(url.getBytes(StandardCharsets.UTF_8)),
                              new DatabaseEntry(Util.int2ByteArray(lastDocID)));
                 return lastDocID;
             } catch (RuntimeException e) {
@@ -135,7 +137,7 @@ public class SleepycatDocIDServer implements DocIDServer{
                 throw new IllegalArgumentException("Doc id: " + prevDocid + " is already assigned to URL: " + url);
             }
 
-            docIDsDB.put(null, new DatabaseEntry(url.getBytes()),
+            docIDsDB.put(null, new DatabaseEntry(url.getBytes(StandardCharsets.UTF_8)),
                          new DatabaseEntry(Util.int2ByteArray(docId)));
             lastDocID = docId;
         }

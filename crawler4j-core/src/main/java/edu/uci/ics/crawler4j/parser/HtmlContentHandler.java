@@ -22,6 +22,7 @@ package edu.uci.ics.crawler4j.parser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.xml.sax.Attributes;
@@ -52,7 +53,7 @@ public class HtmlContentHandler extends DefaultHandler {
         static {
             name2Element = new HashMap<>();
             for (Element element : Element.values()) {
-                name2Element.put(element.toString().toLowerCase(), element);
+                name2Element.put(element.toString().toLowerCase(Locale.ROOT), element);
             }
         }
 
@@ -118,12 +119,12 @@ public class HtmlContentHandler extends DefaultHandler {
 
             String content = attributes.getValue("content");
             if ((equiv != null) && (content != null)) {
-                equiv = equiv.toLowerCase();
+                equiv = equiv.toLowerCase(Locale.ROOT);
                 metaTags.put(equiv, content);
 
                 // http-equiv="refresh" content="0;URL=http://foo.bar/..."
                 if ("refresh".equals(equiv) && (metaRefresh == null)) {
-                    int pos = content.toLowerCase().indexOf("url=");
+                    int pos = content.toLowerCase(Locale.ROOT).indexOf("url=");
                     if (pos != -1) {
                         metaRefresh = content.substring(pos + 4);
                         addToOutgoingUrls(metaRefresh, localName);

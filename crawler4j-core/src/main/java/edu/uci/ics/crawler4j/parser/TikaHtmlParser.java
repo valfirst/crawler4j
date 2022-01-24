@@ -22,7 +22,9 @@ package edu.uci.ics.crawler4j.parser;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import crawlercommons.filters.basic.BasicURLNormalizer;
@@ -93,7 +95,7 @@ public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
             parsedData.setOutgoingUrls(outgoingUrls);
 
             if (page.getContentCharset() == null) {
-                parsedData.setHtml(new String(page.getContentData()));
+                parsedData.setHtml(new String(page.getContentData(), StandardCharsets.UTF_8));
             } else {
                 parsedData.setHtml(new String(page.getContentData(), page.getContentCharset()));
             }
@@ -123,7 +125,7 @@ public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
                 continue;
             }
 
-            String hrefLoweredCase = href.trim().toLowerCase();
+            String hrefLoweredCase = href.trim().toLowerCase(Locale.ROOT);
             if (!hrefLoweredCase.contains("javascript:") &&
                     !hrefLoweredCase.contains("mailto:") && !hrefLoweredCase.contains("@")) {
                 String url = normalizer.filter(UrlResolver.resolveUrl((contextURL == null) ? "" : contextURL, href));

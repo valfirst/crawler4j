@@ -21,6 +21,8 @@ package edu.uci.ics.crawler4j.parser;
 
 import org.apache.tika.parser.html.HtmlMapper;
 
+import java.util.Locale;
+
 /**
  * Maps all HTML tags (not ignore some of this)
  *
@@ -30,7 +32,7 @@ public class AllTagMapper implements HtmlMapper {
 
     @Override
     public String mapSafeElement(String name) {
-        return name.toLowerCase();
+        return name.toLowerCase(Locale.ROOT);
     }
 
     @Override
@@ -40,6 +42,6 @@ public class AllTagMapper implements HtmlMapper {
 
     @Override
     public String mapSafeAttribute(String elementName, String attributeName) {
-        return attributeName.toLowerCase();
+        return attributeName.toLowerCase(Locale.ROOT);
     }
 }

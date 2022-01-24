@@ -19,6 +19,7 @@
  */
 package edu.uci.ics.crawler4j.examples.statushandler;
 
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import org.apache.hc.core5.http.HttpStatus;
@@ -46,7 +47,7 @@ public class StatusHandlerCrawler extends WebCrawler {
      */
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
-        String href = url.getURL().toLowerCase();
+        String href = url.getURL().toLowerCase(Locale.ROOT);
         return !FILTERS.matcher(href).matches() && href.startsWith("https://www.ics.uci.edu/");
     }
 

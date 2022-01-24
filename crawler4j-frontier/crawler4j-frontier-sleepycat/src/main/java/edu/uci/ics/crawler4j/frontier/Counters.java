@@ -19,6 +19,7 @@
  */
 package edu.uci.ics.crawler4j.frontier;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,7 +84,7 @@ public class Counters {
 
             while (result == OperationStatus.SUCCESS) {
                 if (value.getData().length > 0) {
-                    String name = new String(key.getData());
+                    String name = new String(key.getData(), StandardCharsets.UTF_8);
                     long counterValue = Util.byteArray2Long(value.getData());
                     counterValues.put(name, counterValue);
                 }
@@ -110,7 +111,7 @@ public class Counters {
                 counterValues.put(name, value);
                 if (statisticsDB != null) {
                     Transaction txn = env.beginTransaction(null, null);
-                    statisticsDB.put(txn, new DatabaseEntry(name.getBytes()),
+                    statisticsDB.put(txn, new DatabaseEntry(name.getBytes(StandardCharsets.UTF_8)),
                                      new DatabaseEntry(Util.long2ByteArray(value)));
                     txn.commit();
                 }

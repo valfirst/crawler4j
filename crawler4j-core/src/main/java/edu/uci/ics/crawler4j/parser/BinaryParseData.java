@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -102,7 +103,7 @@ public class BinaryParseData implements ParseData {
             transformer.setOutputProperty(OutputKeys.ENCODING, encoding);
         }
 
-        transformerHandler.setResult(new StreamResult(new PrintStream(out)));
+        transformerHandler.setResult(new StreamResult(new PrintStream(out, false, StandardCharsets.UTF_8)));
         return transformerHandler;
     }
 

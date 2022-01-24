@@ -19,6 +19,8 @@
  */
 package edu.uci.ics.crawler4j.util;
 
+import java.util.Locale;
+
 /**
  * @author Yasser Ganjisaffar
  */
@@ -69,20 +71,20 @@ public class Util {
     }
 
     public static boolean hasBinaryContent(String contentType) {
-        String typeStr = (contentType != null) ? contentType.toLowerCase() : "";
+        String typeStr = (contentType != null) ? contentType.toLowerCase(Locale.ROOT) : "";
 
         return typeStr.contains("image") || typeStr.contains("audio") ||
                typeStr.contains("video") || typeStr.contains("application");
     }
 
     public static boolean hasPlainTextContent(String contentType) {
-        String typeStr = (contentType != null) ? contentType.toLowerCase() : "";
+        String typeStr = (contentType != null) ? contentType.toLowerCase(Locale.ROOT) : "";
 
         return typeStr.contains("text") && !typeStr.contains("html");
     }
 
     public static boolean hasCssTextContent(String contentType) {
-        String typeStr = (contentType != null) ? contentType.toLowerCase() : "";
+        String typeStr = (contentType != null) ? contentType.toLowerCase(Locale.ROOT) : "";
 
         return typeStr.contains("css");
     }

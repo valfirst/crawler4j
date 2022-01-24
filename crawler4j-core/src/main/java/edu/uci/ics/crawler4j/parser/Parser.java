@@ -32,6 +32,7 @@ import edu.uci.ics.crawler4j.util.Net;
 import edu.uci.ics.crawler4j.util.Util;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Yasser Ganjisaffar
@@ -93,7 +94,7 @@ public class Parser {
             try {
                 CssParseData parseData = new CssParseData(factory, normalizer);
                 if (page.getContentCharset() == null) {
-                    parseData.setTextContent(new String(page.getContentData()));
+                    parseData.setTextContent(new String(page.getContentData(), StandardCharsets.UTF_8));
                 } else {
                     parseData.setTextContent(
                             new String(page.getContentData(), page.getContentCharset()));
@@ -108,7 +109,7 @@ public class Parser {
             try {
                 TextParseData parseData = new TextParseData();
                 if (page.getContentCharset() == null) {
-                    parseData.setTextContent(new String(page.getContentData()));
+                    parseData.setTextContent(new String(page.getContentData(), StandardCharsets.UTF_8));
                 } else {
                     parseData.setTextContent(
                             new String(page.getContentData(), page.getContentCharset()));

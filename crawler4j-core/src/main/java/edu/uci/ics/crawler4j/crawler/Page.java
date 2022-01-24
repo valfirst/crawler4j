@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.Header;
@@ -180,7 +181,7 @@ public class Page {
         }
 
         if (charset != null) {
-            contentCharset = charset.displayName();
+            contentCharset = charset.displayName(Locale.ROOT);
         }
 
         contentData = toByteArray(entity, maxBytes);
