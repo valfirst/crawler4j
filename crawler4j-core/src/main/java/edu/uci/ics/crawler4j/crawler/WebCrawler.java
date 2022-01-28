@@ -415,9 +415,14 @@ public class WebCrawler implements Runnable {
 
             fetchResult = pageFetcher.fetchPage(curURL);
             int statusCode = fetchResult.getStatusCode();
-            handlePageStatusCode(curURL, statusCode,
-                    EnglishReasonPhraseCatalog.INSTANCE.getReason(statusCode,
-                            Locale.ENGLISH));
+
+            try {
+                handlePageStatusCode(curURL, statusCode,
+                        EnglishReasonPhraseCatalog.INSTANCE.getReason(statusCode,
+                                Locale.ENGLISH));
+            }catch (IllegalArgumentException e) {
+                onUnhandledException(curURL, e);
+            }
             // Finds the status reason for all known statuses
 
             page.setFetchResponseHeaders(fetchResult.getResponseHeaders());
