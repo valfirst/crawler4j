@@ -80,9 +80,23 @@ public class RobotstxtServer {
      * @throws InterruptedException
      */
     public boolean allows(WebURL webURL) throws InterruptedException {
+        return allows(webURL, false);
+    }
+
+    /**
+     * Please note that in the case of a bad URL, TRUE will be returned
+     *
+     * @throws InterruptedException
+     */
+    public boolean allows(WebURL webURL, boolean isSeed) throws InterruptedException {
         if (!config.isEnabled()) {
             return true;
         }
+
+        if(config.isSkipCheckForSeeds() && isSeed) {
+            return true;
+        }
+
         try {
             URL url = new URL(webURL.getURL());
             String host = getHost(url);

@@ -490,7 +490,7 @@ public class CrawlController {
             webUrl.setURL(canonicalUrl);
             webUrl.setDocid(docId);
             webUrl.setDepth((short) 0);
-            if (robotstxtServer.allows(webUrl)) {
+            if (robotstxtServer.allows(webUrl, true)) {
                 frontier.schedule(webUrl);
             } else {
                 // using the WARN level here, as the user specifically asked to add this seed

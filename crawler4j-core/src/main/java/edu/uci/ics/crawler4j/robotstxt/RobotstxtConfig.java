@@ -35,6 +35,12 @@ public class RobotstxtConfig {
     private String userAgentName = "crawler4j";
 
     /**
+     * If we should skip the robots.txt check in the initial seed adding phase.
+     * URLs are checked while being processed.
+     */
+    private boolean skipCheckForSeeds = true;
+
+    /**
      * The maximum number of hosts for which their robots.txt is cached.
      */
     private int cacheSize = 500;
@@ -63,4 +69,11 @@ public class RobotstxtConfig {
         this.cacheSize = cacheSize;
     }
 
+    public boolean isSkipCheckForSeeds() {
+        return skipCheckForSeeds;
+    }
+
+    public void setSkipCheckForSeeds(boolean skipCheckForSeeds) {
+        this.skipCheckForSeeds = skipCheckForSeeds;
+    }
 }
