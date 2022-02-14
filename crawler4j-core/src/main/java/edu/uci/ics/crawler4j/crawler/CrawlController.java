@@ -445,6 +445,27 @@ public class CrawlController {
     }
 
     /**
+     * Adds a new seed URLs. A seed URL is a URL that is fetched by the crawler
+     * to extract new URLs in it and follow them for crawling.
+     *
+     * @param pageUrls the URL of the seed
+     * @throws InterruptedException
+     */
+    public void addSeeds(List<String> pageUrls) throws InterruptedException {
+        List<WebURL> urls = new ArrayList<>();
+        for (String pageUrl : pageUrls) {
+            WebURL u = addSeedHelper(pageUrl, -1);
+            if (u != null) {
+                urls.add(u);
+            }
+        }
+
+        if (!urls.isEmpty()) {
+            frontier.scheduleAll(urls);
+        }
+    }
+
+    /**
      * Adds a new seed URL. A seed URL is a URL that is fetched by the crawler
      * to extract new URLs in it and follow them for crawling. You can also
      * specify a specific document id to be assigned to this seed URL. This
@@ -462,6 +483,13 @@ public class CrawlController {
      * @throws InterruptedException
      */
     public void addSeed(String pageUrl, int docId) throws InterruptedException {
+        WebURL webURL = addSeedHelper(pageUrl, docId);
+        if(webURL != null) {
+            frontier.schedule(webURL);
+        }
+    }
+
+    private WebURL addSeedHelper(String pageUrl, int docId) throws InterruptedException {
         String canonicalUrl = normalizer.filter(pageUrl);
         if (canonicalUrl == null) {
             logger.error("Invalid seed URL: {}", pageUrl);
@@ -470,7 +498,7 @@ public class CrawlController {
                 docId = docIdServer.getDocId(canonicalUrl);
                 if (docId > 0) {
                     logger.trace("This URL is already seen.");
-                    return;
+                    return null;
                 }
                 docId = docIdServer.getNewDocID(canonicalUrl);
             } else {
@@ -491,12 +519,13 @@ public class CrawlController {
             webUrl.setDocid(docId);
             webUrl.setDepth((short) 0);
             if (robotstxtServer.allows(webUrl, true)) {
-                frontier.schedule(webUrl);
+               return webUrl;
             } else {
                 // using the WARN level here, as the user specifically asked to add this seed
                 logger.warn("Robots.txt does not allow this seed: {}", pageUrl);
             }
         }
+        return null;
     }
 
     /**

@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -70,6 +71,7 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
         final URLFrontierGrpc.URLFrontierStub stub = URLFrontierGrpc.newStub(channel);
 
         final AtomicInteger acked = new AtomicInteger(0);
+        final AtomicBoolean completed = new AtomicBoolean(false);
         int sent = 0;
 
         StreamObserver<Urlfrontier.String> responseObserver =
@@ -82,12 +84,13 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
 
                     @Override
                     public void onError(Throwable t) {
+                        completed.set(true);
                         logger.warn(t.getLocalizedMessage(), t);
                     }
 
                     @Override
                     public void onCompleted() {
-                        //nothing to do
+                        completed.set(true);
                     }
                 };
 
@@ -98,6 +101,15 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
             if ((maxPagesToFetch > 0) &&
                     ((scheduledPages.get() + sent) >= maxPagesToFetch)) {
                 break;
+            }
+
+            // don't sent too many in one go
+            while (sent > acked.get() + 10000) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
 
             final Urlfrontier.URLItem item = toItem(url);
@@ -111,6 +123,17 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
 
         if (sent > 0) {
             scheduledPages.addAndGet(sent);
+        }
+
+        streamObserver.onCompleted();
+
+        // wait for completion
+        while (!completed.get()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
 
         channel.shutdown();
