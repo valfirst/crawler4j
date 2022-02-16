@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,6 +49,9 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
     private final CrawlConfig crawlConfig;
     private final AtomicLong scheduledPages;
     private final AtomicLong completedPages;
+    private final ManagedChannel channel;
+    private final URLFrontierGrpc.URLFrontierStub asyncStub;
+    private final URLFrontierGrpc.URLFrontierBlockingStub blockingStub;
 
     public URLFrontierAdapter(CrawlConfig crawlConfig, int maxQueues, String host, int port) {
         this.crawlConfig = crawlConfig;
@@ -57,18 +60,17 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
         this.maxQueues = maxQueues;
         this.scheduledPages = new AtomicLong(0);
         this.completedPages = new AtomicLong(0);
+        this.channel = ManagedChannelBuilder.forAddress(host, port)
+                .usePlaintext()
+                .build();
+        this.asyncStub = URLFrontierGrpc.newStub(channel);
+        this.blockingStub = URLFrontierGrpc.newBlockingStub(channel);
     }
 
     @Override
     public void scheduleAll(List<WebURL> urls) {
+
         int maxPagesToFetch = crawlConfig.getMaxPagesToFetch();
-
-        final ManagedChannel channel =
-                ManagedChannelBuilder.forAddress(host, port)
-                        .usePlaintext()
-                        .build();
-
-        final URLFrontierGrpc.URLFrontierStub stub = URLFrontierGrpc.newStub(channel);
 
         final AtomicInteger acked = new AtomicInteger(0);
         final AtomicBoolean completed = new AtomicBoolean(false);
@@ -94,7 +96,7 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
                     }
                 };
 
-        final StreamObserver<Urlfrontier.URLItem> streamObserver = stub.putURLs(responseObserver);
+        final StreamObserver<Urlfrontier.URLItem> streamObserver = asyncStub.putURLs(responseObserver);
 
         for (WebURL url : urls) {
 
@@ -135,9 +137,6 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
                 Thread.currentThread().interrupt();
             }
         }
-
-        channel.shutdown();
-
     }
 
     private Urlfrontier.URLItem toItem(WebURL url) {
@@ -185,25 +184,15 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
 
     @Override
     public void getNextURLs(int max, List<WebURL> result) {
-
-        final ManagedChannel channel =
-                ManagedChannelBuilder.forAddress(host, port)
-                        .usePlaintext()
-                        .build();
-
-        final URLFrontierGrpc.URLFrontierBlockingStub stub = URLFrontierGrpc.newBlockingStub(channel);
-
         final Urlfrontier.GetParams.Builder request =
                 Urlfrontier.GetParams.newBuilder()
                         .setMaxUrlsPerQueue(max / maxQueues)
                         .setDelayRequestable(crawlConfig.getPolitenessDelay())
                         .setMaxQueues(maxQueues);
 
-        stub.getURLs(request.build())
+        blockingStub.getURLs(request.build())
                 .forEachRemaining(
                         info -> result.add(new URLFrontierWebURLImpl(info)));
-
-        channel.shutdown();
 
     }
 
@@ -212,13 +201,6 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
 
         if (webURL instanceof URLFrontierWebURLImpl) {
             URLFrontierWebURLImpl url = (URLFrontierWebURLImpl) webURL;
-            // this is handled internally be the url frontier impl
-            final ManagedChannel channel =
-                    ManagedChannelBuilder.forAddress(host, port)
-                            .usePlaintext()
-                            .build();
-
-            final URLFrontierGrpc.URLFrontierStub stub = URLFrontierGrpc.newStub(channel);
 
             final StreamObserver<Urlfrontier.String> responseObserver =
                     new StreamObserver<>() {
@@ -239,7 +221,7 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
                         }
                     };
 
-            final StreamObserver<Urlfrontier.URLItem> streamObserver = stub.putURLs(responseObserver);
+            final StreamObserver<Urlfrontier.URLItem> streamObserver = asyncStub.putURLs(responseObserver);
 
             final Urlfrontier.URLItem.Builder builder = Urlfrontier.URLItem.newBuilder();
 
@@ -252,7 +234,6 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
 
             streamObserver.onNext(builder.build());
 
-            channel.shutdown();
         } else {
             logger.error("Received instance is not of type {}", URLFrontierWebURLImpl.class.getSimpleName());
         }
@@ -291,7 +272,7 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
 
     @Override
     public void finish() {
-        //nothing to do
+       channel.shutdown();
     }
 
     @Override
@@ -323,19 +304,10 @@ public class URLFrontierAdapter implements Frontier, DocIDServer {
     }
 
     protected Urlfrontier.Stats getStatistics() {
-        final ManagedChannel channel =
-                ManagedChannelBuilder.forAddress(host, port)
-                        .usePlaintext()
-                        .build();
-
-        final URLFrontierGrpc.URLFrontierBlockingStub blockingFrontier = URLFrontierGrpc.newBlockingStub(channel);
-
         crawlercommons.urlfrontier.Urlfrontier.String.Builder builder =
                 crawlercommons.urlfrontier.Urlfrontier.String.newBuilder();
 
-        Urlfrontier.Stats s = blockingFrontier.getStats(builder.build());
+        return blockingStub.getStats(builder.build());
 
-        channel.shutdown();
-        return s;
     }
 }
