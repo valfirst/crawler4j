@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import crawlercommons.filters.basic.BasicURLNormalizer;
 import edu.uci.ics.crawler4j.url.UrlResolver;
@@ -125,12 +126,7 @@ public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
             }
 
             String hrefLoweredCase = href.trim().toLowerCase(Locale.ROOT);
-            if (!hrefLoweredCase.contains("about:") && !hrefLoweredCase.contains("tel:") &&
-                    !hrefLoweredCase.contains("data:") && !hrefLoweredCase.contains("whatsapp:") &&
-                    !hrefLoweredCase.contains("javascript:") && !hrefLoweredCase.contains("viber:") &&
-                    !hrefLoweredCase.contains("sms:") && !hrefLoweredCase.contains("android-app:") &&
-                    !hrefLoweredCase.contains("fb-messenger:") && !hrefLoweredCase.contains("mailto:") &&
-                    !hrefLoweredCase.contains("@") && !hrefLoweredCase.contains("fb-messenger:")) {
+            if (!containsForbiddenRefTag(hrefLoweredCase)) {
                 String url = normalizer.filter(UrlResolver.resolveUrl((contextURL == null) ? "" : contextURL, href));
                 if (url != null) {
                     WebURL webURL = factory.newWebUrl();
@@ -148,6 +144,10 @@ public class TikaHtmlParser implements edu.uci.ics.crawler4j.parser.HtmlParser {
             }
         }
         return outgoingUrls;
+    }
+
+    protected boolean containsForbiddenRefTag(String href) {
+        return Stream.of("about:", "tel:", "data:", "whatsapp:", "javascript:", "viber:", "sms:", "android-app:", "fb-messenger:", "mailto:", "@").anyMatch(href::contains);
     }
 
     private String chooseEncoding(Page page, Metadata metadata) {
