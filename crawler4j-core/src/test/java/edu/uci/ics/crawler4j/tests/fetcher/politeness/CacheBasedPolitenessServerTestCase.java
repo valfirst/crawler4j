@@ -10,16 +10,16 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class PolitenessServerTestCase {
+public class CacheBasedPolitenessServerTestCase {
 
-    private PolitenessServer politenessServer;
+    private PolitenessServer cacheBasedPolitenessServer;
     private CrawlConfig config;
 
     @Before
     public void init() {
         this.config = new CrawlConfig();
         this.config.setPolitenessDelay(100);
-        this.politenessServer = new PolitenessServer(config);
+        this.cacheBasedPolitenessServer = new PolitenessServer(config);
     }
 
     @Test
@@ -28,11 +28,11 @@ public class PolitenessServerTestCase {
         WebURL webUrl = new MockWebUrl();
         webUrl.setURL("https://github.com/yasserg/crawler4j");
 
-        long politenessDelay = politenessServer.applyPoliteness(webUrl);
+        long politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
         assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
-        politenessDelay = politenessServer.applyPoliteness(webUrl);
+        politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
         assertTrue(politenessDelay > 0);
 
@@ -44,20 +44,20 @@ public class PolitenessServerTestCase {
         WebURL webUrl = new MockWebUrl();
         webUrl.setURL("https://github.com/yasserg/crawler4j");
 
-        long politenessDelay = politenessServer.applyPoliteness(webUrl);
+        long politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
         assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
         webUrl.setURL("https://github.com/yasserg/crawler4j/blob/master/pom.xml");
 
-        politenessDelay = politenessServer.applyPoliteness(webUrl);
+        politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
         assertTrue(politenessDelay > 0);
 
         //let's wait some time, it should not be listed anymore
         sleep(1000);
 
-        politenessDelay = politenessServer.applyPoliteness(webUrl);
+        politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
         assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
@@ -69,26 +69,26 @@ public class PolitenessServerTestCase {
         WebURL webUrl = new MockWebUrl();
         webUrl.setURL("https://github.com/yasserg/crawler4j");
 
-        long politenessDelay = politenessServer.applyPoliteness(webUrl);
+        long politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
         assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
         webUrl.setURL("http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentLinkedQueue.html");
 
-        politenessDelay = politenessServer.applyPoliteness(webUrl);
+        politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
         assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
         webUrl.setURL("https://github.com/yasserg/crawler4j/blob/master/pom.xml");
 
-        politenessDelay = politenessServer.applyPoliteness(webUrl);
+        politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
         assertTrue(politenessDelay > 0);
 
         //let's wait some time, it should not be listed anymore
         sleep(3000);
 
-        politenessDelay = politenessServer.applyPoliteness(webUrl);
+        politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
         assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
@@ -100,25 +100,25 @@ public class PolitenessServerTestCase {
         WebURL webUrl = new MockWebUrl();
         webUrl.setURL("https://github.com/yasserg/crawler4j");
 
-        long politenessDelay = politenessServer.applyPoliteness(webUrl);
+        long politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
         assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
         webUrl.setURL("http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentLinkedQueue.html");
 
-        politenessDelay = politenessServer.applyPoliteness(webUrl);
+        politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
         assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
         webUrl.setURL("https://www.google.de/?gws_rd=ssl");
 
-        politenessDelay = politenessServer.applyPoliteness(webUrl);
+        politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
         assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
         webUrl.setURL("https://stackoverflow.com/");
 
-        politenessDelay = politenessServer.applyPoliteness(webUrl);
+        politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
         assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
@@ -126,7 +126,7 @@ public class PolitenessServerTestCase {
         sleep(5000);
 
         //entries should be evicted...
-        assertEquals(0, politenessServer.getSize());
+        assertEquals(0, cacheBasedPolitenessServer.getSize());
 
     }
 

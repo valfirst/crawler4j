@@ -24,11 +24,11 @@ import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 import java.util.Locale;
 
 import crawlercommons.filters.basic.BasicURLNormalizer;
-import edu.uci.ics.crawler4j.fetcher.politeness.PolitenessServer;
+import edu.uci.ics.crawler4j.PolitenessServer;
+import edu.uci.ics.crawler4j.fetcher.politeness.SimplePolitenessServer;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
@@ -42,7 +42,7 @@ public class PageFetcherHtmlOnly extends PageFetcher {
 
     public PageFetcherHtmlOnly(CrawlConfig config)
             throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-        super(config, BasicURLNormalizer.newBuilder().idnNormalization(BasicURLNormalizer.IdnNormalization.NONE).build(), new PolitenessServer(config));
+        super(config, BasicURLNormalizer.newBuilder().idnNormalization(BasicURLNormalizer.IdnNormalization.NONE).build(), new SimplePolitenessServer(config));
     }
 
     @Override
@@ -55,12 +55,9 @@ public class PageFetcherHtmlOnly extends PageFetcher {
         try {
             head = new HttpHead(toFetchURL);
 
-            synchronized (mutex) {
-                long now = new Date().getTime();
-                if (now - this.lastFetchTime < getConfig().getPolitenessDelay()) {
-                    Thread.sleep(getConfig().getPolitenessDelay() - (now - this.lastFetchTime));
-                }
-                this.lastFetchTime = new Date().getTime();
+            final long politenessDelay = getPolitenessServer().applyPoliteness(webUrl);
+            if (politenessDelay != PolitenessServer.NO_POLITENESS_APPLIED) {
+                Thread.sleep(politenessDelay);
             }
 
             CloseableHttpResponse response = httpClient.execute(head);

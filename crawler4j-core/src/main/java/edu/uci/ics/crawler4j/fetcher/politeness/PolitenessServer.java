@@ -27,11 +27,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class PolitenessServer {
+public class PolitenessServer implements edu.uci.ics.crawler4j.PolitenessServer {
 
     private static final Logger logger = LoggerFactory.getLogger(PolitenessServer.class);
-
-    public static int NO_POLITENESS_APPLIED = -1;
 
     protected Cache<String, Long> seenHosts;
     protected CrawlConfig config;

@@ -28,7 +28,6 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,17 +84,16 @@ public class PageFetcher {
     protected final Object mutex = new Object();
     protected CrawlConfig config;
     protected BasicURLNormalizer normalizer;
-    protected PolitenessServer politenessServer;
+    protected edu.uci.ics.crawler4j.PolitenessServer politenessServer;
     protected PoolingHttpClientConnectionManager connectionManager;
     protected CloseableHttpClient httpClient;
-    protected long lastFetchTime = 0;
     protected IdleConnectionMonitorThread connectionMonitorThread = null;
 
     public PageFetcher(CrawlConfig config, BasicURLNormalizer normalizer) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         this(config, normalizer, new PolitenessServer(config));
     }
 
-    public PageFetcher(CrawlConfig config, BasicURLNormalizer normalizer, PolitenessServer politenessServer) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
+    public PageFetcher(CrawlConfig config, BasicURLNormalizer normalizer, edu.uci.ics.crawler4j.PolitenessServer politenessServer) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
         this.config = config;
         this.normalizer = normalizer;
         this.politenessServer = politenessServer;
@@ -343,5 +341,9 @@ public class PageFetcher {
 
     protected CrawlConfig getConfig() {
         return config;
+    }
+
+    protected edu.uci.ics.crawler4j.PolitenessServer getPolitenessServer() {
+        return politenessServer;
     }
 }
