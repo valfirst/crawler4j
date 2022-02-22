@@ -108,6 +108,8 @@
         <crawler-commons.version>1.2</crawler-commons.version>
         <commons-io.version>2.11.0</commons-io.version>
 
+        <cache2k.version>2.6.1.Final</cache2k.version>
+
         <!-- 3rd party test dependencies -->
         <junit.version>4.13.2</junit.version>
         <wiremock.version>2.27.2</wiremock.version>

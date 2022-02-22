@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,6 +36,7 @@ import java.util.Map;
 import javax.net.ssl.SSLContext;
 
 import crawlercommons.filters.basic.BasicURLNormalizer;
+import edu.uci.ics.crawler4j.fetcher.politeness.PolitenessServer;
 import org.apache.hc.client5.http.ClientProtocolException;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.Credentials;
@@ -82,20 +83,22 @@ import edu.uci.ics.crawler4j.url.WebURL;
 public class PageFetcher {
     protected static final Logger logger = LoggerFactory.getLogger(PageFetcher.class);
     protected final Object mutex = new Object();
-    /**
-     * This field is protected for retro compatibility. Please use the getter method: getConfig() to
-     * read this field;
-     */
-    protected final CrawlConfig config;
-    protected final BasicURLNormalizer normalizer;
+    protected CrawlConfig config;
+    protected BasicURLNormalizer normalizer;
+    protected PolitenessServer politenessServer;
     protected PoolingHttpClientConnectionManager connectionManager;
     protected CloseableHttpClient httpClient;
     protected long lastFetchTime = 0;
     protected IdleConnectionMonitorThread connectionMonitorThread = null;
 
-    public PageFetcher(CrawlConfig config, BasicURLNormalizer normalizer) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
+    public PageFetcher(CrawlConfig config, BasicURLNormalizer normalizer) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+        this(config, normalizer, new PolitenessServer(config));
+    }
+
+    public PageFetcher(CrawlConfig config, BasicURLNormalizer normalizer, PolitenessServer politenessServer) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
         this.config = config;
         this.normalizer = normalizer;
+        this.politenessServer = politenessServer;
 
         RequestConfig requestConfig = RequestConfig.custom()
                 .setExpectContinueEnabled(false)
@@ -254,15 +257,10 @@ public class PageFetcher {
         HttpUriRequest request = null;
         try {
             request = newHttpUriRequest(toFetchURL);
-            if (config.getPolitenessDelay() > 0) {
-                // Applying Politeness delay
-                synchronized (mutex) {
-                    long now = (new Date()).getTime();
-                    if ((now - lastFetchTime) < config.getPolitenessDelay()) {
-                        Thread.sleep(config.getPolitenessDelay() - (now - lastFetchTime));
-                    }
-                    lastFetchTime = (new Date()).getTime();
-                }
+
+            final long politenessDelay = politenessServer.applyPoliteness(webUrl);
+            if (politenessDelay != PolitenessServer.NO_POLITENESS_APPLIED) {
+                Thread.sleep(politenessDelay);
             }
 
             CloseableHttpResponse response = httpClient.execute(request);
@@ -272,7 +270,7 @@ public class PageFetcher {
             // Setting HttpStatus
             int statusCode = response.getCode();
 
-                        // If Redirect ( 3xx )
+            // If Redirect ( 3xx )
             if (statusCode == HttpStatus.SC_MOVED_PERMANENTLY ||
                     statusCode == HttpStatus.SC_MOVED_TEMPORARILY ||
                     statusCode == HttpStatus.SC_MULTIPLE_CHOICES ||

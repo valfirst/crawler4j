@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import crawlercommons.filters.basic.BasicURLNormalizer;
+import edu.uci.ics.crawler4j.fetcher.politeness.PolitenessServer;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
@@ -41,7 +42,7 @@ public class PageFetcherHtmlOnly extends PageFetcher {
 
     public PageFetcherHtmlOnly(CrawlConfig config)
             throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-        super(config, BasicURLNormalizer.newBuilder().idnNormalization(BasicURLNormalizer.IdnNormalization.NONE).build());
+        super(config, BasicURLNormalizer.newBuilder().idnNormalization(BasicURLNormalizer.IdnNormalization.NONE).build(), new PolitenessServer(config));
     }
 
     @Override
