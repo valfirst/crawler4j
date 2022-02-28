@@ -95,37 +95,6 @@ public class SimplePolitenessServerTestCase {
 
     }
 
-    @Test
-    public void testRemoveExpiredEntries() {
-
-        WebURL webUrl = new MockWebUrl();
-        webUrl.setURL("https://github.com/yasserg/crawler4j");
-
-        long politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
-
-        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
-
-        webUrl.setURL("http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentLinkedQueue.html");
-
-        politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
-
-        assertEquals(config.getPolitenessDelay(), politenessDelay);
-
-        webUrl.setURL("https://www.google.de/?gws_rd=ssl");
-
-        politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
-
-        assertEquals(config.getPolitenessDelay(), politenessDelay);
-
-        webUrl.setURL("https://stackoverflow.com/");
-
-        politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
-
-        assertEquals(config.getPolitenessDelay(), politenessDelay);
-
-    }
-
-
     private void sleep(int i) {
         try {
             Thread.sleep(i);
