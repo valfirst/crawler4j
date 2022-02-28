@@ -2,8 +2,6 @@ package edu.uci.ics.crawler4j.fetcher.politeness;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.url.WebURL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
@@ -11,8 +9,6 @@ import java.util.Date;
  * This class handles the politeness logic similar to earlier versions of crawler4j, i.e. apply a delay to every request.
  */
 public class SimplePolitenessServer implements edu.uci.ics.crawler4j.PolitenessServer {
-
-    private static final Logger logger = LoggerFactory.getLogger(PolitenessServer.class);
 
     protected CrawlConfig config;
     private final Object mutex = new Object();

@@ -35,7 +35,8 @@ import java.util.Map;
 import javax.net.ssl.SSLContext;
 
 import crawlercommons.filters.basic.BasicURLNormalizer;
-import edu.uci.ics.crawler4j.fetcher.politeness.PolitenessServer;
+import edu.uci.ics.crawler4j.PolitenessServer;
+import edu.uci.ics.crawler4j.fetcher.politeness.CachedPolitenessServer;
 import org.apache.hc.client5.http.ClientProtocolException;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.Credentials;
@@ -81,19 +82,18 @@ import edu.uci.ics.crawler4j.url.WebURL;
  */
 public class PageFetcher {
     protected static final Logger logger = LoggerFactory.getLogger(PageFetcher.class);
-    protected final Object mutex = new Object();
     protected CrawlConfig config;
     protected BasicURLNormalizer normalizer;
-    protected edu.uci.ics.crawler4j.PolitenessServer politenessServer;
+    protected PolitenessServer politenessServer;
     protected PoolingHttpClientConnectionManager connectionManager;
     protected CloseableHttpClient httpClient;
     protected IdleConnectionMonitorThread connectionMonitorThread = null;
 
     public PageFetcher(CrawlConfig config, BasicURLNormalizer normalizer) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-        this(config, normalizer, new PolitenessServer(config));
+        this(config, normalizer, new CachedPolitenessServer(config));
     }
 
-    public PageFetcher(CrawlConfig config, BasicURLNormalizer normalizer, edu.uci.ics.crawler4j.PolitenessServer politenessServer) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
+    public PageFetcher(CrawlConfig config, BasicURLNormalizer normalizer, PolitenessServer politenessServer) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
         this.config = config;
         this.normalizer = normalizer;
         this.politenessServer = politenessServer;
@@ -257,7 +257,7 @@ public class PageFetcher {
             request = newHttpUriRequest(toFetchURL);
 
             final long politenessDelay = politenessServer.applyPoliteness(webUrl);
-            if (politenessDelay != PolitenessServer.NO_POLITENESS_APPLIED) {
+            if (politenessDelay != CachedPolitenessServer.NO_POLITENESS_APPLIED) {
                 Thread.sleep(politenessDelay);
             }
 

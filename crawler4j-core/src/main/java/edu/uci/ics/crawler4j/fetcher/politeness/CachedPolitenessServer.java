@@ -27,15 +27,15 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class PolitenessServer implements edu.uci.ics.crawler4j.PolitenessServer {
+public class CachedPolitenessServer implements edu.uci.ics.crawler4j.PolitenessServer {
 
-    private static final Logger logger = LoggerFactory.getLogger(PolitenessServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(CachedPolitenessServer.class);
 
     protected Cache<String, Long> seenHosts;
     protected CrawlConfig config;
     private final Object mutex = new Object();
 
-    public PolitenessServer(CrawlConfig config) {
+    public CachedPolitenessServer(CrawlConfig config) {
         this.seenHosts = new Cache2kBuilder<String, Long>() {
         }
                 .expireAfterWrite(config.getPolitenessDelay(), TimeUnit.MILLISECONDS)

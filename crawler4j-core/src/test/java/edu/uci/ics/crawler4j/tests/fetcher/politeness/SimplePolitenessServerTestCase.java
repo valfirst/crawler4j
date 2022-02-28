@@ -1,7 +1,7 @@
 package edu.uci.ics.crawler4j.tests.fetcher.politeness;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
-import edu.uci.ics.crawler4j.fetcher.politeness.PolitenessServer;
+import edu.uci.ics.crawler4j.fetcher.politeness.CachedPolitenessServer;
 import edu.uci.ics.crawler4j.fetcher.politeness.SimplePolitenessServer;
 import edu.uci.ics.crawler4j.url.AbstractWebURL;
 import edu.uci.ics.crawler4j.url.WebURL;
@@ -31,7 +31,7 @@ public class SimplePolitenessServerTestCase {
 
         long politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
 
-        assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
+        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
         politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
 
@@ -47,7 +47,7 @@ public class SimplePolitenessServerTestCase {
 
         long politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
 
-        assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
+        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
         webUrl.setURL("https://github.com/yasserg/crawler4j/blob/master/pom.xml");
 
@@ -60,7 +60,7 @@ public class SimplePolitenessServerTestCase {
 
         politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
 
-        assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
+        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
     }
 
@@ -72,7 +72,7 @@ public class SimplePolitenessServerTestCase {
 
         long politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
 
-        assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
+        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
         webUrl.setURL("http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentLinkedQueue.html");
 
@@ -91,7 +91,7 @@ public class SimplePolitenessServerTestCase {
 
         politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
 
-        assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
+        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
     }
 
@@ -103,7 +103,7 @@ public class SimplePolitenessServerTestCase {
 
         long politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
 
-        assertEquals(PolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
+        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
 
         webUrl.setURL("http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentLinkedQueue.html");
 
