@@ -438,9 +438,8 @@ public class CrawlController {
      *
      * @param pageUrl the URL of the seed
      * @throws InterruptedException
-     * @throws IOException
      */
-    public void addSeed(String pageUrl) throws IOException, InterruptedException {
+    public void addSeed(String pageUrl) throws InterruptedException {
         addSeed(pageUrl, -1);
     }
 
