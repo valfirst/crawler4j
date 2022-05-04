@@ -4,7 +4,7 @@
     <groupId>de.hs-heilbronn.mi</groupId>
     <artifactId>crawler4j-parent</artifactId>
     <packaging>pom</packaging>
-    <version>4.9.0-SNAPSHOT</version>
+    <version>4.9.0</version>
     <name>${project.groupId}:${project.artifactId}</name>
 
     <description>Open Source Web Crawler for Java</description>
@@ -132,7 +132,7 @@
         <maven.versions.version>2.10.0</maven.versions.version>
         <maven.forbiddenapis.version>3.3</maven.forbiddenapis.version>
         <maven.enforcer.version>3.0.0</maven.enforcer.version>
-        <maven.surefire.version>3.0.0-M6</maven.surefire.version>
+        <maven.surefire.version>2.22.2</maven.surefire.version>
     </properties>
 
     <profiles>
