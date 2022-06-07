@@ -12,6 +12,9 @@ import edu.uci.ics.crawler4j.test.SimpleWebURLFactory;
 import edu.uci.ics.crawler4j.url.TLDList;
 import edu.uci.ics.crawler4j.url.WebURL;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class NetTest {
 	
 	/**
@@ -28,26 +31,15 @@ public class NetTest {
 	/**
 	 * <p>
 	 * edu.uci.ics.crawler4j.parser.Parser will force input "<html></html>" for binary content.
-	 * <br>No urls should be detected.
-	 * <br>As long as urls are detected for this input, workarounds for this output must stay in place in other code.
-	 * </p><p>
-	 * Workaround: place following snippet inside the shouldVisit()-method of a WebCrawler class.
-	 * <pre>
-	 * 		// edu.uci.ics.crawler4j.parser.Parser will force input "&lt;html>&lt;/html>" for binary content.
-	 *		// UrlDetector "detects" this url when allowSingleLevelDomain is true.
-	 *		if ("http://&lt;html>&lt;/html>".equals(url.getURL())) {
-	 *			return false;
-	 *		}
-	 * </pre>
+	 * No urls should be detected.
 	 * <p>
 	 */
 	@Test
 	void extractUrlsWithAllowSingleLevelDomainTest() {
 		final Net net = createNet(true);
 		final Set<WebURL> result = net.extractUrls("<html></html>");
-		Assertions.assertThat(result)//
-				.singleElement()//
-				.extracting(t -> t.getURL()).isEqualTo("http://<html></html>");
+		assertNotNull(result);
+		assertEquals(0, result.size(), "We do not expect to detect any urls for an empty html block");
 	}
 	
 	private static Net createNet(final boolean allowSingleLevelDomain) {
