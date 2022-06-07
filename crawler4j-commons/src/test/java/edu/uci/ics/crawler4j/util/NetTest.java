@@ -25,6 +25,7 @@ public class NetTest {
 	void extractUrlsTest() {
 		final Net net = createNet(false);
 		final Set<WebURL> result = net.extractUrls("<html></html>");
+		assertNotNull(result);
 		Assertions.assertThat(result).isEmpty();
 	}
 	
@@ -39,7 +40,7 @@ public class NetTest {
 		final Net net = createNet(true);
 		final Set<WebURL> result = net.extractUrls("<html></html>");
 		assertNotNull(result);
-		assertEquals(0, result.size(), "We do not expect to detect any urls for an empty html block");
+		Assertions.assertThat(result).isEmpty();
 	}
 	
 	private static Net createNet(final boolean allowSingleLevelDomain) {
