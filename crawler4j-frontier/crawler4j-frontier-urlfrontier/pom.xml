@@ -13,8 +13,7 @@
     <artifactId>crawler4j-frontier-urlfrontier</artifactId>
 
     <properties>
-        <url-frontier.version>2.1</url-frontier.version>
-        <protobuf-java-util.version>3.21.2</protobuf-java-util.version>
+        <url-frontier.version>2.2</url-frontier.version>
     </properties>
 
     <dependencies>
@@ -27,11 +26,6 @@
             <groupId>com.github.crawler-commons</groupId>
             <artifactId>urlfrontier-API</artifactId>
             <version>${url-frontier.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java-util</artifactId>
-            <version>${protobuf-java-util.version}</version>
         </dependency>
         <!-- Logging API -->
         <dependency>
