@@ -26,18 +26,21 @@ import edu.uci.ics.crawler4j.url.WebURL;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.concurrent.Callable;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CacheBasedPolitenessServerTestCase {
 
     private CachedPolitenessServer cacheBasedPolitenessServer;
-    private CrawlConfig config;
 
     @Before
     public void init() {
-        this.config = new CrawlConfig();
-        this.config.setPolitenessDelay(100);
+        CrawlConfig config = new CrawlConfig();
+        config.setPolitenessDelay(100);
         this.cacheBasedPolitenessServer = new CachedPolitenessServer(config);
     }
 
@@ -73,8 +76,7 @@ public class CacheBasedPolitenessServerTestCase {
 
         assertTrue(politenessDelay > 0);
 
-        //let's wait some time, it should not be listed anymore
-        sleep(1000);
+        await().atMost(5, SECONDS).until(cacheIsEvicted());
 
         politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
@@ -104,8 +106,7 @@ public class CacheBasedPolitenessServerTestCase {
 
         assertTrue(politenessDelay > 0);
 
-        //let's wait some time, it should not be listed anymore
-        sleep(3000);
+        await().atMost(5, SECONDS).until(cacheIsEvicted());
 
         politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
@@ -113,54 +114,12 @@ public class CacheBasedPolitenessServerTestCase {
 
     }
 
-    @Test
-    public void testRemoveExpiredEntries() {
-
-        WebURL webUrl = new MockWebUrl();
-        webUrl.setURL("https://github.com/yasserg/crawler4j");
-
-        long politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
-
-        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
-
-        webUrl.setURL("http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentLinkedQueue.html");
-
-        politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
-
-        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
-
-        webUrl.setURL("https://www.google.de/?gws_rd=ssl");
-
-        politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
-
-        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
-
-        webUrl.setURL("https://stackoverflow.com/");
-
-        politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
-
-        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
-
-        //let's wait some time, it should not be listed anymore
-        sleep(5000);
-
-        //entries should be evicted...
-        assertEquals(0, cacheBasedPolitenessServer.getSize());
-
+    private Callable<Boolean> cacheIsEvicted() {
+        return () -> 0 == cacheBasedPolitenessServer.getSize();
     }
 
-
-    private void sleep(int i) {
-        try {
-            Thread.sleep(i);
-        } catch (InterruptedException e) {
-            //nothing to do here
-        }
-    }
-
-    public class MockWebUrl extends AbstractWebURL {
+    public static class MockWebUrl extends AbstractWebURL {
 
     }
-
 
 }
