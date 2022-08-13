@@ -24,8 +24,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.lang3.Validate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import crawlercommons.filters.basic.BasicURLNormalizer;
 import edu.uci.ics.crawler4j.Constants;
@@ -66,7 +64,16 @@ public class Parser {
         }
     }
 
+    public void parse(Page page)
+    		throws NotAllowedContentException,
+    		Exception
+    {
+    	parse(page, page.getWebURL().getURL());
+    }
+    
 		/**
+		 * @deprecated override/use {@link #parse(Page)}
+		 * 
 		 * @throws NotAllowedContentException thrown to enforce not handling the fetched content,
 		 * other exceptions are considered parse exceptions.
 		 */
@@ -82,13 +89,14 @@ public class Parser {
 				
 				BinaryParseData parseData = createBinaryParseData();
 				if (config.isProcessBinaryContentInCrawling()) {
-					parseData.setBinaryContent(page.getContentData());
+					parseData.parseBinaryContentAndSetHtml(page);
 				} else {
 					parseData.setHtml(Constants.EMPTY_HTML_TAGS);
 				}
 				
 				String html = parseData.getHtml();
-				Validate.validState(html != null, "BinaryParseData.setBinaryContent(...) should initialize the html value");
+				Validate.validState(html != null//
+						, "BinaryParseData.parseBinaryContentAndSetHtml(...) should initialize the html value");
 				parseData.setOutgoingUrls(net.extractUrls(html));
 				page.setParseData(parseData);
 				
@@ -96,19 +104,22 @@ public class Parser {
 				
 				CssParseData parseData = createCssParseData();
 				setTextContent(parseData, page);
-				parseData.setOutgoingUrls(page.getWebURL()); // parses outgoingUrls
+				parseData.parseAndSetOutgoingUrls(page);
 				page.setParseData(parseData);
 				
 			} else if (Util.hasPlainTextContent(page.getContentType())) { // plain Text
 				
 				TextParseData parseData = createTextParseData();
 				setTextContent(parseData, page);
+				// Allow the same "moment" to parse its content with the Page-object as context.
+				parseData.parseAndSetOutgoingUrls(page);
+				// Behavior kept for backwards compatibility -> also identical to the handling of binary content
 				parseData.setOutgoingUrls(net.extractUrls(parseData.getTextContent()));
 				page.setParseData(parseData);
 				
 			} else { // isHTML
 				
-				HtmlParseData parsedData = createHtmlParseData(page, contextURL);
+				HtmlParseData parsedData = createHtmlParseData(page);
 				
 				if (page.getContentCharset() == null) {
 					page.setContentCharset(parsedData.getContentCharset());
@@ -146,7 +157,7 @@ public class Parser {
 		 * Open for extension
 		 */
 		protected CssParseData createCssParseData() {
-			return new CssParseData(getFactory(), getNormalizer());
+			return new CssParseData(getFactory(), getNormalizer(), getConfig().isHaltOnError());
 		}
 		
 		/**
@@ -159,10 +170,14 @@ public class Parser {
 		/**
 		 * Open for extension
 		 */
-		protected HtmlParseData createHtmlParseData(final Page page, final String contextURL)
+		protected HtmlParseData createHtmlParseData(final Page page)
 				throws Exception
 		{
-			return getHtmlContentParser().parse(page, contextURL);
+			return getHtmlContentParser().parse(page);
+		}
+		
+		protected CrawlConfig getConfig() {
+			return config;
 		}
 		
 		protected WebURLFactory getFactory() {
