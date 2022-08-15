@@ -68,17 +68,10 @@ public class CssParseData extends TextParseData {
 		}
 	}
 	
-	/**
-	 * @deprecated override {@link #parseAndSetOutgoingUrls(WebURL)}
-	 */
-	public void setOutgoingUrls(final WebURL referringPage) {
-		final Set<WebURL> outgoingUrls = parseOutgoingUrls(referringPage);
-		this.setOutgoingUrls(outgoingUrls);
-	}
-	
 	@Override
 	public void parseAndSetOutgoingUrls(final Page page) throws Exception {
-		setOutgoingUrls(page.getWebURL());
+		final Set<WebURL> outgoingUrls = parseOutgoingUrls(page.getWebURL());
+		this.setOutgoingUrls(outgoingUrls);
 	}
 	
 	private Set<WebURL> parseOutgoingUrls(final WebURL referringPage) {

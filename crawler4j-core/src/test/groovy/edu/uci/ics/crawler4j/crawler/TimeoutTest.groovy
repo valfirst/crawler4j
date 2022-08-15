@@ -143,7 +143,7 @@ class VisitAllCrawler extends WebCrawler {
     }
 
     @Override
-    protected void onContentFetchError(WebURL webUrl) {
+    protected void onContentFetchError(WebURL webUrl, Exception e) {
         this.page = page;
     }
 

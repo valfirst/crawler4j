@@ -589,25 +589,6 @@ public class CrawlController {
         this.docIdServer = docIdServer;
     }
 
-    /**
-     * @deprecated implements a factory {@link WebCrawlerFactory} and inject your cutom data as
-     * shown <a href="https://github.com/rzo1/crawler4j#using-a-factory">here</a> .
-     */
-    @Deprecated
-    public Object getCustomData() {
-        return customData;
-    }
-
-    /**
-     * @deprecated implements a factory {@link WebCrawlerFactory} and inject your cutom data as
-     * shown <a href="https://github.com/rzo1/crawler4j#using-a-factory">here</a> .
-     */
-
-    @Deprecated
-    public void setCustomData(Object customData) {
-        this.customData = customData;
-    }
-
     public boolean isFinished() {
         return this.finished;
     }
