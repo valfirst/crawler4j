@@ -38,7 +38,7 @@ Otherwise, you can use `HSQLDB` instead
         <dependency>
             <groupId>de.hs-heilbronn.mi</groupId>
             <artifactId>crawler4j-with-hsqldb</artifactId>
-            <version>4.10.0</version>
+            <version>4.10.1</version>
         </dependency>
 ```
 
@@ -48,7 +48,7 @@ or you use an external [crawler-commons/url-frontier](https://github.com/crawler
         <dependency>
             <groupId>de.hs-heilbronn.mi</groupId>
             <artifactId>crawler4j-with-urlfrontier</artifactId>
-            <version>4.10.0</version>
+            <version>4.10.1</version>
         </dependency>
 ```
 
