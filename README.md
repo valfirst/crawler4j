@@ -9,12 +9,33 @@ crawling the Web. Using it, you can setup a multi-threaded web crawler in few mi
 
 ## Table of content
 
+- [Why you should use this fork?](#why-you-should-use-this-fork)
 - [Installation](#installation)
 - [Quickstart](#quickstart)   
 - [More Examples](#more-examples)
 - [Configuration Details](#configuration-details)
 - [Reconstructing extra urls to crawl](#reconstructing-extra-urls-to-crawl)
+- [Authentication](#authentication)
+- [High-level design diagrams](#high-level-design-diagrams)
 - [License](#license)
+
+## Why you should use this fork?
+
+This fork starts where the development of the previous main repository stalled.
+
+Some highlights include:
+
+- choice between multiple frontier implementations => avoid using a database with a license that doesn't comply with your use-case
+- easy substitution of various parser implementations (not only for html, but also css, binary, and plain text)
+- dynamic authentication
+- improved exception handling, more versatile to customize
+- fixes various parsing issues
+- more documentation
+- more tests (JUnit)
+- uses Apache Maven as build tool
+- provides a clean upgrade path by keeping backward compatibility in mind and deprecating methods before removing them
+- more eyes have gone through the code, so readability and correctness have improved
+- maintained, i.e. dependencies are often updated to their latest versions
 
 ## Installation
 
@@ -56,6 +77,7 @@ or you use an external [crawler-commons/url-frontier](https://github.com/crawler
 You need to create a crawler class that extends WebCrawler. This class decides which URLs
 should be crawled and handles the downloaded page. The following is a sample
 implementation:
+
 ```java
 public class MyCrawler extends WebCrawler {
 
@@ -110,6 +132,7 @@ public class MyCrawler extends WebCrawler {
     
 }
 ```
+
 As can be seen in the above code, there are two main functions that should be overridden:
 
 - shouldVisit: This function decides whether the given URL should be crawled or not. In
@@ -184,14 +207,6 @@ Since, "A" is a seed page, it will have a depth of 0. "B" will have depth of 1 a
 ```java
 crawlConfig.setMaxDepthOfCrawling(maxDepthOfCrawling);
 ```
-### Enable SSL
-To enable SSL simply:
-
-```java
-CrawlConfig config = new CrawlConfig();
-
-config.setIncludeHttpsPages(true);
-```
 
 ### Maximum number of pages to crawl
 Although by default there is no limit on the number of pages to crawl, you can set a limit
@@ -229,6 +244,7 @@ crawlConfig.setProxyHost("proxyserver.example.com");
 crawlConfig.setProxyPort(8080);
 ```
 If your proxy also needs authentication:
+
 ```java
 crawlConfig.setProxyUsername(username);
 crawlConfig.setProxyPassword(password);
@@ -239,6 +255,7 @@ Sometimes you need to run a crawler for a long time. It is possible that the cra
 terminates unexpectedly. In such cases, it might be desirable to resume the crawling.
 You would be able to resume a previously stopped/crashed crawl using the following
 settings:
+
 ```java
 crawlConfig.setResumableCrawling(true);
 ```
@@ -252,6 +269,7 @@ for more details. By default crawler4j uses the following user agent string:
 "crawler4j (https://github.com/rzo1/crawler4j/)"
 ```
 However, you can overwrite it:
+
 ```java
 crawlConfig.setUserAgentString(userAgentString);
 ```
@@ -298,8 +316,31 @@ new Parser(config, normalizer, htmlParser, tldList, frontierConfiguration.getWeb
 // -> the magic should happen inside a custom htmlParser implementation.
 ```
 
-## License
+## Authentication
 
-Copyright (c) 2010-2018 Yasser Ganjisaffar
+Different forms of authentication are supported:
+- BASIC_AUTHENTICATION
+- FORM_AUTHENTICATION
+- NT_AUTHENTICATION.
+
+An example on how to configure form authentication in its most simple form:
+
+```java
+		final CrawlConfig config = new CrawlConfig();
+		config.addAuthInfo(new FormAuthInfo(
+				"myUser", "myReallyGoodPwd"
+				, "https://www.test.com/login"
+				, "username", "password"
+		));
+```
+
+Overriding `FormAuthInfo.doFormLogin(...)` allows implementing more dynamic form authentication (entering more fields, fetching dynamic login forms, ...).
+
+## High-level design diagrams
+
+Below activity diagram highlights the most important steps and vocabulary to know as user of the library.
+![crawler4j activity diagram](documentation/crawler4j%20activity%20diagram.svg "crawler4j activity diagram")
+
+## License
 
 Published under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0), see LICENSE
