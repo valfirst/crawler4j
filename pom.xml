@@ -81,11 +81,11 @@
     </organization>
 
     <modules>
+        <module>crawler4j-boms</module>
+        <module>crawler4j-commons</module>
         <module>crawler4j-core</module>
         <module>crawler4j-examples</module>
         <module>crawler4j-frontier</module>
-        <module>crawler4j-commons</module>
-        <module>crawler4j-boms</module>
     </modules>
 
     <properties>
@@ -120,8 +120,9 @@
         <cache2k.version>2.6.1.Final</cache2k.version>
 
         <!-- 3rd party test dependencies -->
-        <junit.version>4.13.2</junit.version>
-        <wiremock.version>2.27.2</wiremock.version>
+        <junit.version>5.9.0</junit.version>
+        <assertj.version>3.23.1</assertj.version>
+        <wiremock.version>2.33.2</wiremock.version>
         <spock.version>2.1-groovy-3.0</spock.version>
         <groovy.version>3.0.12</groovy.version>
 
