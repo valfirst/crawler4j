@@ -18,8 +18,10 @@ class OnRedirectedToInvalidTest extends Specification {
     @Rule
     public TemporaryFolder temp = new TemporaryFolder()
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(new WireMockConfiguration().dynamicPort())
+    @RegisterExtension
+    static WireMockExtension wm = WireMockExtension.newInstance()
+        .options(new WireMockConfiguration().dynamicPort())
+        .build();
 
 
     def "intercept redirect to invalid url"() {
@@ -75,7 +77,7 @@ class OnRedirectedToInvalidTest extends Specification {
         robotstxtConfig.setEnabled false
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher, webURLFactory)
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, webURLFactory)
-        controller.addSeed "http://localhost:" + wireMockRule.port() + "/some/index.html"
+        controller.addSeed "http://localhost:" + wm.getPort() + "/some/index.html"
 
         HandleInvalidRedirectWebCrawler crawler = new HandleInvalidRedirectWebCrawler()
         controller.start(crawler)

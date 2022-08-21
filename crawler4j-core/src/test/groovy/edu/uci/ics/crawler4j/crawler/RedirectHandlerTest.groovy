@@ -18,8 +18,10 @@ class RedirectHandlerTest extends Specification {
     @Rule
     public TemporaryFolder temp = new TemporaryFolder()
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(new WireMockConfiguration().dynamicPort())
+    @RegisterExtension
+    static WireMockExtension wm = WireMockExtension.newInstance()
+        .options(new WireMockConfiguration().dynamicPort())
+        .build();
 
     def "follow redirects"(int redirectStatus) {
         given: "an index page with a ${redirectStatus}"
@@ -66,14 +68,14 @@ class RedirectHandlerTest extends Specification {
         PageFetcher pageFetcher = new PageFetcher(config)
         RobotstxtServer robotstxtServer = new RobotstxtServer(new RobotstxtConfig(), pageFetcher, webURLFactory)
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, webURLFactory)
-        controller.addSeed "http://localhost:" + wireMockRule.port() + "/some/index.html"
+        controller.addSeed "http://localhost:" + wm.getPort() + "/some/index.html"
 
         controller.start(HandleRedirectWebCrawler.class, 1)
 
         then: "envent in WebCrawler will trigger"
         List<Object> crawlerData = controller.getCrawlersLocalData().get(0)
         assert crawlerData.get(0) == 1
-        assert crawlerData.get(1) == "http://localhost:" + wireMockRule.port() + "/another/index.html"
+        assert crawlerData.get(1) == "http://localhost:" + wm.getPort() + "/another/index.html"
 
         verify(exactly(1), getRequestedFor(urlEqualTo("/some/index.html")))
         verify(exactly(1), getRequestedFor(urlEqualTo("/another/index.html")))

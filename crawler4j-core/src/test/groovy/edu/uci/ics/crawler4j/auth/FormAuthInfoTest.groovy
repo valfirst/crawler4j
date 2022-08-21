@@ -33,8 +33,10 @@ class FormAuthInfoTest extends Specification {
     @Rule
     public TemporaryFolder temp = new TemporaryFolder()
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(new WireMockConfiguration().dynamicPort())
+    @RegisterExtension
+    static WireMockExtension wm = WireMockExtension.newInstance()
+        .options(new WireMockConfiguration().dynamicPort())
+        .build();
 
     def "http basic auth"() {
         given: "two pages on first.com behind basic auth"
@@ -110,7 +112,7 @@ class FormAuthInfoTest extends Specification {
         FormAuthInfo formAuthInfo = new FormAuthInfo(
                 "foofy"
                 , "superS3cret"
-                , "http://localhost:${wireMockRule.port()}/login.php"
+                , "http://localhost:${wm.getPort()}/login.php"
                 , "username"
                 , "password")
         c.setAuthInfos([formAuthInfo])
@@ -124,7 +126,7 @@ class FormAuthInfoTest extends Specification {
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher, webURLFactory)
         CrawlController controller = new CrawlController(c, pageFetcher, robotstxtServer, webURLFactory)
 
-        controller.addSeed("http://localhost:${wireMockRule.port()}/")
+        controller.addSeed("http://localhost:${wm.getPort()}/")
         controller.start(WebCrawler.class, 1)
 
         expect: "POST to credentials"

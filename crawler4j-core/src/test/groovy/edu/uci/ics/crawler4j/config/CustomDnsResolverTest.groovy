@@ -22,8 +22,10 @@ class CustomDnsResolverTest extends Specification {
     @Rule
     public TemporaryFolder temp = new TemporaryFolder()
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(new WireMockConfiguration().dynamicPort())
+    @RegisterExtension
+    static WireMockExtension wm = WireMockExtension.newInstance()
+        .options(new WireMockConfiguration().dynamicPort())
+        .build();
 
 
     def "visit javascript files"() {
@@ -62,7 +64,7 @@ class CustomDnsResolverTest extends Specification {
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher, webURLFactory)
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, webURLFactory)
 
-        controller.addSeed("http://googhle.com:" + wireMockRule.port() + "/some/index.html")
+        controller.addSeed("http://googhle.com:" + wm.getPort() + "/some/index.html")
         controller.start(WebCrawler.class, 1)
 
 

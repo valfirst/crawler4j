@@ -19,8 +19,10 @@ class TimeoutTest extends Specification {
     @Rule
     public TemporaryFolder temp = new TemporaryFolder()
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(new WireMockConfiguration().dynamicPort())
+    @RegisterExtension
+    static WireMockExtension wm = WireMockExtension.newInstance()
+        .options(new WireMockConfiguration().dynamicPort())
+        .build();
 
     def 'intercept socket timeout exception'() {
         given: "an index page with two links will fail to respond in time"
@@ -65,7 +67,7 @@ class TimeoutTest extends Specification {
         PageFetcher pageFetcher = new PageFetcher(config)
         RobotstxtServer robotstxtServer = new RobotstxtServer(new RobotstxtConfig(), pageFetcher, webURLFactory)
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, webURLFactory)
-        controller.addSeed "http://localhost:" + wireMockRule.port() + "/some/index.html"
+        controller.addSeed "http://localhost:" + wm.getPort() + "/some/index.html"
 
         controller.start(VisitAllCrawler.class, 1)
 
@@ -121,7 +123,7 @@ class TimeoutTest extends Specification {
         WebURLFactory webURLFactory = new SleepycatWebURLFactory()
         RobotstxtServer robotstxtServer = new RobotstxtServer(new RobotstxtConfig(), pageFetcher, webURLFactory)
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, webURLFactory)
-        controller.addSeed "http://localhost:" + wireMockRule.port() + "/some/index.html"
+        controller.addSeed "http://localhost:" + wm.getPort() + "/some/index.html"
 
         controller.start(VisitAllCrawler.class, 1)
 

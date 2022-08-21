@@ -25,8 +25,10 @@ class BasicAuthTest extends Specification {
     @Rule
     public TemporaryFolder temp = new TemporaryFolder()
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(new WireMockConfiguration().dynamicPort())
+    @RegisterExtension
+    static WireMockExtension wm = WireMockExtension.newInstance()
+        .options(new WireMockConfiguration().dynamicPort())
+        .build();
 
     def "http basic auth"() {
         given: "two pages on first.com behind basic auth"
@@ -114,7 +116,7 @@ class BasicAuthTest extends Specification {
         config.setPolitenessDelay 500
         BasicAuthInfo basicAuthInfo = new BasicAuthInfo(
                 "user", "pass",
-                "http://first.com:${wireMockRule.port()}/"
+                "http://first.com:${wm.getPort()}/"
         )
         config.setDnsResolver(inMemDnsResolver)
         config.setAuthInfos([basicAuthInfo])
@@ -126,27 +128,27 @@ class BasicAuthTest extends Specification {
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher, webURLFactory)
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer, webURLFactory)
 
-        controller.addSeed("http://first.com:${wireMockRule.port()}/")
-        controller.addSeed("http://second.com:${wireMockRule.port()}/")
+        controller.addSeed("http://first.com:${wm.getPort()}/")
+        controller.addSeed("http://second.com:${wm.getPort()}/")
         controller.start(WebCrawler.class, 1)
 
 
         then: "first.com will receive credentials"
         verify(exactly(1), getRequestedFor(urlEqualTo("/some/index.html"))
                 .withBasicAuth(new BasicCredentials("user", "pass"))
-                .withHeader("Host", new EqualToPattern( "first.com:${wireMockRule.port()}"))
+                .withHeader("Host", new EqualToPattern( "first.com:${wm.getPort()}"))
         )
         verify(exactly(1), getRequestedFor(urlEqualTo("/"))
                 .withBasicAuth(new BasicCredentials("user", "pass"))
-                .withHeader("Host", new EqualToPattern( "first.com:${wireMockRule.port()}"))
+                .withHeader("Host", new EqualToPattern( "first.com:${wm.getPort()}"))
         )
 
         and: "second.com won't see secrets"
         verify(exactly(1), getRequestedFor(urlEqualTo("/some/index.html"))
-                .withHeader("Host", new EqualToPattern( "second.com:${wireMockRule.port()}"))
+                .withHeader("Host", new EqualToPattern( "second.com:${wm.getPort()}"))
         )
         verify(exactly(1), getRequestedFor(urlEqualTo("/"))
-                .withHeader("Host", new EqualToPattern( "second.com:${wireMockRule.port()}"))
+                .withHeader("Host", new EqualToPattern( "second.com:${wm.getPort()}"))
         )
     }
 

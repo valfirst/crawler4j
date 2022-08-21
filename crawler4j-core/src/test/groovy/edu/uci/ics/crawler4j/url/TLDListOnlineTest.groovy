@@ -14,8 +14,10 @@ class TLDListOnlineTest extends Specification {
     @Rule
     public TemporaryFolder temp = new TemporaryFolder()
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule()
+    @RegisterExtension
+    static WireMockExtension wm = WireMockExtension.newInstance()
+        .options(new WireMockConfiguration().dynamicPort())
+        .build();
 
     def "download TLD from url"() {
         given: "an online TLD file list"
@@ -26,7 +28,7 @@ class TLDListOnlineTest extends Specification {
             .withBody("fakeprovince.ca")
         ))
         and: "TLDList instance that download fresh list"
-        def config = new CrawlConfig(onlineTldListUpdate: true, publicSuffixSourceUrl: "http://localhost:${wireMockRule.port()}/tld-names.txt")
+        def config = new CrawlConfig(onlineTldListUpdate: true, publicSuffixSourceUrl: "http://localhost:${wm.getPort()}/tld-names.txt")
         def tldList = new TLDList(config)
 
         expect:

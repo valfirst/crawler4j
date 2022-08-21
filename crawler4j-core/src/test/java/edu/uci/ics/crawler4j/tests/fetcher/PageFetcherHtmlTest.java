@@ -19,12 +19,12 @@
  */
 package edu.uci.ics.crawler4j.tests.fetcher;
 
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.Page;
@@ -33,8 +33,10 @@ import edu.uci.ics.crawler4j.url.WebURLImpl;
 
 public class PageFetcherHtmlTest {
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(new WireMockConfiguration().dynamicPort());
+    @RegisterExtension
+    static WireMockExtension wm = WireMockExtension.newInstance()
+        .options(new WireMockConfiguration().dynamicPort())
+        .build();
 
     @Test
     public void testCustomPageFetcher() throws Exception {
@@ -67,14 +69,14 @@ public class PageFetcherHtmlTest {
         CrawlConfig cfg = new CrawlConfig();
         WebURLImpl url = new WebURLImpl();
 
-        url.setURL("http://localhost:" + wireMockRule.port() + "/some/index.html");
+        url.setURL("http://localhost:" + wm.getPort() + "/some/index.html");
         PageFetcher pf = new PageFetcherHtmlOnly(cfg);
         pf.fetchPage(url).fetchContent(new Page(url), 47);
 
         WireMock.verify(1, WireMock.headRequestedFor(WireMock.urlEqualTo("/some/index.html")));
         WireMock.verify(1, WireMock.getRequestedFor(WireMock.urlEqualTo("/some/index.html")));
 
-        url.setURL("http://localhost:" + wireMockRule.port() + "/some/invoice.pdf");
+        url.setURL("http://localhost:" + wm.getPort() + "/some/invoice.pdf");
         pf = new PageFetcherHtmlOnly(cfg);
         pf.fetchPage(url).fetchContent(new Page(url), 4);
 
