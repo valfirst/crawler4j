@@ -186,10 +186,10 @@ public class WebCrawler implements Runnable {
     /**
      * This function is called if the content of a url is bigger than allowed size.
      *
-     * @param urlStr - The URL which it's content is bigger than allowed size
+     * @param page - The URL which it's content is bigger than allowed size
      */
-    protected void onPageBiggerThanMaxSize(String urlStr, long pageSize) {
-        logger.warn("Skipping a URL: {} which was bigger ( {} ) than max allowed size", urlStr,
+    protected void onPageBiggerThanMaxSize(Page page, long pageSize) {
+        logger.warn("Skipping a URL: {} which was bigger ( {} ) than max allowed size", page.getWebURL().getURL(),
                 pageSize);
     }
 
@@ -232,10 +232,12 @@ public class WebCrawler implements Runnable {
     /**
      * This function is called if the content of a url could not be fetched.
      *
-     * @param webUrl URL which content failed to be fetched
+     * @param page Partial page object
      */
-    protected void onContentFetchError(WebURL webUrl, Exception e) {
-        onContentFetchError(webUrl, e);
+    protected void onContentFetchError(Page page, Exception e) {
+        logger.warn("Can't fetch content of: {}", page.getWebURL().getURL());
+        // Do nothing by default (except basic logging)
+        // Sub-classed can override this to add their custom functionality
     }
     
     /**
@@ -253,13 +255,19 @@ public class WebCrawler implements Runnable {
     /**
      * This function is called when a unhandled exception was encountered during fetching
      *
-     * @param webUrl URL where a unhandled exception occured
+     *@param page Partial page object
      */
-    protected void onUnhandledException(WebURL webUrl, Throwable e) {
+    protected void onUnhandledException(Page page, Throwable e) {
         if (myController.getConfig().isHaltOnError() && !(e instanceof IOException)) {
             throw new RuntimeException("unhandled exception", e);
         } else {
-            String urlStr = (webUrl == null ? "NULL" : webUrl.getURL());
+            String urlStr = (//
+            		page == null //
+            		? "NULL" //
+            				: page.getWebURL() == null //
+            				? "NULL" //
+            						: page.getWebURL().getURL()//
+            						);
             logger.warn("Unhandled exception while fetching {}: {}", urlStr, e.getMessage());
             logger.info("Stacktrace: ", e);
             // Do nothing by default (except basic logging)
@@ -422,11 +430,11 @@ public class WebCrawler implements Runnable {
 					return handleFetchResultSuccess(fetchResult, page);
 				}
 			} catch (PageBiggerThanMaxSizeException e) {
-				onPageBiggerThanMaxSize(curURL.getURL(), e.getPageSize());
+				onPageBiggerThanMaxSize(page, e.getPageSize());
 			} catch (ContentFetchException | SocketTimeoutException cfe) {
-				onContentFetchError(curURL, cfe);
+				onContentFetchError(page, cfe);
 			} catch (Exception e) {
-				onUnhandledException(curURL, e);
+				onUnhandledException(page, e);
 			}
 			return false;
 		}

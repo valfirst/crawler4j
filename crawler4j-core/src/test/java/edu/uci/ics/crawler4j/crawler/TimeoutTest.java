@@ -9,7 +9,6 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import edu.uci.ics.crawler4j.test.TestUtils;
 import edu.uci.ics.crawler4j.url.SleepycatWebURLFactory;
-import edu.uci.ics.crawler4j.url.WebURL;
 import edu.uci.ics.crawler4j.url.WebURLFactory;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -128,26 +127,19 @@ class VisitAllCrawler extends WebCrawler {
 	private Page page;
 	
 	@Override
-	protected void onRedirectedStatusCode(Page page) {
+	protected void onContentFetchError(Page page, Exception e) {
 		this.page = page;
-		super.onRedirectedStatusCode(page);
+		super.onContentFetchError(page, e);
 	}
 	
 	@Override
-	protected void onRedirectedToInvalidUrl(Page page) {
+	protected void onUnhandledException(Page page, Throwable e) {
 		this.page = page;
-		super.onRedirectedToInvalidUrl(page);
-	}
-	
-	@Override
-	public void visit(Page page) {
-		this.page = page;
-		super.visit(page);
+		super.onUnhandledException(page, e);
 	}
 	
 	@Override
 	public Object getMyLocalData() {
 		return page;
 	}
-	
 }
