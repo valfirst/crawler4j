@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.fetcher.politeness.CachedPolitenessServer;
 import edu.uci.ics.crawler4j.fetcher.politeness.SimplePolitenessServer;
-import edu.uci.ics.crawler4j.url.AbstractWebURL;
+import edu.uci.ics.crawler4j.test.SimpleWebURL;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 public class SimplePolitenessServerTestCase {
@@ -44,7 +44,7 @@ public class SimplePolitenessServerTestCase {
     @Test
     public void testApplyPoliteness1() {
 
-        WebURL webUrl = new MockWebUrl();
+        WebURL webUrl = new SimpleWebURL();
         webUrl.setURL("https://github.com/yasserg/crawler4j");
 
         long politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
@@ -53,14 +53,16 @@ public class SimplePolitenessServerTestCase {
 
         politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
 
-        Assertions.assertThat(politenessDelay).isEqualTo(config.getPolitenessDelay());
+        Assertions.assertThat(politenessDelay).isBetween(//
+        		Long.valueOf(config.getPolitenessDelay() - 10)//
+        		, Long.valueOf(config.getPolitenessDelay()));
 
     }
 
     @Test
     public void testApplyPoliteness2() {
 
-        WebURL webUrl = new MockWebUrl();
+        WebURL webUrl = new SimpleWebURL();
         webUrl.setURL("https://github.com/yasserg/crawler4j");
 
         long politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
@@ -71,7 +73,9 @@ public class SimplePolitenessServerTestCase {
 
         politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
 
-        Assertions.assertThat(politenessDelay).isEqualTo(config.getPolitenessDelay());
+        Assertions.assertThat(politenessDelay).isBetween(//
+        		Long.valueOf(config.getPolitenessDelay() - 10)//
+        		, Long.valueOf(config.getPolitenessDelay()));
 
         //let's wait some time, it should not be listed anymore
         sleep(1000);
@@ -85,7 +89,7 @@ public class SimplePolitenessServerTestCase {
     @Test
     public void testApplyPoliteness3() {
 
-        WebURL webUrl = new MockWebUrl();
+        WebURL webUrl = new SimpleWebURL();
         webUrl.setURL("https://github.com/yasserg/crawler4j");
 
         long politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
@@ -96,7 +100,9 @@ public class SimplePolitenessServerTestCase {
 
         politenessDelay = simplePolitenessServer.applyPoliteness(webUrl);
 
-        Assertions.assertThat(politenessDelay).isEqualTo(config.getPolitenessDelay());
+        Assertions.assertThat(politenessDelay).isBetween(//
+        		Long.valueOf(config.getPolitenessDelay() - 10)//
+        		, Long.valueOf(config.getPolitenessDelay()));
 
         webUrl.setURL("https://github.com/yasserg/crawler4j/blob/master/pom.xml");
 
@@ -120,10 +126,5 @@ public class SimplePolitenessServerTestCase {
             //nothing to do here
         }
     }
-
-    public class MockWebUrl extends AbstractWebURL {
-
-    }
-
 
 }

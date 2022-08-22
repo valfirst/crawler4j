@@ -32,7 +32,7 @@ public class HtmlParserTest {
 		
 		Assertions.assertThatNoException().isThrownBy(() -> {
 			page.load(entity, 1_000_000);
-			parser.parse(page, url.getURL());
+			parser.parse(page);
 		});
 	}
 }

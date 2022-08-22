@@ -19,10 +19,8 @@
  */
 package edu.uci.ics.crawler4j.tests.fetcher.politeness;
 
-import edu.uci.ics.crawler4j.crawler.CrawlConfig;
-import edu.uci.ics.crawler4j.fetcher.politeness.CachedPolitenessServer;
-import edu.uci.ics.crawler4j.url.AbstractWebURL;
-import edu.uci.ics.crawler4j.url.WebURL;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 
 import java.util.concurrent.Callable;
 
@@ -30,8 +28,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.awaitility.Awaitility.await;
+import edu.uci.ics.crawler4j.crawler.CrawlConfig;
+import edu.uci.ics.crawler4j.fetcher.politeness.CachedPolitenessServer;
+import edu.uci.ics.crawler4j.test.SimpleWebURL;
+import edu.uci.ics.crawler4j.url.WebURL;
 
 public class CacheBasedPolitenessServerTestCase {
 
@@ -47,7 +47,7 @@ public class CacheBasedPolitenessServerTestCase {
     @Test
     public void testApplyPoliteness1() {
 
-        WebURL webUrl = new MockWebUrl();
+        WebURL webUrl = new SimpleWebURL();
         webUrl.setURL("https://github.com/yasserg/crawler4j");
 
         long politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
@@ -63,7 +63,7 @@ public class CacheBasedPolitenessServerTestCase {
     @Test
     public void testApplyPoliteness2() {
 
-        WebURL webUrl = new MockWebUrl();
+        WebURL webUrl = new SimpleWebURL();
         webUrl.setURL("https://github.com/yasserg/crawler4j");
 
         long politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
@@ -87,7 +87,7 @@ public class CacheBasedPolitenessServerTestCase {
     @Test
     public void testApplyPoliteness3() {
 
-        WebURL webUrl = new MockWebUrl();
+        WebURL webUrl = new SimpleWebURL();
         webUrl.setURL("https://github.com/yasserg/crawler4j");
 
         long politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
@@ -116,10 +116,6 @@ public class CacheBasedPolitenessServerTestCase {
 
     private Callable<Boolean> cacheIsEvicted() {
         return () -> 0 == cacheBasedPolitenessServer.getSize();
-    }
-
-    public static class MockWebUrl extends AbstractWebURL {
-
     }
 
 }

@@ -142,7 +142,7 @@
         <maven.versions.version>2.11.0</maven.versions.version>
         <maven.forbiddenapis.version>3.3</maven.forbiddenapis.version>
         <maven.enforcer.version>3.1.0</maven.enforcer.version>
-        <maven.surefire.version>2.22.2</maven.surefire.version>
+        <maven.surefire.version>3.0.0-M7</maven.surefire.version>
     </properties>
 
     <profiles>
@@ -322,9 +322,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven.surefire.version}</version>
-                    <configuration>
-                        <argLine>-Xmx512m -Dfile.encoding=UTF-8</argLine>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
