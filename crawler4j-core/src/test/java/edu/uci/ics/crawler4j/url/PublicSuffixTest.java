@@ -24,6 +24,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
+import edu.uci.ics.crawler4j.test.SimpleWebURL;
 
 class PublicSuffixTest {
 	
@@ -46,7 +47,10 @@ class PublicSuffixTest {
 		externalTldList = new TLDList(c2);
 	}
 	
-	@CsvSource({"http://www.example.com, example.com, www", "http://dummy.edu.np, dummy.edu.np, "})
+	@CsvSource({//
+		"http://www.example.com, example.com, www"//
+		, "http://dummy.edu.np, dummy.edu.np, "//
+		})
 	@ParameterizedTest
 	void etldDomainsAreCorrectlyIdentifiedByInternalLookup(String url, String domain, String subdomain) {
 		WebURL webUrl = new SleepycatWebURLFactory().newWebUrl();
@@ -60,7 +64,10 @@ class PublicSuffixTest {
 		Assertions.assertThat(webUrl.getSubDomain()).isEqualTo(subdomain);
 	}
 	
-	@CsvSource({"http://www.example.com, example.com, www", "http://dummy.edu.np, dummy.edu.np, "})
+	@CsvSource({//
+		"http://www.example.com, example.com, www"//
+		, "http://dummy.edu.np, dummy.edu.np, "//
+		})
 	@ParameterizedTest
 	void etldDomainsAreCorrectlyIdentifiedByExternalLookup(String url, String domain, String subdomain) {
 		WebURL webUrl = new SleepycatWebURLFactory().newWebUrl();
