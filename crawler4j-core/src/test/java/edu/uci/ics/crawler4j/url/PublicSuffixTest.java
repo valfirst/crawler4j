@@ -49,7 +49,7 @@ class PublicSuffixTest {
 	
 	@CsvSource({//
 		"http://www.example.com, example.com, www"//
-		, "http://dummy.edu.np, dummy.edu.np, "//
+		, "http://dummy.edu.np, dummy.edu.np, ''"//
 		})
 	@ParameterizedTest
 	void etldDomainsAreCorrectlyIdentifiedByInternalLookup(String url, String domain, String subdomain) {
@@ -66,7 +66,7 @@ class PublicSuffixTest {
 	
 	@CsvSource({//
 		"http://www.example.com, example.com, www"//
-		, "http://dummy.edu.np, dummy.edu.np, "//
+		, "http://dummy.edu.np, dummy.edu.np, ''"//
 		})
 	@ParameterizedTest
 	void etldDomainsAreCorrectlyIdentifiedByExternalLookup(String url, String domain, String subdomain) {
