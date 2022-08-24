@@ -24,6 +24,7 @@ import java.net.InetAddress;
 import java.util.List;
 
 import org.apache.hc.client5.http.impl.InMemoryDnsResolver;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.io.TempDir;
@@ -38,6 +39,7 @@ class BasicAuthTest {
         .options(new WireMockConfiguration().dynamicPort())
         .build();
 
+    @Disabled()
     @Test
     void httpBasicAuth() throws Exception {
         // given: "two pages on first.com behind basic auth"
