@@ -19,25 +19,25 @@
  */
 package edu.uci.ics.crawler4j.tests.fetcher.politeness;
 
-import edu.uci.ics.crawler4j.crawler.CrawlConfig;
-import edu.uci.ics.crawler4j.fetcher.politeness.CachedPolitenessServer;
-import edu.uci.ics.crawler4j.url.AbstractWebURL;
-import edu.uci.ics.crawler4j.url.WebURL;
-import org.junit.Before;
-import org.junit.Test;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 
 import java.util.concurrent.Callable;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import edu.uci.ics.crawler4j.crawler.CrawlConfig;
+import edu.uci.ics.crawler4j.fetcher.politeness.CachedPolitenessServer;
+import edu.uci.ics.crawler4j.test.SimpleWebURL;
+import edu.uci.ics.crawler4j.url.WebURL;
 
 public class CacheBasedPolitenessServerTestCase {
 
     private CachedPolitenessServer cacheBasedPolitenessServer;
 
-    @Before
+    @BeforeEach
     public void init() {
         CrawlConfig config = new CrawlConfig();
         config.setPolitenessDelay(100);
@@ -47,79 +47,75 @@ public class CacheBasedPolitenessServerTestCase {
     @Test
     public void testApplyPoliteness1() {
 
-        WebURL webUrl = new MockWebUrl();
+        WebURL webUrl = new SimpleWebURL();
         webUrl.setURL("https://github.com/yasserg/crawler4j");
 
         long politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
-        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
+        Assertions.assertThat(politenessDelay).isEqualTo(CachedPolitenessServer.NO_POLITENESS_APPLIED);
 
         politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
-        assertTrue(politenessDelay > 0);
+        Assertions.assertThat(politenessDelay).isGreaterThan(0);
 
     }
 
     @Test
     public void testApplyPoliteness2() {
 
-        WebURL webUrl = new MockWebUrl();
+        WebURL webUrl = new SimpleWebURL();
         webUrl.setURL("https://github.com/yasserg/crawler4j");
 
         long politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
-        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
+        Assertions.assertThat(politenessDelay).isEqualTo(CachedPolitenessServer.NO_POLITENESS_APPLIED);
 
         webUrl.setURL("https://github.com/yasserg/crawler4j/blob/master/pom.xml");
 
         politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
-        assertTrue(politenessDelay > 0);
+        Assertions.assertThat(politenessDelay).isGreaterThan(0);
 
         await().atMost(5, SECONDS).until(cacheIsEvicted());
 
         politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
-        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
+        Assertions.assertThat(politenessDelay).isEqualTo(CachedPolitenessServer.NO_POLITENESS_APPLIED);
 
     }
 
     @Test
     public void testApplyPoliteness3() {
 
-        WebURL webUrl = new MockWebUrl();
+        WebURL webUrl = new SimpleWebURL();
         webUrl.setURL("https://github.com/yasserg/crawler4j");
 
         long politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
-        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
+        Assertions.assertThat(politenessDelay).isEqualTo(CachedPolitenessServer.NO_POLITENESS_APPLIED);
 
         webUrl.setURL("http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentLinkedQueue.html");
 
         politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
-        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
+        Assertions.assertThat(politenessDelay).isEqualTo(CachedPolitenessServer.NO_POLITENESS_APPLIED);
 
         webUrl.setURL("https://github.com/yasserg/crawler4j/blob/master/pom.xml");
 
         politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
-        assertTrue(politenessDelay > 0);
+        Assertions.assertThat(politenessDelay).isGreaterThan(0);
 
         await().atMost(5, SECONDS).until(cacheIsEvicted());
 
         politenessDelay = cacheBasedPolitenessServer.applyPoliteness(webUrl);
 
-        assertEquals(CachedPolitenessServer.NO_POLITENESS_APPLIED, politenessDelay);
+        Assertions.assertThat(politenessDelay).isEqualTo(CachedPolitenessServer.NO_POLITENESS_APPLIED);
 
     }
 
     private Callable<Boolean> cacheIsEvicted() {
         return () -> 0 == cacheBasedPolitenessServer.getSize();
-    }
-
-    public static class MockWebUrl extends AbstractWebURL {
-
     }
 
 }

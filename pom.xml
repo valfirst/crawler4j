@@ -81,11 +81,11 @@
     </organization>
 
     <modules>
+        <module>crawler4j-boms</module>
+        <module>crawler4j-commons</module>
         <module>crawler4j-core</module>
         <module>crawler4j-examples</module>
         <module>crawler4j-frontier</module>
-        <module>crawler4j-commons</module>
-        <module>crawler4j-boms</module>
     </modules>
 
     <properties>
@@ -120,8 +120,9 @@
         <cache2k.version>2.6.1.Final</cache2k.version>
 
         <!-- 3rd party test dependencies -->
-        <junit.version>4.13.2</junit.version>
-        <wiremock.version>2.27.2</wiremock.version>
+        <junit.version>5.9.0</junit.version>
+        <assertj.version>3.23.1</assertj.version>
+        <wiremock.version>2.33.2</wiremock.version>
         <spock.version>2.1-groovy-3.0</spock.version>
         <groovy.version>3.0.12</groovy.version>
 
@@ -141,7 +142,7 @@
         <maven.versions.version>2.11.0</maven.versions.version>
         <maven.forbiddenapis.version>3.3</maven.forbiddenapis.version>
         <maven.enforcer.version>3.1.0</maven.enforcer.version>
-        <maven.surefire.version>2.22.2</maven.surefire.version>
+        <maven.surefire.version>3.0.0-M7</maven.surefire.version>
     </properties>
 
     <profiles>
@@ -321,9 +322,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven.surefire.version}</version>
-                    <configuration>
-                        <argLine>-Xmx512m -Dfile.encoding=UTF-8</argLine>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

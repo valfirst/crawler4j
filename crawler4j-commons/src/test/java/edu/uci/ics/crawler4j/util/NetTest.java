@@ -19,6 +19,8 @@
  */
 package edu.uci.ics.crawler4j.util;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Set;
@@ -30,9 +32,6 @@ import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.test.SimpleWebURLFactory;
 import edu.uci.ics.crawler4j.url.TLDList;
 import edu.uci.ics.crawler4j.url.WebURL;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class NetTest {
 	
