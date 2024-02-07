@@ -10,22 +10,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-jdk11:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-
-      - name: Build with Maven
-        run: mvn clean install -Pforbiddenapis
-        env:
-          MAVEN_OPTS: -Xmx2048m
-
   build-jdk17:
     runs-on: ubuntu-latest
 
