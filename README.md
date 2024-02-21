@@ -2,7 +2,7 @@
 
 ![Maven Central](https://img.shields.io/maven-central/v/de.hs-heilbronn.mi/crawler4j-parent.svg?style=flat-square)
 
-This repository contains a maintained fork of [yasserg/crawler4j](https://github.com/yasserg/crawler4j).
+This repository contains a fork of [yasserg/crawler4j](https://github.com/yasserg/crawler4j).
 
 crawler4j is an open source web crawler for Java which provides a simple interface for
 crawling the Web. Using it, you can setup a multi-threaded web crawler in few minutes.
