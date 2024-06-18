@@ -4,6 +4,14 @@
 
 This repository contains a fork of [yasserg/crawler4j](https://github.com/yasserg/crawler4j).
 
+# Repository Archived
+
+> **⚠️ Disclaimer: This repository is no longer actively maintained and has been archived.**
+> 
+> For an alternative crawler solution, please visit [Apache StormCrawler (Incubating)](https://stormcrawler.apache.org/).
+
+---
+
 crawler4j is an open source web crawler for Java which provides a simple interface for
 crawling the Web. Using it, you can setup a multi-threaded web crawler in few minutes.
 
