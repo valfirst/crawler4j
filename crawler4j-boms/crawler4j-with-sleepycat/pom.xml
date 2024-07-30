@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>crawler4j-boms</artifactId>
-        <groupId>de.hs-heilbronn.mi</groupId>
+        <groupId>com.github.valfirst.crawler4j</groupId>
         <version>5.0.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -15,12 +15,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>de.hs-heilbronn.mi</groupId>
+            <groupId>com.github.valfirst.crawler4j</groupId>
             <artifactId>crawler4j-core</artifactId>
             <version>${crawler4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>de.hs-heilbronn.mi</groupId>
+            <groupId>com.github.valfirst.crawler4j</groupId>
             <artifactId>crawler4j-frontier-sleepycat</artifactId>
             <version>${crawler4j.version}</version>
         </dependency>

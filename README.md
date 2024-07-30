@@ -1,6 +1,6 @@
 # crawler4j
 
-![Maven Central](https://img.shields.io/maven-central/v/de.hs-heilbronn.mi/crawler4j-parent.svg?style=flat-square)
+![Maven Central](https://img.shields.io/maven-central/v/com.github.valfirst.crawler4j/crawler4j-parent.svg?style=flat-square)
 
 This repository contains a fork of [rzo1/crawler4j](https://github.com/rzo1/crawler4j) which is a fork of [yasserg/crawler4j](https://github.com/yasserg/crawler4j) in its turn.
 
@@ -45,7 +45,7 @@ Add the following dependency to your pom.xml:
 
 ```xml
         <dependency>
-            <groupId>de.hs-heilbronn.mi</groupId>
+            <groupId>com.github.valfirst.crawler4j</groupId>
             <artifactId>crawler4j-with-sleepycat</artifactId>
             <version>5.0.2</version>
         </dependency>
@@ -57,7 +57,7 @@ Otherwise, you can use `HSQLDB` instead
 
 ```xml
         <dependency>
-            <groupId>de.hs-heilbronn.mi</groupId>
+            <groupId>com.github.valfirst.crawler4j</groupId>
             <artifactId>crawler4j-with-hsqldb</artifactId>
             <version>5.0.2</version>
         </dependency>
@@ -67,7 +67,7 @@ or you use an external [crawler-commons/url-frontier](https://github.com/crawler
 
 ```xml
         <dependency>
-            <groupId>de.hs-heilbronn.mi</groupId>
+            <groupId>com.github.valfirst.crawler4j</groupId>
             <artifactId>crawler4j-with-urlfrontier</artifactId>
             <version>5.0.2</version>
         </dependency>
@@ -80,7 +80,7 @@ or you use an external [crawler-commons/url-frontier](https://github.com/crawler
 Since `5.0.1`, we provide a Maven archetype to bootstrap crawler4j development. Just urn
 
 ```bash
-mvn archetype:generate -DarchetypeGroupId=de.hs-heilbronn.mi -DarchetypeArtifactId=crawler4j-archetype -DarchetypeVersion=5.0.1                
+mvn archetype:generate -DarchetypeGroupId=com.github.valfirst.crawler4j -DarchetypeArtifactId=crawler4j-archetype -DarchetypeVersion=5.0.1                
 ```
 
 ### Manual
@@ -277,7 +277,7 @@ User-agent string is used for representing your crawler to web servers. See [her
 for more details. By default crawler4j uses the following user agent string:
 
 ```
-"crawler4j (https://github.com/rzo1/crawler4j/)"
+"crawler4j (https://github.com/valfirst/crawler4j/)"
 ```
 However, you can overwrite it:
 

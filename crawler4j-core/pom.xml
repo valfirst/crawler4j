@@ -4,7 +4,7 @@
 
     <parent>
         <artifactId>crawler4j-parent</artifactId>
-        <groupId>de.hs-heilbronn.mi</groupId>
+        <groupId>com.github.valfirst.crawler4j</groupId>
         <version>5.0.3-SNAPSHOT</version>
     </parent>
 
@@ -57,7 +57,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>de.hs-heilbronn.mi</groupId>
+            <groupId>com.github.valfirst.crawler4j</groupId>
             <artifactId>crawler4j-commons</artifactId>
             <version>${crawler4j.version}</version>
         </dependency>
@@ -201,7 +201,7 @@
 					</dependency>
         <!-- Test Dependencies -->
         <dependency>
-            <groupId>de.hs-heilbronn.mi</groupId>
+            <groupId>com.github.valfirst.crawler4j</groupId>
             <artifactId>crawler4j-frontier-sleepycat</artifactId>
             <version>${crawler4j.version}</version>
             <!-- test scope here as it is an optional dependency! -->
