@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>de.hs-heilbronn.mi</groupId>
+    <groupId>com.github.valfirst.crawler4j</groupId>
     <artifactId>crawler4j-parent</artifactId>
     <packaging>pom</packaging>
     <version>5.0.3-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
 
     <description>Open Source Web Crawler for Java</description>
-    <url>https://github.com/rzo1/crawler4j</url>
+    <url>https://github.com/valfirst/crawler4j</url>
 
     <licenses>
         <license>
@@ -18,9 +18,9 @@
         </license>
     </licenses>
     <scm>
-        <url>https://github.com/rzo1/crawler4j</url>
-        <connection>scm:git:git@github.com:rzo1/crawler4j.git</connection>
-        <developerConnection>scm:git:git@github.com:rzo1/crawler4j.git</developerConnection>
+        <url>https://github.com/valfirst/crawler4j</url>
+        <connection>scm:git:git@github.com:valfirst/crawler4j.git</connection>
+        <developerConnection>scm:git:git@github.com:valfirst/crawler4j.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
     <distributionManagement>
@@ -74,6 +74,15 @@
             <email/>
             <timezone>Europe/Brussels</timezone>
         </developer>
+        <developer>
+            <id>valfirst</id>
+            <name>Valery Yatsynovich</name>
+            <roles>
+                <role>Fork Maintainer</role>
+            </roles>
+            <email/>
+            <url>https://github.com/valfirst/crawler4j</url>
+        </developer>
     </developers>
 
     <organization>
@@ -91,7 +100,7 @@
 
     <properties>
         <!-- Application settings -->
-        <copyright.year>2022</copyright.year>
+        <copyright.year>2024</copyright.year>
         <license.inceptionYear>2010</license.inceptionYear>
         <license.licenseName>apache_v2</license.licenseName>
 
