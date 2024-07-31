@@ -59,7 +59,7 @@
         <dependency>
             <groupId>com.github.valfirst.crawler4j</groupId>
             <artifactId>crawler4j-commons</artifactId>
-            <version>${crawler4j.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.crawler-commons</groupId>
@@ -197,7 +197,7 @@
         <dependency>
             <groupId>com.github.valfirst.crawler4j</groupId>
             <artifactId>crawler4j-frontier-sleepycat</artifactId>
-            <version>${crawler4j.version}</version>
+            <version>${project.version}</version>
             <!-- test scope here as it is an optional dependency! -->
             <scope>test</scope>
         </dependency>

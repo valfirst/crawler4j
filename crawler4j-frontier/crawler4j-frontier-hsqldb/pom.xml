@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.github.valfirst.crawler4j</groupId>
             <artifactId>crawler4j-commons</artifactId>
-            <version>${crawler4j.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <!-- Logging API -->
         <dependency>
