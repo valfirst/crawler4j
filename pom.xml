@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.valfirst.crawler4j</groupId>
     <artifactId>crawler4j-parent</artifactId>
     <packaging>pom</packaging>
-    <version>5.0.3-SNAPSHOT</version>
+    <version>5.0.3</version>
     <name>${project.groupId}:${project.artifactId}</name>
 
     <description>Open Source Web Crawler for Java</description>
@@ -21,7 +20,7 @@
         <url>https://github.com/valfirst/crawler4j</url>
         <connection>scm:git:git@github.com:valfirst/crawler4j.git</connection>
         <developerConnection>scm:git:git@github.com:valfirst/crawler4j.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v5.0.3</tag>
     </scm>
     <distributionManagement>
         <snapshotRepository>
@@ -42,7 +41,7 @@
             <roles>
                 <role>Original Founder</role>
             </roles>
-            <email/>
+            <email />
             <timezone>America/Los_Angeles</timezone>
         </developer>
         <developer>
@@ -61,7 +60,7 @@
             <roles>
                 <role>Fork Maintainer</role>
             </roles>
-            <email/>
+            <email />
             <url>https://github.com/rzo1/crawler4j</url>
             <timezone>Europe/Berlin</timezone>
         </developer>
@@ -71,7 +70,7 @@
             <roles>
                 <role>Contributor</role>
             </roles>
-            <email/>
+            <email />
             <timezone>Europe/Brussels</timezone>
         </developer>
         <developer>
@@ -80,7 +79,7 @@
             <roles>
                 <role>Fork Maintainer</role>
             </roles>
-            <email/>
+            <email />
             <url>https://github.com/valfirst/crawler4j</url>
         </developer>
     </developers>
