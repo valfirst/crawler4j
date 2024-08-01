@@ -1,6 +1,6 @@
 # crawler4j
 
-![Maven Central](https://img.shields.io/maven-central/v/com.github.valfirst.crawler4j/crawler4j-parent.svg?style=flat-square)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.valfirst.crawler4j/crawler4j-parent.svg?style=flat-square)](https://central.sonatype.com/namespace/com.github.valfirst.crawler4j)
 
 This repository contains a fork of [rzo1/crawler4j](https://github.com/rzo1/crawler4j) which is a fork of [yasserg/crawler4j](https://github.com/yasserg/crawler4j) in its turn.
 
