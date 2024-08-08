@@ -111,7 +111,7 @@
         <maven.compile.encoding>UTF-8</maven.compile.encoding>
         <maven.compiler.target>${java.target}</maven.compiler.target>
 
-        <slf4j.version>2.0.13</slf4j.version>
+        <slf4j.version>2.0.14</slf4j.version>
         <log4j.version>2.23.1</log4j.version>
 
         <apache.http.client.version>5.3.1</apache.http.client.version>
